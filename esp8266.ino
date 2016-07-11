@@ -19,6 +19,8 @@
 #define DEFAULT_TIMESERVER "0.pool.ntp.org"//"time.nist.gov"
 #define MINIMUM_INTERVAL 60
 
+// global variables first
+
 //NTP BS -------------------------------------
 const char timeServer[] = "time.nist.gov"; // time.nist.gov NTP server
 unsigned int localPort = 123;
@@ -41,52 +43,16 @@ const char host[] = "api.coindesk.com";
 
 SoftwareSerial mySerial(D0,D1); //rx,tx
 
-//NTP functions ------------------------------
-void sendNTPpacket(WiFiUDP& u)
+// function declarations second
+void connectToWifi(const char ssid[], const char password[]);
+void sendNTPpacket(WiFiUDP& u);
+time_t getNtpTime();
+
+void setup()
 {
-  // Zeroise the buffer.
-  memset(packetBuffer, 0, NTP_PACKET_SIZE);
-  memcpy(packetBuffer, sendBuffer, 16);
-
-
-  if (u.beginPacket(timeServer, 123)) {
-    u.write(packetBuffer, NTP_PACKET_SIZE);
-    u.endPacket();
-  }
-}
-
-
-time_t getNtpTime()
-{
-  WiFiUDP udp;
-  udp.begin(localPort);
-  while (udp.parsePacket() > 0); // discard any previously received packets
-  for (int i = 0 ; i < 5 ; i++) // 5 retries.
-  {
-    sendNTPpacket(udp);
-    uint32_t beginWait = millis();
-    while (millis() - beginWait < 1500) {
-      if (udp.parsePacket()) {
-         udp.read(packetBuffer, NTP_PACKET_SIZE);
-         // Extract seconds portion.
-         unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
-         unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
-         unsigned long secSince1900 = highWord << 16 | lowWord;
-         udp.flush();
-         Serial.print(secSince1900);
-         return secSince1900 - 2208988800UL + 1 * 60;
-      }
-      delay(10);
-    }
-  }
-  return 0; // return 0 if unable to get the time
-}
-
-void setup() { //Setup bs --------------------
-
   // Serial
   Serial.begin(115200);
-  mySerial.begin(19200);
+  mySerial.begin(19200); // for VFD
   delay(100);
 
   mySerial.write('\x0E');
@@ -99,26 +65,16 @@ void setup() { //Setup bs --------------------
 
   delay(2000);
 
-   // Initialize display
-
+  // Initialize display
 
   // We start by connecting to a WiFi network
   Serial.println();
   Serial.println();
   Serial.print("Connecting to ");
   Serial.println(ssid);
-  
-  WiFi.begin(ssid, password);
-  
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
 
-  Serial.println("");
-  Serial.println("WiFi connected");  
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+  connectToWifi(ssid, password);
+  
 }
 
 void loop() {
@@ -204,4 +160,60 @@ void loop() {
 
   // Wait 5 seconds
   delay(8000);
+}
+
+//NTP functions ------------------------------
+void sendNTPpacket(WiFiUDP& u)
+{
+  // Zeroise the buffer.
+  memset(packetBuffer, 0, NTP_PACKET_SIZE);
+  memcpy(packetBuffer, sendBuffer, 16);
+
+
+  if (u.beginPacket(timeServer, 123)) {
+    u.write(packetBuffer, NTP_PACKET_SIZE);
+    u.endPacket();
+  }
+}
+
+
+time_t getNtpTime()
+{
+  WiFiUDP udp;
+  udp.begin(localPort);
+  while (udp.parsePacket() > 0); // discard any previously received packets
+  for (int i = 0 ; i < 5 ; i++) // 5 retries.
+  {
+    sendNTPpacket(udp);
+    uint32_t beginWait = millis();
+    while (millis() - beginWait < 1500) {
+      if (udp.parsePacket()) {
+         udp.read(packetBuffer, NTP_PACKET_SIZE);
+         // Extract seconds portion.
+         unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
+         unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
+         unsigned long secSince1900 = highWord << 16 | lowWord;
+         udp.flush();
+         Serial.print(secSince1900);
+         return secSince1900 - 2208988800UL + 1 * 60;
+      }
+      delay(10);
+    }
+  }
+  return 0; // return 0 if unable to get the time
+}
+
+void connectToWifi(const char ssid[], const char password[])
+{
+  while (WiFi.status() != WL_CONNECTED)
+  {
+    WiFi.begin(ssid, password);
+    delay(5);
+    Serial.print(".");
+  }
+
+  Serial.println();
+  Serial.println("WiFi connected");  
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
 }
