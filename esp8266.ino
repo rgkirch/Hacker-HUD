@@ -34,8 +34,8 @@ byte sendBuffer[] = {
 
 
 // WiFi settings -----------------------------
-const char ssid[]     = "HellSpot Slow";
-const char password[] = "ILikeWiFi";
+const std::string ssid("HellSpot Slow");
+const std::string password("ILikeWiFi");
 
 // API server
 const char host[] = "api.coindesk.com";
@@ -43,7 +43,7 @@ const char host[] = "api.coindesk.com";
 SoftwareSerial mySerial(D0,D1); //rx,tx
 
 // function declarations second
-void connectToWifi(const char ssid[], const char password[]);
+void connectToWifi(const std::string& ssid, const std::string& password);
 void sendNTPpacket(WiFiUDP& u);
 time_t getNtpTime();
 
@@ -67,13 +67,7 @@ void setup()
   // Initialize display
 
   // We start by connecting to a WiFi network
-  Serial.println();
-  Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
-
   connectToWifi(ssid, password);
-  
 }
 
 void loop() {
@@ -202,17 +196,21 @@ time_t getNtpTime()
   return 0; // return 0 if unable to get the time
 }
 
-void connectToWifi(const char ssid[], const char password[])
+void connectToWifi(const std::string& ssid, const std::string& password)
 {
-  while (WiFi.status() != WL_CONNECTED)
-  {
-    WiFi.begin(ssid, password);
-    delay(5);
-    Serial.print(".");
-  }
-
-  Serial.println();
-  Serial.println("WiFi connected");  
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
+    int delayTime = 200;
+    while (WiFi.status() != WL_CONNECTED)
+    {
+        WiFi.begin(ssid.c_str(), password.c_str());
+        delay(delayTime);
+        Serial.print(".");
+        if(delayTime < 5000)
+        {
+            delayTime *= 2;
+        }
+    }
+    Serial.println();
+    Serial.println("WiFi connected");
+    Serial.println("IP address: ");
+    Serial.println(WiFi.localIP());
 }
