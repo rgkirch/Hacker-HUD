@@ -1,20 +1,19 @@
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiAP.h>
+#include <ESP8266WiFiGeneric.h>
 #include <ESP8266WiFiMulti.h>
 #include <ESP8266WiFiSTA.h>
 #include <ESP8266WiFiScan.h>
-#include <ESP8266WiFiGeneric.h>
-#include <WiFiServer.h>
-#include <WiFiClientSecure.h>
-#include <WiFiUdp.h>
-#include <ESP8266WiFiAP.h>
-#include <ESP8266WiFi.h>
 #include <ESP8266WiFiType.h>
-#include <WiFiClient.h>
 
-// Libraries
-#include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
+#include <WiFiServer.h>
+#include <WiFiUdp.h>
 
+#include <string>
 
 #define DEFAULT_TIMESERVER "0.pool.ntp.org"//"time.nist.gov"
 #define MINIMUM_INTERVAL 60
@@ -22,7 +21,7 @@
 // global variables first
 
 //NTP BS -------------------------------------
-const char timeServer[] = "time.nist.gov"; // time.nist.gov NTP server
+const std::string timeServer("time.nist.gov"); // time.nist.gov NTP server
 unsigned int localPort = 123;
 const int NTP_PACKET_SIZE = 48;
 byte packetBuffer[NTP_PACKET_SIZE];
@@ -170,7 +169,7 @@ void sendNTPpacket(WiFiUDP& u)
   memcpy(packetBuffer, sendBuffer, 16);
 
 
-  if (u.beginPacket(timeServer, 123)) {
+  if (u.beginPacket(timeServer.c_str(), 123)) {
     u.write(packetBuffer, NTP_PACKET_SIZE);
     u.endPacket();
   }
