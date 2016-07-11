@@ -1,132 +1,207 @@
-#include <SPI.h>
-#include <WiFi.h>
+#include <ESP8266WiFiMulti.h>
+#include <ESP8266WiFiSTA.h>
+#include <ESP8266WiFiScan.h>
+#include <ESP8266WiFiGeneric.h>
+#include <WiFiServer.h>
+#include <WiFiClientSecure.h>
 #include <WiFiUdp.h>
+#include <ESP8266WiFiAP.h>
+#include <ESP8266WiFi.h>
+#include <ESP8266WiFiType.h>
+#include <WiFiClient.h>
 
-int status = WL_IDLE_STATUS;
-char ssid[] = "HellSpot Slow"; //  your network SSID (name)
-char pass[] = "ILikeWiFi"; // your network password
-int keyIndex = 0; // your network key Index number (needed only for WEP)
-unsigned int localPort = 2390; // local port to listen for UDP packets
-IPAddress timeServer(129, 6, 15, 28); // time.nist.gov NTP server
-const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
-byte packetBuffer[ NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
-WiFiUDP Udp; // A UDP instance to let us send and receive packets over UDP
+// Libraries
+#include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
+#include <SoftwareSerial.h>
 
-void setup()
+
+#define DEFAULT_TIMESERVER "0.pool.ntp.org"//"time.nist.gov"
+#define MINIMUM_INTERVAL 60
+
+//NTP BS -------------------------------------
+const char timeServer[] = "time.nist.gov"; // time.nist.gov NTP server
+unsigned int localPort = 123;
+const int NTP_PACKET_SIZE = 48;
+byte packetBuffer[NTP_PACKET_SIZE];
+byte sendBuffer[] = {
+  0b11100011,          // LI, Version, Mode.
+  0x0,                 // Stratum unspecified.
+  0x6,                 // Polling interval
+  0xEC,                // Clock precision.
+  0x0, 0x0, 0x0, 0x0}; // Reference ...
+
+
+// WiFi settings -----------------------------
+const char ssid[]     = "HellSpot Slow";
+const char password[] = "ILikeWiFi";
+
+// API server
+const char host[] = "api.coindesk.com";
+
+SoftwareSerial mySerial(D0,D1); //rx,tx
+
+//NTP functions ------------------------------
+void sendNTPpacket(WiFiUDP& u)
 {
-  // Open serial communications and wait for port to open:
-  Serial.begin(115200);
-  // connected is 3 and idle is 0
-  status = WiFi.begin(ssid, pass);
-  delay(4000);
-  if(status == 3)
-  {
-    Serial.println("connected");
-  } else {
-    Serial.println("not connected");
-  }
-
-  //printWifiStatus();
-
-  //Udp.begin(localPort);
-}
-
-void loop()
-{
-  sendNTPpacket(timeServer); // send an NTP packet to a time server
-  // wait to see if a reply is available
-  delay(1000);
-  if (Udp.parsePacket())
-  {
-    Serial.println("packet received");
-    // We've received a packet, read the data from it
-    Udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
-
-    //the timestamp starts at byte 40 of the received packet and is four bytes,
-    // or two words, long. First, esxtract the two words:
-
-    unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
-    unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
-    // combine the four bytes (two words) into a long integer
-    // this is NTP time (seconds since Jan 1 1900):
-    unsigned long secsSince1900 = highWord << 16 | lowWord;
-    Serial.print("Seconds since Jan 1 1900 = ");
-    Serial.println(secsSince1900);
-
-    // now convert NTP time into everyday time:
-    Serial.print("Unix time = ");
-    // Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
-    const unsigned long seventyYears = 2208988800UL;
-    // subtract seventy years:
-    unsigned long epoch = secsSince1900 - seventyYears;
-    // print Unix time:
-    Serial.println(epoch);
-
-
-    // print the hour, minute and second:
-    Serial.print("The UTC time is ");       // UTC is the time at Greenwich Meridian (GMT)
-    Serial.print((epoch  % 86400L) / 3600); // print the hour (86400 equals secs per day)
-    Serial.print(':');
-    if (((epoch % 3600) / 60) < 10) {
-      // In the first 10 minutes of each hour, we'll want a leading '0'
-      Serial.print('0');
-    }
-    Serial.print((epoch  % 3600) / 60); // print the minute (3600 equals secs per minute)
-    Serial.print(':');
-    if ((epoch % 60) < 10) {
-      // In the first 10 seconds of each minute, we'll want a leading '0'
-      Serial.print('0');
-    }
-    Serial.println(epoch % 60); // print the second
-  }
-  // wait ten seconds before asking for the time again
-  delay(10000);
-}
-
-// send an NTP request to the time server at the given address
-unsigned long sendNTPpacket(IPAddress& address) {
-  //Serial.println("1");
-  // set all bytes in the buffer to 0
+  // Zeroise the buffer.
   memset(packetBuffer, 0, NTP_PACKET_SIZE);
-  // Initialize values needed to form NTP request
-  // (see URL above for details on the packets)
-  //Serial.println("2");
-  packetBuffer[0] = 0b11100011;   // LI, Version, Mode
-  packetBuffer[1] = 0;     // Stratum, or type of clock
-  packetBuffer[2] = 6;     // Polling Interval
-  packetBuffer[3] = 0xEC;  // Peer Clock Precision
-  // 8 bytes of zero for Root Delay & Root Dispersion
-  packetBuffer[12]  = 49;
-  packetBuffer[13]  = 0x4E;
-  packetBuffer[14]  = 49;
-  packetBuffer[15]  = 52;
+  memcpy(packetBuffer, sendBuffer, 16);
 
-  //Serial.println("3");
 
-  // all NTP fields have been given values, now
-  // you can send a packet requesting a timestamp:
-  Udp.beginPacket(address, 123); //NTP requests are to port 123
-  //Serial.println("4");
-  Udp.write(packetBuffer, NTP_PACKET_SIZE);
-  //Serial.println("5");
-  Udp.endPacket();
-  //Serial.println("6");
+  if (u.beginPacket(timeServer, 123)) {
+    u.write(packetBuffer, NTP_PACKET_SIZE);
+    u.endPacket();
+  }
 }
 
 
-void printWifiStatus() {
-  // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+time_t getNtpTime()
+{
+  WiFiUDP udp;
+  udp.begin(localPort);
+  while (udp.parsePacket() > 0); // discard any previously received packets
+  for (int i = 0 ; i < 5 ; i++) // 5 retries.
+  {
+    sendNTPpacket(udp);
+    uint32_t beginWait = millis();
+    while (millis() - beginWait < 1500) {
+      if (udp.parsePacket()) {
+         udp.read(packetBuffer, NTP_PACKET_SIZE);
+         // Extract seconds portion.
+         unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
+         unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
+         unsigned long secSince1900 = highWord << 16 | lowWord;
+         udp.flush();
+         Serial.print(secSince1900);
+         return secSince1900 - 2208988800UL + 1 * 60;
+      }
+      delay(10);
+    }
+  }
+  return 0; // return 0 if unable to get the time
+}
 
-  // print your WiFi shield's IP address:
-  IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+void setup() { //Setup bs --------------------
 
-  // print the received signal strength:
-  long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
+  // Serial
+  Serial.begin(115200);
+  mySerial.begin(19200);
+  delay(100);
+
+  mySerial.write('\x0E');
+  mySerial.write('\x0C');
+
+  mySerial.print("VFD Display code V1");
+
+  mySerial.write('\x0E');
+  mySerial.write('\x0C');
+
+  delay(2000);
+
+   // Initialize display
+
+
+  // We start by connecting to a WiFi network
+  Serial.println();
+  Serial.println();
+  Serial.print("Connecting to ");
+  Serial.println(ssid);
+  
+  WiFi.begin(ssid, password);
+  
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");  
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+}
+
+void loop() {
+
+  // Connect to API
+  Serial.print("connecting to ");
+  Serial.println(host);
+  
+  // Use WiFiClient class to create TCP connections
+  WiFiClient client;
+  const int httpPort = 80;
+  if (!client.connect(host, httpPort)) {
+    Serial.println("connection failed");
+    return;
+  }
+  
+  // We now create a URI for the request
+  String url = "/v1/bpi/currentprice.json";
+  
+  Serial.print("Requesting URL: ");
+  Serial.println(url);
+  
+  // This will send the request to the server
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + host + "\r\n" + 
+               "Connection: close\r\n\r\n");
+  delay(500);
+  
+  // Read all the lines of the reply from server and print them to Serial
+  String answer;
+  while(client.available()){
+    String line = client.readStringUntil('\r');
+    answer += line;
+  }
+
+  client.stop();
+  Serial.println();
+  Serial.println("closing connection");
+
+  // Process answer
+  Serial.println();
+  Serial.println("Answer: ");
+  Serial.println(answer);
+
+  // Convert to JSON
+  String jsonAnswer;
+  int jsonIndex;
+
+  for (int i = 0; i < answer.length(); i++) {
+    if (answer[i] == '{') {
+      jsonIndex = i;
+      break;
+    }
+  }
+
+  // Get JSON data
+  jsonAnswer = answer.substring(jsonIndex);
+  Serial.println();
+  Serial.println("JSON answer: ");
+  Serial.println(jsonAnswer);
+  jsonAnswer.trim();
+
+  // Get rate as float
+  int rateIndex = jsonAnswer.indexOf("rate_float");
+  String priceString = jsonAnswer.substring(rateIndex + 12, rateIndex + 18);
+  priceString.trim();
+  float price = priceString.toFloat();
+
+  // Print price
+  Serial.println();
+  Serial.println("Bitcoin price: ");
+  Serial.println(price);
+
+  //Display Price
+  mySerial.write('\x0E');
+  mySerial.write('\x0C');
+  mySerial.print("Bitcoin $: ");
+  mySerial.print(price);
+  mySerial.print("    ");
+  float penis = getNtpTime();
+
+  mySerial.print(penis);
+
+  // Wait 5 seconds
+  delay(8000);
 }
