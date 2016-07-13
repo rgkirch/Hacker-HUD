@@ -19,6 +19,7 @@
 #define MINIMUM_INTERVAL 60
 
 // global variables first
+const int httpPort = 80;
 
 //NTP BS -------------------------------------
 const std::string timeServer("time.nist.gov"); // time.nist.gov NTP server
@@ -38,12 +39,13 @@ const std::string ssid("HellSpot Slow");
 const std::string password("ILikeWiFi");
 
 // API server
-const char host[] = "api.coindesk.com";
+const std::string coindesk("api.coindesk.com");
 
 SoftwareSerial mySerial(D0,D1); //rx,tx
 
 // function declarations second
 void connectToWifi(const std::string& ssid, const std::string& password);
+int getBitcoinPrice(const std::string& host);
 void sendNTPpacket(WiFiUDP& u);
 time_t getNtpTime();
 
@@ -72,87 +74,19 @@ void setup()
 
 void loop() {
 
-  // Connect to API
-  Serial.print("connecting to ");
-  Serial.println(host);
-  
-  // Use WiFiClient class to create TCP connections
-  WiFiClient client;
-  const int httpPort = 80;
-  if (!client.connect(host, httpPort)) {
-    Serial.println("connection failed");
-    return;
-  }
-  
-  // We now create a URI for the request
-  String url = "/v1/bpi/currentprice.json";
-  
-  Serial.print("Requesting URL: ");
-  Serial.println(url);
-  
-  // This will send the request to the server
-  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
-               "Host: " + host + "\r\n" + 
-               "Connection: close\r\n\r\n");
-  delay(500);
-  
-  // Read all the lines of the reply from server and print them to Serial
-  String answer;
-  while(client.available()){
-    String line = client.readStringUntil('\r');
-    answer += line;
-  }
+    int price = getBitcoinPrice(coindesk);
+    //Display Price
+    mySerial.write('\x0E');
+    mySerial.write('\x0C');
+    mySerial.print("Bitcoin $: ");
+    mySerial.print(price);
+    mySerial.print("    ");
+    float time = getNtpTime();
 
-  client.stop();
-  Serial.println();
-  Serial.println("closing connection");
+    mySerial.print(time);
 
-  // Process answer
-  Serial.println();
-  Serial.println("Answer: ");
-  Serial.println(answer);
-
-  // Convert to JSON
-  String jsonAnswer;
-  int jsonIndex;
-
-  for (int i = 0; i < answer.length(); i++) {
-    if (answer[i] == '{') {
-      jsonIndex = i;
-      break;
-    }
-  }
-
-  // Get JSON data
-  jsonAnswer = answer.substring(jsonIndex);
-  Serial.println();
-  Serial.println("JSON answer: ");
-  Serial.println(jsonAnswer);
-  jsonAnswer.trim();
-
-  // Get rate as float
-  int rateIndex = jsonAnswer.indexOf("rate_float");
-  String priceString = jsonAnswer.substring(rateIndex + 12, rateIndex + 18);
-  priceString.trim();
-  float price = priceString.toFloat();
-
-  // Print price
-  Serial.println();
-  Serial.println("Bitcoin price: ");
-  Serial.println(price);
-
-  //Display Price
-  mySerial.write('\x0E');
-  mySerial.write('\x0C');
-  mySerial.print("Bitcoin $: ");
-  mySerial.print(price);
-  mySerial.print("    ");
-  float penis = getNtpTime();
-
-  mySerial.print(penis);
-
-  // Wait 5 seconds
-  delay(8000);
+    // Wait 5 seconds
+    delay(8000);
 }
 
 //NTP functions ------------------------------
@@ -213,4 +147,160 @@ void connectToWifi(const std::string& ssid, const std::string& password)
     Serial.println("WiFi connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+}
+
+int getBitcoinPrice(const std::string& host)
+{
+    // Connect to API
+    Serial.print("connecting to ");
+    Serial.println(host.c_str());
+
+    // Use WiFiClient class to create TCP connections
+    WiFiClient client;
+    int status = 0;
+    for(int i = 0; i < 4; ++i)
+    {
+        status = client.connect(host.c_str(), httpPort);
+        if(!status)
+        {
+            std::string failed("Connection to " + host + " failed. Trying again...");
+            Serial.println(failed.c_str());
+            delay(500);
+        } else {
+            // We now create a URI for the request
+            String url = "/v1/bpi/currentprice.json";
+
+            Serial.println("Requesting URL: " + url);
+
+            // This will send the request to the server
+            client.print("GET " + url + " HTTP/1.1\r\n" +
+                         "host: " + host.c_str() + "\r\n" +
+                         "Connection: close\r\n\r\n");
+            delay(500);
+
+            // Read all the lines of the reply from server and print them to Serial
+            String answer;
+            while(client.available())
+            {
+                String line = client.readStringUntil('\r');
+                answer += line;
+            }
+
+            client.stop();
+            Serial.println();
+            Serial.println("closing connection");
+
+            // Process answer
+            Serial.println();
+            Serial.println("Answer: ");
+            Serial.println(answer);
+
+            // Convert to JSON
+            String jsonAnswer;
+            int jsonIndex;
+
+            for (int i = 0; i < answer.length(); i++) {
+                if (answer[i] == '{') {
+                    jsonIndex = i;
+                    break;
+                }
+            }
+
+            // Get JSON data
+            jsonAnswer = answer.substring(jsonIndex);
+            Serial.println();
+            Serial.println("JSON answer: ");
+            Serial.println(jsonAnswer);
+            jsonAnswer.trim();
+
+            // Get rate as float
+            int rateIndex = jsonAnswer.indexOf("rate_float");
+            String priceString = jsonAnswer.substring(rateIndex + 12, rateIndex + 18);
+            priceString.trim();
+            float price = priceString.toFloat();
+
+            // Print price
+            Serial.println();
+            Serial.println("Bitcoin price: ");
+            Serial.println(price);
+            return price;
+        }
+    }
+    return -1;
+}
+
+/*
+ * © Francesco Potortì 2013 - GPLv3
+ *
+ * Send an HTTP packet and wait for the response, return the Unix time
+ */
+
+unsigned long webUnixTime ()
+{
+    WiFiClient client;
+    unsigned long time = 0;
+
+    // Just choose any reasonably busy web server, the load is really low
+    if (client.connect("g.cn", 80))
+        {
+            // Make an HTTP 1.1 request which is missing a Host: header
+            // compliant servers are required to answer with an error that includes
+            // a Date: header.
+            client.print(F("GET / HTTP/1.1 \r\n\r\n"));
+
+            char buf[5];			// temporary buffer for characters
+            client.setTimeout(5000);
+            if (client.find((char *)"\r\nDate: ") // look for Date: header
+	    && client.readBytes(buf, 5) == 5) // discard
+	{
+	    unsigned day = client.parseInt();	     // day
+	    client.readBytes(buf, 1);	     // discard
+	    client.readBytes(buf, 3);	     // month
+	    int year = client.parseInt();	     // year
+	    byte hour = client.parseInt();     // hour
+	    byte minute = client.parseInt(); // minute
+	    byte second = client.parseInt(); // second
+
+	    int daysInPrevMonths;
+	    switch (buf[0])
+	        {
+	        case 'F': daysInPrevMonths =    31; break; // Feb
+	        case 'S': daysInPrevMonths = 243; break; // Sep
+	        case 'O': daysInPrevMonths = 273; break; // Oct
+	        case 'N': daysInPrevMonths = 304; break; // Nov
+	        case 'D': daysInPrevMonths = 334; break; // Dec
+	        default:
+	            if (buf[0] == 'J' && buf[1] == 'a')
+		daysInPrevMonths = 0;		// Jan
+	            else if (buf[0] == 'A' && buf[1] == 'p')
+		daysInPrevMonths = 90;		// Apr
+	            else switch (buf[2])
+		         {
+		         case 'r': daysInPrevMonths =    59; break; // Mar
+		         case 'y': daysInPrevMonths = 120; break; // May
+		         case 'n': daysInPrevMonths = 151; break; // Jun
+		         case 'l': daysInPrevMonths = 181; break; // Jul
+		         default: // add a default label here to avoid compiler warning
+		         case 'g': daysInPrevMonths = 212; break; // Aug
+		         }
+	        }
+
+	    // This code will not work after February 2100
+	    // because it does not account for 2100 not being a leap year and because
+	    // we use the day variable as accumulator, which would overflow in 2149
+	    day += (year - 1970) * 365;	// days from 1970 to the whole past year
+	    day += (year - 1969) >> 2;	// plus one day per leap year
+	    day += daysInPrevMonths;	// plus days for previous months this year
+	    if (daysInPrevMonths >= 59	// if we are past February
+	            && ((year & 3) == 0))	// and this is a leap year
+	        day += 1;			// add one day
+	    // Remove today, add hours, minutes and seconds this month
+	    time = (((day-1ul) * 24 + hour) * 60 + minute) * 60 + second;
+	}
+        }
+    delay(10);
+    client.flush();
+    client.stop();
+
+    return time;
 }
