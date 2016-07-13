@@ -85,15 +85,17 @@ void setup()
 
 void loop()
 {
+    // bitcoin price
     int price = getBitcoinPrice();
-    //Display Price
+    Serial.print("Bitcoin price: " + getBitcoinPrice());
     mySerial.write('\x0E');
     mySerial.write('\x0C');
     mySerial.print("Bitcoin $: ");
     mySerial.print(price);
     mySerial.print("    ");
+    // time
     float time = networkTime();
-
+    Serial.println(time);
     mySerial.print(time);
 
     // Wait 5 seconds
@@ -148,20 +150,10 @@ int getBitcoinPrice()
                 String line = client.readStringUntil('\r');
                 answer += line;
             }
-
             client.stop();
-            Serial.println();
-            Serial.println("closing connection");
-
-            // Process answer
-            Serial.println();
-            Serial.println("Answer: ");
-            Serial.println(answer);
-
             // Convert to JSON
             String jsonAnswer;
             int jsonIndex;
-
             for (int i = 0; i < answer.length(); i++)
             {
                 if (answer[i] == '{')
@@ -170,24 +162,14 @@ int getBitcoinPrice()
                     break;
                 }
             }
-
             // Get JSON data
             jsonAnswer = answer.substring(jsonIndex);
-            Serial.println();
-            Serial.println("JSON answer: ");
-            Serial.println(jsonAnswer);
             jsonAnswer.trim();
-
             // Get rate as float
             int rateIndex = jsonAnswer.indexOf("rate_float");
             String priceString = jsonAnswer.substring(rateIndex + 12, rateIndex + 18);
             priceString.trim();
             float price = priceString.toFloat();
-
-            // Print price
-            Serial.println();
-            Serial.println("Bitcoin price: ");
-            Serial.println(price);
             return price;
         }
     }
