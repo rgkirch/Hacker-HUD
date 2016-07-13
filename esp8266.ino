@@ -13,75 +13,86 @@
 #include <WiFiServer.h>
 #include <WiFiUdp.h>
 
-#include <string>
-
-#define DEFAULT_TIMESERVER "0.pool.ntp.org"//"time.nist.gov"
-#define MINIMUM_INTERVAL 60
+#include <SPI.h>
 
 // global variables first
 const int httpPort = 80;
 
 //NTP BS -------------------------------------
-const std::string timeServer("time.nist.gov"); // time.nist.gov NTP server
-unsigned int localPort = 123;
+char networkSSID[] = "HellSpot Slow"; //    your network SSID (name)
+char networkPassword[] = "ILikeWiFi"; // your network password
+//WiFiUDP udp; // A UDP instance to let us send and receive packets over UDP
+const unsigned int udpLocalPort = 2390; // local port to listen for UDP packets
+//int keyIndex = 0; // your network key Index number (needed only for WEP)
+//const String timeServer("time.nist.gov"); // time.nist.gov NTP server
+/*
 const int NTP_PACKET_SIZE = 48;
-byte packetBuffer[NTP_PACKET_SIZE];
 byte sendBuffer[] = {
   0b11100011,          // LI, Version, Mode.
   0x0,                 // Stratum unspecified.
   0x6,                 // Polling interval
   0xEC,                // Clock precision.
   0x0, 0x0, 0x0, 0x0}; // Reference ...
+*/
 
 
 // WiFi settings -----------------------------
-const std::string ssid("HellSpot Slow");
-const std::string password("ILikeWiFi");
+//const String ssid("HellSpot Slow");
+//const String password("ILikeWiFi");
 
-// API server
-const std::string coindesk("api.coindesk.com");
-
-SoftwareSerial mySerial(D0,D1); //rx,tx
 
 // function declarations second
-void connectToWifi(const std::string& ssid, const std::string& password);
-int getBitcoinPrice(const std::string& host);
-void sendNTPpacket(WiFiUDP& u);
-time_t getNtpTime();
+unsigned long networkTime();
+void connectToWifi(const String& ssid, const String& password);
+int getBitcoinPrice();
+
+/*
+class VFD
+{
+public:
+    VFD(VFD&);
+    SoftwareSerial mySerial;
+private:
+    VFD();
+};
+*/
+
+    SoftwareSerial mySerial(D0,D1); //rx,tx
 
 void setup()
 {
-  // Serial
-  Serial.begin(115200);
-  mySerial.begin(19200); // for VFD
-  delay(100);
+    // Serial
+    Serial.begin(115200);
+    while(!Serial); // /shrug
+    mySerial.begin(19200); // for VFD
+    delay(100);
 
-  mySerial.write('\x0E');
-  mySerial.write('\x0C');
+    mySerial.write('\x0E');
+    mySerial.write('\x0C');
 
-  mySerial.print("VFD Display code V1");
+    mySerial.print("VFD Display code V1");
 
-  mySerial.write('\x0E');
-  mySerial.write('\x0C');
+    mySerial.write('\x0E');
+    mySerial.write('\x0C');
 
-  delay(2000);
+    delay(2000);
 
-  // Initialize display
+    // Initialize display
 
-  // We start by connecting to a WiFi network
-  connectToWifi(ssid, password);
+    // We start by connecting to a WiFi network
+    connectToWifi(networkSSID, networkPassword);
 }
 
-void loop() {
-
-    int price = getBitcoinPrice(coindesk);
+void loop()
+{
+    int price = getBitcoinPrice();
     //Display Price
     mySerial.write('\x0E');
     mySerial.write('\x0C');
     mySerial.print("Bitcoin $: ");
     mySerial.print(price);
     mySerial.print("    ");
-    float time = getNtpTime();
+    float time = networkTime();
 
     mySerial.print(time);
 
@@ -89,48 +100,7 @@ void loop() {
     delay(8000);
 }
 
-//NTP functions ------------------------------
-void sendNTPpacket(WiFiUDP& u)
-{
-  // Zeroise the buffer.
-  memset(packetBuffer, 0, NTP_PACKET_SIZE);
-  memcpy(packetBuffer, sendBuffer, 16);
-
-
-  if (u.beginPacket(timeServer.c_str(), 123)) {
-    u.write(packetBuffer, NTP_PACKET_SIZE);
-    u.endPacket();
-  }
-}
-
-
-time_t getNtpTime()
-{
-  WiFiUDP udp;
-  udp.begin(localPort);
-  while (udp.parsePacket() > 0); // discard any previously received packets
-  for (int i = 0 ; i < 5 ; i++) // 5 retries.
-  {
-    sendNTPpacket(udp);
-    uint32_t beginWait = millis();
-    while (millis() - beginWait < 1500) {
-      if (udp.parsePacket()) {
-         udp.read(packetBuffer, NTP_PACKET_SIZE);
-         // Extract seconds portion.
-         unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
-         unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
-         unsigned long secSince1900 = highWord << 16 | lowWord;
-         udp.flush();
-         Serial.print(secSince1900);
-         return secSince1900 - 2208988800UL + 1 * 60;
-      }
-      delay(10);
-    }
-  }
-  return 0; // return 0 if unable to get the time
-}
-
-void connectToWifi(const std::string& ssid, const std::string& password)
+void connectToWifi(const String& ssid, const String& password)
 {
     int delayTime = 200;
     while (WiFi.status() != WL_CONNECTED)
@@ -149,33 +119,26 @@ void connectToWifi(const std::string& ssid, const std::string& password)
     Serial.println(WiFi.localIP());
 }
 
-int getBitcoinPrice(const std::string& host)
+int getBitcoinPrice()
 {
+    const String coindesk("api.coindesk.com");
     // Connect to API
-    Serial.print("connecting to ");
-    Serial.println(host.c_str());
+    Serial.println("connecting to " + coindesk);
 
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
     int status = 0;
     for(int i = 0; i < 4; ++i)
     {
-        status = client.connect(host.c_str(), httpPort);
+        status = client.connect(coindesk.c_str(), httpPort);
         if(!status)
         {
-            std::string failed("Connection to " + host + " failed. Trying again...");
-            Serial.println(failed.c_str());
+            Serial.println(String("Connection to " + coindesk + " failed. Trying again..."));
             delay(500);
         } else {
-            // We now create a URI for the request
-            String url = "/v1/bpi/currentprice.json";
-
-            Serial.println("Requesting URL: " + url);
-
-            // This will send the request to the server
-            client.print("GET " + url + " HTTP/1.1\r\n" +
-                         "host: " + host.c_str() + "\r\n" +
-                         "Connection: close\r\n\r\n");
+            client.println("GET /v1/bpi/currentprice/USD.json HTTP/1.1\r\nhost: api.coindesk.com\n\nConnection: close\r\n\r\n");
+            client.println();
+            
             delay(500);
 
             // Read all the lines of the reply from server and print them to Serial
@@ -199,8 +162,10 @@ int getBitcoinPrice(const std::string& host)
             String jsonAnswer;
             int jsonIndex;
 
-            for (int i = 0; i < answer.length(); i++) {
-                if (answer[i] == '{') {
+            for (int i = 0; i < answer.length(); i++)
+            {
+                if (answer[i] == '{')
+                {
                     jsonIndex = i;
                     break;
                 }
@@ -242,29 +207,29 @@ unsigned long webUnixTime ()
 
     // Just choose any reasonably busy web server, the load is really low
     if (client.connect("g.cn", 80))
-        {
+    {
             // Make an HTTP 1.1 request which is missing a Host: header
             // compliant servers are required to answer with an error that includes
             // a Date: header.
             client.print(F("GET / HTTP/1.1 \r\n\r\n"));
 
-            char buf[5];			// temporary buffer for characters
+            char buf[5]; // temporary buffer for characters
             client.setTimeout(5000);
             if (client.find((char *)"\r\nDate: ") // look for Date: header
 	    && client.readBytes(buf, 5) == 5) // discard
 	{
-	    unsigned day = client.parseInt();	     // day
-	    client.readBytes(buf, 1);	     // discard
-	    client.readBytes(buf, 3);	     // month
-	    int year = client.parseInt();	     // year
-	    byte hour = client.parseInt();     // hour
+	    unsigned day = client.parseInt(); // day
+	    client.readBytes(buf, 1); // discard
+	    client.readBytes(buf, 3); // month
+	    int year = client.parseInt(); // year
+	    byte hour = client.parseInt(); // hour
 	    byte minute = client.parseInt(); // minute
 	    byte second = client.parseInt(); // second
 
 	    int daysInPrevMonths;
 	    switch (buf[0])
 	        {
-	        case 'F': daysInPrevMonths =    31; break; // Feb
+	        case 'F': daysInPrevMonths = 31; break; // Feb
 	        case 'S': daysInPrevMonths = 243; break; // Sep
 	        case 'O': daysInPrevMonths = 273; break; // Oct
 	        case 'N': daysInPrevMonths = 304; break; // Nov
@@ -304,3 +269,103 @@ unsigned long webUnixTime ()
 
     return time;
 }
+
+void printWifiStatus() {
+  // print the SSID of the network you're attached to:
+  Serial.print("SSID: ");
+  Serial.println(WiFi.SSID());
+
+  // print your WiFi shield's IP address:
+  IPAddress ip = WiFi.localIP();
+  Serial.print("IP Address: ");
+  Serial.println(ip);
+
+  // print the received signal strength:
+  long rssi = WiFi.RSSI();
+  Serial.print("signal strength (RSSI):");
+  Serial.print(rssi);
+  Serial.println(" dBm");
+}
+
+// send an NTP request to the time server at the given address
+unsigned long networkTime()
+{
+    WiFiUDP udp; // A UDP instance to let us send and receive packets over UDP
+    IPAddress timeServer(129, 6, 15, 28); // time.nist.gov NTP server
+    const int NTP_PACKET_SIZE = 48; // NTP time stamp is in the first 48 bytes of the message
+    byte packetBuffer[NTP_PACKET_SIZE]; //buffer to hold incoming and outgoing packets
+
+    memset(packetBuffer, 0, NTP_PACKET_SIZE); // set all bytes in the buffer to 0
+    // Initialize values needed to form NTP request
+    packetBuffer[0] = 0b11100011;     // LI, Version, Mode
+    packetBuffer[1] = 0;         // Stratum, or type of clock
+    packetBuffer[2] = 6;         // Polling Interval
+    packetBuffer[3] = 0xEC;    // Peer Clock Precision
+    // 8 bytes of zero for Root Delay & Root Dispersion
+    packetBuffer[12] = 49;
+    packetBuffer[13] = 0x4E;
+    packetBuffer[14] = 49;
+    packetBuffer[15] = 52;
+
+    // all NTP fields have been given values
+    // now you can send a packet requesting a timestamp:
+    udp.begin(udpLocalPort);
+    while (udp.parsePacket() > 0); // discard any previously received packets
+    udp.beginPacket(timeServer, 123); //NTP requests are to port 123
+    udp.write(packetBuffer, NTP_PACKET_SIZE);
+    udp.endPacket();
+
+    delay(1000);
+    if (udp.parsePacket())
+    {
+        Serial.println("packet received");
+        // We've received a packet, read the data from it
+        udp.read(packetBuffer, NTP_PACKET_SIZE); // read the packet into the buffer
+
+        //the timestamp starts at byte 40 of the received packet and is four bytes,
+        // or two words, long. First, extract the two words:
+
+        unsigned long highWord = word(packetBuffer[40], packetBuffer[41]);
+        unsigned long lowWord = word(packetBuffer[42], packetBuffer[43]);
+        // combine the four bytes (two words) into a long integer
+        // this is NTP time (seconds since Jan 1 1900):
+        unsigned long secsSince1900 = highWord << 16 | lowWord;
+        Serial.print("Seconds since Jan 1 1900 = ");
+        Serial.println(secsSince1900);
+
+        // now convert NTP time into everyday time:
+        Serial.print("Unix time = ");
+        // Unix time starts on Jan 1 1970. In seconds, that's 2208988800:
+        const unsigned long seventyYears = 2208988800UL;
+        // subtract seventy years:
+        unsigned long epoch = secsSince1900 - seventyYears;
+        // print Unix time:
+        Serial.println(epoch);
+
+
+        // print the hour, minute and second:
+        Serial.print("The UTC time is "); // UTC is the time at Greenwich Meridian (GMT)
+        Serial.print((epoch % 86400L) / 3600); // print the hour (86400 equals secs per day)
+        Serial.print(':');
+        if (((epoch % 3600) / 60) < 10)
+        {
+            // In the first 10 minutes of each hour, we'll want a leading '0'
+            Serial.print('0');
+        }
+        Serial.print((epoch % 3600) / 60); // print the minute (3600 equals secs per minute)
+        Serial.print(':');
+        if ((epoch % 60) < 10)
+        {
+            // In the first 10 seconds of each minute, we'll want a leading '0'
+            Serial.print('0');
+        }
+        Serial.println(epoch % 60); // print the second
+    }
+}
+
+/*
+VFD::VFD()
+{
+    mySerial = SoftwareSerial(D0,D1); //rx,tx
+}
+*/
