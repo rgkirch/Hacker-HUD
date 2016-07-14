@@ -22,6 +22,7 @@ String networkTime();
 void connectToWifi(const char ssid[], const char password[]);
 int getBitcoinPrice();
 unsigned long webUnixTime();
+void printWifiStatus(Stream& stream);
 
 class VFD
 {
@@ -51,6 +52,9 @@ void setup()
     vfdDisplay->print("WiFi IP");
     vfdDisplay->newline();
     vfdDisplay->print(WiFi.localIP());
+    delay(1000);
+    Serial.println("serial stream test print");
+    printWifiStatus(Serial);
     delay(1000);
 }
 
@@ -203,21 +207,21 @@ unsigned long webUnixTime()
     return time;
 }
 
-void printWifiStatus() {
+void printWifiStatus(Stream& stream) {
   // print the SSID of the network you're attached to:
-  Serial.print("SSID: ");
-  Serial.println(WiFi.SSID());
+  stream.print("SSID: ");
+  stream.println(WiFi.SSID());
 
   // print your WiFi shield's IP address:
   IPAddress ip = WiFi.localIP();
-  Serial.print("IP Address: ");
-  Serial.println(ip);
+  stream.print("IP Address: ");
+  stream.println(ip);
 
   // print the received signal strength:
   long rssi = WiFi.RSSI();
-  Serial.print("signal strength (RSSI):");
-  Serial.print(rssi);
-  Serial.println(" dBm");
+  stream.print("signal strength (RSSI):");
+  stream.print(rssi);
+  stream.println(" dBm");
 }
 
 // send an NTP request to the time server at the given address
