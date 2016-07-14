@@ -18,50 +18,39 @@
 // global variables first
 const int httpPort = 80;
 
-//NTP BS -------------------------------------
 char networkSSID[] = "HellSpot Slow"; //    your network SSID (name)
 char networkPassword[] = "ILikeWiFi"; // your network password
-//WiFiUDP udp; // A UDP instance to let us send and receive packets over UDP
 const unsigned int udpLocalPort = 2390; // local port to listen for UDP packets
-enum VFD {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
-//int keyIndex = 0; // your network key Index number (needed only for WEP)
-//const String timeServer("time.nist.gov"); // time.nist.gov NTP server
-/*
-const int NTP_PACKET_SIZE = 48;
-byte sendBuffer[] = {
-  0b11100011,          // LI, Version, Mode.
-  0x0,                 // Stratum unspecified.
-  0x6,                 // Polling interval
-  0xEC,                // Clock precision.
-  0x0, 0x0, 0x0, 0x0}; // Reference ...
-*/
-
-
-// WiFi settings -----------------------------
-//const String ssid("HellSpot Slow");
-//const String password("ILikeWiFi");
-
 
 // function declarations second
 String networkTime();
 void connectToWifi(const String& ssid, const String& password);
 int getBitcoinPrice();
 unsigned long webUnixTime();
-void vfd();
 
-SoftwareSerial vfdDisplay(D0,D1); //rx,tx
+class VFD()
+{
+public:
+    VFD();
+    template <typename T>
+    void print(T&);
+    void write(int);
+    void clear();
+private:
+    SoftwareSerial vfdDisplay; //rx,tx
+    enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
+};
+
+VFD* vfdDisplay;
 
 void setup()
 {
     // Serial
     Serial.begin(115200);
     while(!Serial);
-    vfdDisplay.begin(19200); // for VFD
-    while(!vfdDisplay);
-    vfdDisplay.write(VFD::DEFAULTCHARSET);
-    vfdDisplay.write(VFD::CLEAR);
-    vfdDisplay.write(VFD::FORMFEED);
-    vfdDisplay.print("VFD Display code V1");
+    vfdDisplay = new VFD();
+    vfdDisplay->clear();
+    vfdDisplay->print("VFD Display code V1");
     delay(1000);
 
     connectToWifi(networkSSID, networkPassword);
@@ -70,28 +59,21 @@ void setup()
 void loop()
 {
     //Serial.println("max attempt connection " + WL_MAX_ATTEMPT_CONNECTION);
-    vfd();
-}
-
-void vfd()
-{
     // bitcoin price
     int price = getBitcoinPrice();
     Serial.print("Bitcoin price: ");
     Serial.println(price);
-    vfdDisplay.write(VFD::CLEAR);
-    vfdDisplay.write(VFD::FORMFEED);
-    vfdDisplay.print("Bitcoin $: ");
-    vfdDisplay.print(price);
+    vfdDisplay->clear();
+    vfdDisplay->print("Bitcoin $: ");
+    vfdDisplay->print(price);
     delay(4000);
 
     // time
     String time = networkTime();
     Serial.println(time);
-    vfdDisplay.write(VFD::CLEAR);
-    vfdDisplay.write(VFD::FORMFEED);
-    vfdDisplay.print("Time: ");
-    vfdDisplay.print(time);
+    vfdDisplay->clear();
+    vfdDisplay->print("Time: ");
+    vfdDisplay->print(time);
     delay(4000);
 }
 
@@ -329,6 +311,30 @@ String networkTime()
         return time;
     }
     return "for a better clock";
+}
+
+VFD::VFD()
+{
+    vfdDisplay = SoftwareSerial(D0,D1); //rx,tx
+    vfdDisplay.begin(19200);
+    while(!vfdDisplay);
+}
+
+template <typename T>
+void VFD::print(T& value)
+{
+    vfdDisplay.print(value);
+}
+
+void VFD::write(int value)
+{
+    vfdDisplay.write(value);
+}
+
+void VFD::clear()
+{
+    vfdDisplay.write(14);
+    vfdDisplay.write(12);
 }
 
 //8 Move Cursor Left (backspace)
