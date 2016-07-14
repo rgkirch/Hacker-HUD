@@ -7,16 +7,19 @@
 
 #include <SPI.h>
 
+//#define WL_MAX_ATTEMPT_CONNECTION 10
+//#define WL_DELAY_START_CONNECTION 5000
+
 // global variables first
 const int httpPort = 80;
 
-char networkSSID[] = "HellSpot Slow"; //    your network SSID (name)
-char networkPassword[] = "ILikeWiFi"; // your network password
+String networkSSID = "HellSpot Slow"; //    your network SSID (name)
+String networkPassword = "ILikeWiFi"; // your network password
 const unsigned int udpLocalPort = 2390; // local port to listen for UDP packets
 
 // function declarations second
 String networkTime();
-void connectToWifi(const String& ssid, const String& password);
+void connectToWifi(const char ssid[], const char password[]);
 int getBitcoinPrice();
 unsigned long webUnixTime();
 
@@ -25,9 +28,10 @@ class VFD
 public:
     VFD();
     template <typename T>
-    void print(T&);
+    void print(T);
     void write(int);
     void clear();
+    void newline();
 private:
     SoftwareSerial* vfdDisplay;
     enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
@@ -42,10 +46,12 @@ void setup()
     while(!Serial);
     vfdDisplay = new VFD();
     vfdDisplay->clear();
-    vfdDisplay->print("VFD Display code V1");
+    connectToWifi(networkSSID.c_str(), networkPassword.c_str());
+    vfdDisplay->clear();
+    vfdDisplay->print("WiFi IP");
+    vfdDisplay->newline();
+    vfdDisplay->print(WiFi.localIP());
     delay(1000);
-
-    connectToWifi(networkSSID, networkPassword);
 }
 
 void loop()
@@ -69,22 +75,17 @@ void loop()
     delay(4000);
 }
 
-void connectToWifi(const String& ssid, const String& password)
+void connectToWifi(const char ssid[], const char password[])
 {
-    int delayTime = 200;
+    WiFi.begin(ssid, password);
     while (WiFi.status() != WL_CONNECTED)
     {
-        WiFi.begin(ssid.c_str(), password.c_str());
-        delay(delayTime);
+        delay(500);
         Serial.print(".");
-        if(delayTime < 5000)
-        {
-            delayTime *= 2;
-        }
     }
     Serial.println();
     Serial.println("WiFi connected");
-    Serial.println("IP address: ");
+    Serial.print("IP address: ");
     Serial.println(WiFi.localIP());
 }
 
@@ -313,7 +314,7 @@ VFD::VFD()
 }
 
 template <typename T>
-void VFD::print(T& value)
+void VFD::print(T value)
 {
     vfdDisplay->print(value);
 }
@@ -327,6 +328,11 @@ void VFD::clear()
 {
     vfdDisplay->write(e::CLEAR);
     vfdDisplay->write(e::FORMFEED);
+}
+void VFD::newline()
+{
+    vfdDisplay->write(e::LINEFEED);
+    vfdDisplay->write(e::CARRIAGERETURN);
 }
 
 //8 Move Cursor Left (backspace)
