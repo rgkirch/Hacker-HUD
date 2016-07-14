@@ -23,6 +23,7 @@ char networkSSID[] = "HellSpot Slow"; //    your network SSID (name)
 char networkPassword[] = "ILikeWiFi"; // your network password
 //WiFiUDP udp; // A UDP instance to let us send and receive packets over UDP
 const unsigned int udpLocalPort = 2390; // local port to listen for UDP packets
+enum VFD {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
 //int keyIndex = 0; // your network key Index number (needed only for WEP)
 //const String timeServer("time.nist.gov"); // time.nist.gov NTP server
 /*
@@ -42,64 +43,56 @@ byte sendBuffer[] = {
 
 
 // function declarations second
-unsigned long networkTime();
+String networkTime();
 void connectToWifi(const String& ssid, const String& password);
 int getBitcoinPrice();
+unsigned long webUnixTime();
+void vfd();
 
-/*
-class VFD
-{
-public:
-    VFD(VFD&);
-    SoftwareSerial mySerial;
-private:
-    VFD();
-};
-*/
-
-    SoftwareSerial mySerial(D0,D1); //rx,tx
+SoftwareSerial vfdDisplay(D0,D1); //rx,tx
 
 void setup()
 {
     // Serial
     Serial.begin(115200);
-    while(!Serial); // /shrug
-    mySerial.begin(19200); // for VFD
-    delay(100);
+    while(!Serial);
+    vfdDisplay.begin(19200); // for VFD
+    while(!vfdDisplay);
+    vfdDisplay.write(VFD::DEFAULTCHARSET);
+    vfdDisplay.write(VFD::CLEAR);
+    vfdDisplay.write(VFD::FORMFEED);
+    vfdDisplay.print("VFD Display code V1");
+    delay(1000);
 
-    mySerial.write('\x0E');
-    mySerial.write('\x0C');
-
-    mySerial.print("VFD Display code V1");
-
-    mySerial.write('\x0E');
-    mySerial.write('\x0C');
-
-    delay(2000);
-
-    // Initialize display
-
-    // We start by connecting to a WiFi network
     connectToWifi(networkSSID, networkPassword);
 }
 
 void loop()
 {
+    //Serial.println("max attempt connection " + WL_MAX_ATTEMPT_CONNECTION);
+    vfd();
+}
+
+void vfd()
+{
     // bitcoin price
     int price = getBitcoinPrice();
-    Serial.print("Bitcoin price: " + getBitcoinPrice());
-    mySerial.write('\x0E');
-    mySerial.write('\x0C');
-    mySerial.print("Bitcoin $: ");
-    mySerial.print(price);
-    mySerial.print("    ");
-    // time
-    float time = networkTime();
-    Serial.println(time);
-    mySerial.print(time);
+    Serial.print("Bitcoin price: ");
+    Serial.println(price);
+    vfdDisplay.write(VFD::CLEAR);
+    vfdDisplay.write(VFD::FORMFEED);
+    vfdDisplay.print("Bitcoin $: ");
+    vfdDisplay.print(price);
+    delay(4000);
 
-    // Wait 5 seconds
-    delay(8000);
+    // time
+    String time = networkTime();
+    Serial.println(time);
+    vfdDisplay.write(VFD::CLEAR);
+    vfdDisplay.write(VFD::FORMFEED);
+    vfdDisplay.print("Time: ");
+    vfdDisplay.print(time);
+    delay(4000);
 }
 
 void connectToWifi(const String& ssid, const String& password)
@@ -125,53 +118,36 @@ int getBitcoinPrice()
 {
     const String coindesk("api.coindesk.com");
     // Connect to API
-    Serial.println("connecting to " + coindesk);
+    //Serial.println("connecting to " + coindesk);
 
     // Use WiFiClient class to create TCP connections
     WiFiClient client;
     int status = 0;
-    for(int i = 0; i < 4; ++i)
+    status = client.connect(coindesk.c_str(), httpPort);
+    if(!status)
     {
-        status = client.connect(coindesk.c_str(), httpPort);
-        if(!status)
-        {
-            Serial.println(String("Connection to " + coindesk + " failed. Trying again..."));
-            delay(500);
-        } else {
-            client.println("GET /v1/bpi/currentprice/USD.json HTTP/1.1\r\nhost: api.coindesk.com\n\nConnection: close\r\n\r\n");
-            client.println();
-            
-            delay(500);
+        Serial.println("Connection to " + coindesk + " failed. Trying again...");
+        delay(500);
+    } else {
+        client.println("GET /v1/bpi/currentprice/USD.json HTTP/1.1\r\nhost: api.coindesk.com\n\nConnection: close\r\n\r\n");
+        client.println();
+        
+        delay(500);
 
-            // Read all the lines of the reply from server and print them to Serial
-            String answer;
-            while(client.available())
-            {
-                String line = client.readStringUntil('\r');
-                answer += line;
-            }
-            client.stop();
-            // Convert to JSON
-            String jsonAnswer;
-            int jsonIndex;
-            for (int i = 0; i < answer.length(); i++)
-            {
-                if (answer[i] == '{')
-                {
-                    jsonIndex = i;
-                    break;
-                }
-            }
-            // Get JSON data
-            jsonAnswer = answer.substring(jsonIndex);
-            jsonAnswer.trim();
-            // Get rate as float
-            int rateIndex = jsonAnswer.indexOf("rate_float");
-            String priceString = jsonAnswer.substring(rateIndex + 12, rateIndex + 18);
-            priceString.trim();
-            float price = priceString.toFloat();
-            return price;
+        // Read all the lines of the reply from server and print them to Serial
+        String response;
+        while(client.available())
+        {
+            response += client.readStringUntil('\r');
         }
+        //Serial.println(response);
+        client.stop();
+        // Convert to JSON
+        int index = response.indexOf("rate_float");
+        String priceString = response.substring(index + 12, index + 18);
+        priceString.trim();
+        float price = priceString.toFloat();
+        return price;
     }
     return -1;
 }
@@ -182,7 +158,7 @@ int getBitcoinPrice()
  * Send an HTTP packet and wait for the response, return the Unix time
  */
 
-unsigned long webUnixTime ()
+unsigned long webUnixTime()
 {
     WiFiClient client;
     unsigned long time = 0;
@@ -270,7 +246,7 @@ void printWifiStatus() {
 }
 
 // send an NTP request to the time server at the given address
-unsigned long networkTime()
+String networkTime()
 {
     WiFiUDP udp; // A UDP instance to let us send and receive packets over UDP
     IPAddress timeServer(129, 6, 15, 28); // time.nist.gov NTP server
@@ -280,7 +256,7 @@ unsigned long networkTime()
     memset(packetBuffer, 0, NTP_PACKET_SIZE); // set all bytes in the buffer to 0
     // Initialize values needed to form NTP request
     packetBuffer[0] = 0b11100011;     // LI, Version, Mode
-    packetBuffer[1] = 0;         // Stratum, or type of clock
+    packetBuffer[1] = 3;         // Stratum, or type of clock
     packetBuffer[2] = 6;         // Polling Interval
     packetBuffer[3] = 0xEC;    // Peer Clock Precision
     // 8 bytes of zero for Root Delay & Root Dispersion
@@ -325,29 +301,48 @@ unsigned long networkTime()
         Serial.println(epoch);
 
 
+        String time;
         // print the hour, minute and second:
-        Serial.print("The UTC time is "); // UTC is the time at Greenwich Meridian (GMT)
-        Serial.print((epoch % 86400L) / 3600); // print the hour (86400 equals secs per day)
-        Serial.print(':');
+        //Serial.print("The UTC time is "); // UTC is the time at Greenwich Meridian (GMT)
+        //Serial.print((epoch % 86400L) / 3600); // print the hour (86400 equals secs per day)
+        time += ((epoch % 86400L) / 3600); // print the hour (86400 equals secs per day)
+        //Serial.print(':');
+        time += (':');
         if (((epoch % 3600) / 60) < 10)
         {
             // In the first 10 minutes of each hour, we'll want a leading '0'
-            Serial.print('0');
+            //Serial.print('0');
+            time += ('0');
         }
-        Serial.print((epoch % 3600) / 60); // print the minute (3600 equals secs per minute)
-        Serial.print(':');
+        //Serial.print((epoch % 3600) / 60); // print the minute (3600 equals secs per minute)
+        time += ((epoch % 3600) / 60); // print the minute (3600 equals secs per minute)
+        //Serial.print(':');
+        time += (':');
         if ((epoch % 60) < 10)
         {
             // In the first 10 seconds of each minute, we'll want a leading '0'
-            Serial.print('0');
+            //Serial.print('0');
+            time += ('0');
         }
-        Serial.println(epoch % 60); // print the second
+        //Serial.println(epoch % 60); // print the second
+        time += (epoch % 60); // print the second
+        return time;
     }
+    return "for a better clock";
 }
 
-/*
-VFD::VFD()
-{
-    mySerial = SoftwareSerial(D0,D1); //rx,tx
-}
-*/
+//8 Move Cursor Left (backspace)
+//9 	Move Cursor Right (tab)
+//10 	Move Cursor Down (linefeed)
+//12 	Move Cursor To Top Left (formfeed)
+//13 	Move Cursor To Line Start (carriage return)
+//14 	Clear Display
+//17 	Disable Scroll (default)
+//18 	Enable Scroll
+//20 	Cursor Off (default)
+//21 	Cursor On
+//22 	Cursor Off
+//23 	Cursor Off
+//25 	Enable Character Set 2
+//26 	Enable Character Set 1 (default)
+//27 - 255 	Display Visible ASCII Characters 
