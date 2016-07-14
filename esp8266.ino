@@ -1,16 +1,8 @@
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiAP.h>
-#include <ESP8266WiFiGeneric.h>
 #include <ESP8266WiFiMulti.h>
-#include <ESP8266WiFiSTA.h>
-#include <ESP8266WiFiScan.h>
-#include <ESP8266WiFiType.h>
 
 #include <ArduinoJson.h>
 #include <SoftwareSerial.h>
-#include <WiFiClient.h>
-#include <WiFiClientSecure.h>
-#include <WiFiServer.h>
 #include <WiFiUdp.h>
 
 #include <SPI.h>
@@ -28,7 +20,7 @@ void connectToWifi(const String& ssid, const String& password);
 int getBitcoinPrice();
 unsigned long webUnixTime();
 
-class VFD()
+class VFD
 {
 public:
     VFD();
@@ -37,7 +29,7 @@ public:
     void write(int);
     void clear();
 private:
-    SoftwareSerial vfdDisplay; //rx,tx
+    SoftwareSerial* vfdDisplay;
     enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
 };
 
@@ -315,26 +307,26 @@ String networkTime()
 
 VFD::VFD()
 {
-    vfdDisplay = SoftwareSerial(D0,D1); //rx,tx
-    vfdDisplay.begin(19200);
+    vfdDisplay = new SoftwareSerial(D0,D1); //rx,tx
+    vfdDisplay->begin(19200);
     while(!vfdDisplay);
 }
 
 template <typename T>
 void VFD::print(T& value)
 {
-    vfdDisplay.print(value);
+    vfdDisplay->print(value);
 }
 
 void VFD::write(int value)
 {
-    vfdDisplay.write(value);
+    vfdDisplay->write(value);
 }
 
 void VFD::clear()
 {
-    vfdDisplay.write(14);
-    vfdDisplay.write(12);
+    vfdDisplay->write(e::CLEAR);
+    vfdDisplay->write(e::FORMFEED);
 }
 
 //8 Move Cursor Left (backspace)
