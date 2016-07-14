@@ -6,6 +6,7 @@
 #include <WiFiUdp.h>
 
 #include <SPI.h>
+#include <string>
 
 //#define WL_MAX_ATTEMPT_CONNECTION 10
 //#define WL_DELAY_START_CONNECTION 5000
@@ -22,7 +23,17 @@ String networkTime();
 void connectToWifi(const char ssid[], const char password[]);
 int getBitcoinPrice();
 unsigned long webUnixTime();
-void printWifiStatus(Stream& stream);
+void printWifiStatus(Print& stream);
+
+class Buffer : public Print
+{
+public:
+    size_t write(uint8_t);
+    operator String();
+private:
+    String buffer;
+};
+// void print(arg) {_buffer += args}
 
 class VFD : public SoftwareSerial
 {
@@ -30,6 +41,10 @@ public:
     VFD(uint8_t receivePin, uint8_t transmitPin) : SoftwareSerial(receivePin, transmitPin) {}
     void clear();
     void newline();
+    void slowprint(String);
+    void enableScroll();
+    void disableScroll();
+    // void slowprint(arg) {delay(100); printchar();}
 private:
     enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
 };
@@ -53,7 +68,9 @@ void setup()
     delay(1000);
     Serial.println("serial stream test print");
     printWifiStatus(Serial);
-    printWifiStatus(vfd);
+    Buffer buffer;
+    printWifiStatus(buffer);
+    vfd.slowprint(buffer);
     delay(5000);
 }
 
@@ -206,7 +223,7 @@ unsigned long webUnixTime()
     return time;
 }
 
-void printWifiStatus(Stream& stream) {
+void printWifiStatus(Print& stream) {
   // print the SSID of the network you're attached to:
   stream.print("SSID: ");
   stream.println(WiFi.SSID());
@@ -318,6 +335,38 @@ void VFD::newline()
 {
     write(e::LINEFEED);
     write(e::CARRIAGERETURN);
+}
+
+void VFD::enableScroll()
+{
+    write(e::ENABLESCROLL);
+}
+
+void VFD::disableScroll()
+{
+    write(e::DISABLESCROLL);
+}
+
+void VFD::slowprint(String string)
+{
+    enableScroll();
+    for(int i = 0; i < string.length(); ++i)
+    {
+        print(string[i]);
+        delay(100);
+    }
+    disableScroll();
+}
+
+size_t Buffer::write(uint8_t i)
+{
+    buffer += (char)i;
+    return 1;
+}
+
+Buffer::operator String()
+{
+    return buffer;
 }
 
 //8 Move Cursor Left (backspace)
