@@ -225,6 +225,7 @@ unsigned long webUnixTime()
 
 void printWifiStatus(Print& stream) {
   // print the SSID of the network you're attached to:
+  stream.println();
   stream.print("SSID: ");
   stream.println(WiFi.SSID());
 
