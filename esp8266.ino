@@ -24,38 +24,37 @@ int getBitcoinPrice();
 unsigned long webUnixTime();
 void printWifiStatus(Stream& stream);
 
-class VFD
+class VFD : public SoftwareSerial
 {
 public:
-    VFD();
-    template <typename T>
-    void print(T);
-    void write(int);
+    VFD(uint8_t receivePin, uint8_t transmitPin) : SoftwareSerial(receivePin, transmitPin) {}
     void clear();
     void newline();
 private:
-    SoftwareSerial* vfdDisplay;
     enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
 };
 
-VFD* vfdDisplay;
+VFD vfd(D0, D1);
 
 void setup()
 {
     // Serial
     Serial.begin(115200);
     while(!Serial);
-    vfdDisplay = new VFD();
-    vfdDisplay->clear();
+    //vfd = new VFD(D0,D1); //rx,tx;
+    vfd.begin(19200);
+    while(!vfd);
+    vfd.clear();
     connectToWifi(networkSSID.c_str(), networkPassword.c_str());
-    vfdDisplay->clear();
-    vfdDisplay->print("WiFi IP");
-    vfdDisplay->newline();
-    vfdDisplay->print(WiFi.localIP());
+    vfd.clear();
+    vfd.print("WiFi IP");
+    vfd.newline();
+    vfd.print(WiFi.localIP());
     delay(1000);
     Serial.println("serial stream test print");
     printWifiStatus(Serial);
-    delay(1000);
+    printWifiStatus(vfd);
+    delay(5000);
 }
 
 void loop()
@@ -65,17 +64,17 @@ void loop()
     int price = getBitcoinPrice();
     Serial.print("Bitcoin price: ");
     Serial.println(price);
-    vfdDisplay->clear();
-    vfdDisplay->print("Bitcoin $: ");
-    vfdDisplay->print(price);
+    vfd.clear();
+    vfd.print("Bitcoin $: ");
+    vfd.print(price);
     delay(4000);
 
     // time
     String time = networkTime();
     Serial.println(time);
-    vfdDisplay->clear();
-    vfdDisplay->print("Time: ");
-    vfdDisplay->print(time);
+    vfd.clear();
+    vfd.print("Time: ");
+    vfd.print(time);
     delay(4000);
 }
 
@@ -310,33 +309,15 @@ String networkTime()
     return "for a better clock";
 }
 
-VFD::VFD()
-{
-    vfdDisplay = new SoftwareSerial(D0,D1); //rx,tx
-    vfdDisplay->begin(19200);
-    while(!vfdDisplay);
-}
-
-template <typename T>
-void VFD::print(T value)
-{
-    vfdDisplay->print(value);
-}
-
-void VFD::write(int value)
-{
-    vfdDisplay->write(value);
-}
-
 void VFD::clear()
 {
-    vfdDisplay->write(e::CLEAR);
-    vfdDisplay->write(e::FORMFEED);
+    write(e::CLEAR);
+    write(e::FORMFEED);
 }
 void VFD::newline()
 {
-    vfdDisplay->write(e::LINEFEED);
-    vfdDisplay->write(e::CARRIAGERETURN);
+    write(e::LINEFEED);
+    write(e::CARRIAGERETURN);
 }
 
 //8 Move Cursor Left (backspace)
