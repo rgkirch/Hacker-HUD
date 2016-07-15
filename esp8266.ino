@@ -25,27 +25,21 @@ int getBitcoinPrice();
 unsigned long webUnixTime();
 void printWifiStatus(Print& stream);
 
-class Buffer : public Print
-{
-public:
-    size_t write(uint8_t);
-    operator String();
-private:
-    String buffer;
-};
-// void print(arg) {_buffer += args}
-
 class VFD : public SoftwareSerial
 {
 public:
-    VFD(uint8_t receivePin, uint8_t transmitPin) : SoftwareSerial(receivePin, transmitPin) {}
+    VFD(uint8_t receivePin, uint8_t transmitPin) : SoftwareSerial(receivePin, transmitPin), delayTime(0) {}
+    size_t write(uint8_t);
     void clear();
     void newline();
     void slowprint(String);
     void enableScroll();
     void disableScroll();
+    void setPrintSpeed(int);
+    void setCharacterPrintDelay(int);
     // void slowprint(arg) {delay(100); printchar();}
 private:
+    int delayTime;
     enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
 };
 
@@ -68,9 +62,10 @@ void setup()
     delay(1000);
     Serial.println("serial stream test print");
     printWifiStatus(Serial);
-    Buffer buffer;
-    printWifiStatus(buffer);
-    vfd.slowprint(buffer);
+    vfd.enableScroll();
+    vfd.setPrintSpeed(10);
+    printWifiStatus(vfd);
+    vfd.setCharacterPrintDelay(0);
     delay(5000);
 }
 
@@ -126,7 +121,7 @@ int getBitcoinPrice()
     } else {
         client.println("GET /v1/bpi/currentprice/USD.json HTTP/1.1\r\nhost: api.coindesk.com\n\nConnection: close\r\n\r\n");
         client.println();
-        
+
         delay(500);
 
         // Read all the lines of the reply from server and print them to Serial
@@ -161,61 +156,60 @@ unsigned long webUnixTime()
     // Just choose any reasonably busy web server, the load is really low
     if (client.connect("g.cn", 80))
     {
-            // Make an HTTP 1.1 request which is missing a Host: header
-            // compliant servers are required to answer with an error that includes
-            // a Date: header.
-            client.print(F("GET / HTTP/1.1 \r\n\r\n"));
+        // Make an HTTP 1.1 request which is missing a Host: header
+        // compliant servers are required to answer with an error that includes
+        // a Date: header.
+        client.print(F("GET / HTTP/1.1 \r\n\r\n"));
 
-            char buf[5]; // temporary buffer for characters
-            client.setTimeout(5000);
-            if (client.find((char *)"\r\nDate: ") // look for Date: header
-	    && client.readBytes(buf, 5) == 5) // discard
-	{
-	    unsigned day = client.parseInt(); // day
-	    client.readBytes(buf, 1); // discard
-	    client.readBytes(buf, 3); // month
-	    int year = client.parseInt(); // year
-	    byte hour = client.parseInt(); // hour
-	    byte minute = client.parseInt(); // minute
-	    byte second = client.parseInt(); // second
+        char buf[5]; // temporary buffer for characters
+        client.setTimeout(5000);
+        if(client.find((char *)"\r\nDate: ") && client.readBytes(buf, 5) == 5) // look for Date: header; discard
+        {
+            unsigned day = client.parseInt(); // day
+            client.readBytes(buf, 1); // discard
+            client.readBytes(buf, 3); // month
+            int year = client.parseInt(); // year
+            byte hour = client.parseInt(); // hour
+            byte minute = client.parseInt(); // minute
+            byte second = client.parseInt(); // second
 
-	    int daysInPrevMonths;
-	    switch (buf[0])
-	        {
-	        case 'F': daysInPrevMonths = 31; break; // Feb
-	        case 'S': daysInPrevMonths = 243; break; // Sep
-	        case 'O': daysInPrevMonths = 273; break; // Oct
-	        case 'N': daysInPrevMonths = 304; break; // Nov
-	        case 'D': daysInPrevMonths = 334; break; // Dec
-	        default:
-	            if (buf[0] == 'J' && buf[1] == 'a')
-		daysInPrevMonths = 0;		// Jan
-	            else if (buf[0] == 'A' && buf[1] == 'p')
-		daysInPrevMonths = 90;		// Apr
-	            else switch (buf[2])
-		         {
-		         case 'r': daysInPrevMonths =    59; break; // Mar
-		         case 'y': daysInPrevMonths = 120; break; // May
-		         case 'n': daysInPrevMonths = 151; break; // Jun
-		         case 'l': daysInPrevMonths = 181; break; // Jul
-		         default: // add a default label here to avoid compiler warning
-		         case 'g': daysInPrevMonths = 212; break; // Aug
-		         }
-	        }
+            int daysInPrevMonths;
+            switch (buf[0])
+            {
+                case 'F': daysInPrevMonths = 31; break; // Feb
+                case 'S': daysInPrevMonths = 243; break; // Sep
+                case 'O': daysInPrevMonths = 273; break; // Oct
+                case 'N': daysInPrevMonths = 304; break; // Nov
+                case 'D': daysInPrevMonths = 334; break; // Dec
+                default:
+                if (buf[0] == 'J' && buf[1] == 'a')
+        daysInPrevMonths = 0;		// Jan
+                else if (buf[0] == 'A' && buf[1] == 'p')
+        daysInPrevMonths = 90;		// Apr
+                else switch (buf[2])
+                {
+                case 'r': daysInPrevMonths =    59; break; // Mar
+                case 'y': daysInPrevMonths = 120; break; // May
+                case 'n': daysInPrevMonths = 151; break; // Jun
+                case 'l': daysInPrevMonths = 181; break; // Jul
+                default: // add a default label here to avoid compiler warning
+                case 'g': daysInPrevMonths = 212; break; // Aug
+                }
+            }
 
-	    // This code will not work after February 2100
-	    // because it does not account for 2100 not being a leap year and because
-	    // we use the day variable as accumulator, which would overflow in 2149
-	    day += (year - 1970) * 365;	// days from 1970 to the whole past year
-	    day += (year - 1969) >> 2;	// plus one day per leap year
-	    day += daysInPrevMonths;	// plus days for previous months this year
-	    if (daysInPrevMonths >= 59	// if we are past February
-	            && ((year & 3) == 0))	// and this is a leap year
-	        day += 1;			// add one day
-	    // Remove today, add hours, minutes and seconds this month
-	    time = (((day-1ul) * 24 + hour) * 60 + minute) * 60 + second;
-	}
+            // This code will not work after February 2100
+            // because it does not account for 2100 not being a leap year and because
+            // we use the day variable as accumulator, which would overflow in 2149
+            day += (year - 1970) * 365;	// days from 1970 to the whole past year
+            day += (year - 1969) >> 2;	// plus one day per leap year
+            day += daysInPrevMonths;	// plus days for previous months this year
+            if (daysInPrevMonths >= 59	// if we are past February
+                    && ((year & 3) == 0))	// and this is a leap year
+                day += 1;			// add one day
+            // Remove today, add hours, minutes and seconds this month
+            time = (((day-1ul) * 24 + hour) * 60 + minute) * 60 + second;
         }
+    }
     delay(10);
     client.flush();
     client.stop();
@@ -231,12 +225,12 @@ void printWifiStatus(Print& stream) {
 
   // print your WiFi shield's IP address:
   IPAddress ip = WiFi.localIP();
-  stream.print("IP Address: ");
+  stream.print("IP: ");
   stream.println(ip);
 
   // print the received signal strength:
   long rssi = WiFi.RSSI();
-  stream.print("signal strength (RSSI):");
+  stream.print("RSSI:");
   stream.print(rssi);
   stream.println(" dBm");
 }
@@ -327,6 +321,15 @@ String networkTime()
     return "for a better clock";
 }
 
+size_t VFD::write(uint8_t b)
+{
+    if(delayTime > 0)
+    {
+        delay(delayTime);
+    }
+    return SoftwareSerial::write(b);
+}
+
 void VFD::clear()
 {
     write(e::CLEAR);
@@ -350,25 +353,28 @@ void VFD::disableScroll()
 
 void VFD::slowprint(String string)
 {
-    enableScroll();
     for(int i = 0; i < string.length(); ++i)
     {
         print(string[i]);
         delay(100);
     }
-    disableScroll();
+}
+void VFD::setPrintSpeed(int charsPerSecond)
+{
+    if(charsPerSecond > 0)
+    {
+        delayTime = 1000 / charsPerSecond;
+    }
+}
+void VFD::setCharacterPrintDelay(int time)
+{
+    if(time >= 0)
+    {
+        delayTime = time;
+    }
 }
 
-size_t Buffer::write(uint8_t i)
-{
-    buffer += (char)i;
-    return 1;
-}
-
-Buffer::operator String()
-{
-    return buffer;
-}
+//<p class="TweetTextSize TweetTextSize--26px js-tweet-text tweet-text" lang="en" data-aria-label-part="0">
 
 //8 Move Cursor Left (backspace)
 //9 	Move Cursor Right (tab)
@@ -384,4 +390,4 @@ Buffer::operator String()
 //23 	Cursor Off
 //25 	Enable Character Set 2
 //26 	Enable Character Set 1 (default)
-//27 - 255 	Display Visible ASCII Characters 
+//27 - 255 	Display Visible ASCII Characters
