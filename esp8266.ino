@@ -20,7 +20,7 @@ const unsigned int udpLocalPort = 2390; // local port to listen for UDP packets
 
 // function declarations second
 String networkTime();
-void connectToWifi(const char ssid[], const char password[]);
+void connectToWifi(const String& ssid, const String& password);
 int getBitcoinPrice();
 unsigned long webUnixTime();
 void printWifiStatus(Print& stream);
@@ -54,7 +54,7 @@ void setup()
     vfd.begin(19200);
     while(!vfd);
     vfd.clear();
-    connectToWifi(networkSSID.c_str(), networkPassword.c_str());
+    connectToWifi(networkSSID, networkPassword);
     vfd.clear();
     vfd.print("WiFi IP");
     vfd.newline();
@@ -90,9 +90,9 @@ void loop()
     delay(4000);
 }
 
-void connectToWifi(const char ssid[], const char password[])
+void connectToWifi(const String& ssid, const String& password)
 {
-    WiFi.begin(ssid, password);
+    WiFi.begin(ssid.c_str(), password.c_str());
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
