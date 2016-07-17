@@ -45,15 +45,12 @@ private:
     enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
 };
 
-class Memory
+namespace Memory
 {
-public:
-    static int    setSsid(const String& ssid);
-    static String getSsid();
-    static int    setNetworkPassword(const String& networkPassword);
-    static String getNetworkPassword();
-private:
-    Memory() = delete;
+    int    setSsid(const String& ssid);
+    String getSsid();
+    int    setNetworkPassword(const String& networkPassword);
+    String getNetworkPassword();
     enum e {SSID, NETWORKPASSWORD = 64};
 };
 
