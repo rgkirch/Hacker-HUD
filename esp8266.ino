@@ -1,12 +1,13 @@
 #include <ESP8266WiFi.h>
 #include <ESP8266WiFiMulti.h>
 
-#include <ArduinoJson.h>
 #include <SoftwareSerial.h>
 #include <WiFiUdp.h>
 
 #include <SPI.h>
-#include <string>
+#include <EEPROM.h>
+
+#include <tuple>
 
 //#define WL_MAX_ATTEMPT_CONNECTION 10
 //#define WL_DELAY_START_CONNECTION 5000
@@ -24,6 +25,7 @@ void connectToWifi(const String& ssid, const String& password);
 int getBitcoinPrice();
 unsigned long webUnixTime();
 void printWifiStatus(Print& stream);
+void printEspInfo();
 
 class VFD : public SoftwareSerial
 {
@@ -43,6 +45,22 @@ private:
     enum e {BACKSPACE = 8, TAB, LINEFEED, FORMFEED = 12, CARRIAGERETURN, CLEAR, DISABLESCROLL = 17, ENABLESCROLL, CURSOROFF = 20, CURSORON, ALTERNATECHARSET = 25, DEFAULTCHARSET};
 };
 
+class Memory
+{
+public:
+    static int    setSsid(const String& ssid);
+    static String getSsid();
+    static int    setNetworkPassword(const String& networkPassword);
+    static String getNetworkPassword();
+private:
+    Memory() = delete;
+    enum e {SSID, NETWORKPASSWORD = 64};
+};
+
+typedef char ssid[32];
+typedef char password[64];
+typedef std::tuple<ssid, password> connection;
+
 VFD vfd(D0, D1);
 
 void setup()
@@ -53,45 +71,62 @@ void setup()
     //vfd = new VFD(D0,D1); //rx,tx;
     vfd.begin(19200);
     while(!vfd);
+
     vfd.clear();
     connectToWifi(networkSSID, networkPassword);
+
     vfd.clear();
     vfd.print("WiFi IP");
     vfd.newline();
     vfd.print(WiFi.localIP());
+
     delay(1000);
-    Serial.println("serial stream test print");
-    printWifiStatus(Serial);
-    vfd.enableScroll();
+
+    //printWifiStatus(Serial);
+    //vfd.enableScroll();
+    //vfd.setPrintSpeed(10);
+    //printWifiStatus(vfd);
+    //vfd.setCharacterPrintDelay(0);
+
     vfd.setPrintSpeed(10);
-    printWifiStatus(vfd);
-    vfd.setCharacterPrintDelay(0);
-    delay(5000);
+    Memory::setSsid(networkSSID);
+    Memory::setNetworkPassword(networkPassword);
 }
 
 void loop()
 {
     //Serial.println("max attempt connection " + WL_MAX_ATTEMPT_CONNECTION);
     // bitcoin price
-    int price = getBitcoinPrice();
-    Serial.print("Bitcoin price: ");
-    Serial.println(price);
-    vfd.clear();
-    vfd.print("Bitcoin $: ");
-    vfd.print(price);
-    delay(4000);
+    if(0)
+    {
+        int price = getBitcoinPrice();
+        Serial.print("Bitcoin price: ");
+        Serial.println(price);
+        vfd.clear();
+        vfd.print("Bitcoin $: ");
+        vfd.print(price);
+        delay(4000);
 
-    // time
-    String time = networkTime();
-    Serial.println(time);
-    vfd.clear();
-    vfd.print("Time: ");
-    vfd.print(time);
-    delay(4000);
+        // time
+        String time = networkTime();
+        Serial.println(time);
+        vfd.clear();
+        vfd.print("Time: ");
+        vfd.print(time);
+        delay(4000);
+    }
+    vfd.print(Memory::getSsid());
+    Serial.print(Memory::getSsid());
+    vfd.print(Memory::getNetworkPassword());
+    Serial.print(Memory::getNetworkPassword());
 }
 
 void connectToWifi(const String& ssid, const String& password)
 {
+    if(!ssid)
+    {}
+    if(!password)
+    {}
     WiFi.begin(ssid.c_str(), password.c_str());
     while (WiFi.status() != WL_CONNECTED)
     {
@@ -359,6 +394,7 @@ void VFD::slowprint(String string)
         delay(100);
     }
 }
+
 void VFD::setPrintSpeed(int charsPerSecond)
 {
     if(charsPerSecond > 0)
@@ -366,6 +402,7 @@ void VFD::setPrintSpeed(int charsPerSecond)
         delayTime = 1000 / charsPerSecond;
     }
 }
+
 void VFD::setCharacterPrintDelay(int time)
 {
     if(time >= 0)
@@ -374,7 +411,88 @@ void VFD::setCharacterPrintDelay(int time)
     }
 }
 
+int Memory::setSsid(const String& ssid)
+{
+    EEPROM.begin(512);
+    if(ssid.length() > 64)
+    {
+        return -1;
+    }
+    if(ssid.indexOf('\0') != -1) // string can't have null in it
+    {
+        return -1;
+    }
+    for(int i = 0; i < ssid.length(); ++i)
+    {
+        EEPROM.write(e::SSID + i, ssid[i]);
+    }
+    EEPROM.write(e::SSID + ssid.length(), '\0');
+    EEPROM.commit();
+}
+
+String Memory::getSsid()
+{
+    EEPROM.begin(512);
+    String ssid;
+    char c;
+    for(int i = e::SSID; (c = EEPROM.read(i)) != '\0' && i < 64; ++i)
+    {
+        ssid += (char)c;
+    }
+    return ssid;
+}
+
+int Memory::setNetworkPassword(const String& networkPassword)
+{
+    EEPROM.begin(512);
+    if(networkPassword.length() > 64)
+    {
+        return -1;
+    }
+    if(networkPassword.indexOf('\0') != -1) // string can't have null in it
+    {
+        return -1;
+    }
+    for(int i = 0; i < networkPassword.length(); ++i)
+    {
+        EEPROM.write(e::NETWORKPASSWORD + i, networkPassword[i]);
+    }
+    EEPROM.write(e::NETWORKPASSWORD + networkPassword.length(), '\0');
+    EEPROM.commit();
+}
+
+String Memory::getNetworkPassword()
+{
+    EEPROM.begin(512);
+    String networkPassword;
+    char c;
+    for(int i = e::NETWORKPASSWORD; (c = EEPROM.read(i)) != '\0' && i < 64; ++i)
+    {
+        networkPassword += (char)c;
+    }
+    return networkPassword;
+}
+
+void printEspInfo()
+{
+    Serial.println(ESP.getVcc());
+    Serial.println(ESP.getFreeHeap());
+    Serial.println(ESP.getChipId());
+    Serial.println(ESP.getSdkVersion());
+    Serial.println(ESP.getCoreVersion());
+    Serial.println(ESP.getBootVersion());
+    Serial.println(ESP.getBootMode());
+    Serial.println(ESP.getCpuFreqMHz());
+    Serial.println(ESP.getFlashChipId());
+    Serial.println(ESP.getFlashChipRealSize()); //gets the actual chip size based on the flash id
+    Serial.println(ESP.getFlashChipSize()); //gets the size of the flash as set by the compiler
+    Serial.println(ESP.getFlashChipSpeed());
+    Serial.println(ESP.getFlashChipMode());
+    Serial.println(ESP.getFlashChipSizeByChipId());
+}
+
 //<p class="TweetTextSize TweetTextSize--26px js-tweet-text tweet-text" lang="en" data-aria-label-part="0">
+//http://www.esp8266.com/wiki/doku.php?id=ota-over-the-air-esp8266
 
 //8 Move Cursor Left (backspace)
 //9 	Move Cursor Right (tab)
