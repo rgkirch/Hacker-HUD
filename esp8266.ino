@@ -2,7 +2,9 @@
 #include <ESP8266WiFiMulti.h>
 
 #include <SoftwareSerial.h>
+#include <ESP8266mDNS.h>
 #include <WiFiUdp.h>
+#include <ArduinoOTA.h>
 
 #include <SPI.h>
 #include <EEPROM.h>
@@ -21,11 +23,13 @@ const unsigned int udpLocalPort = 2390; // local port to listen for UDP packets
 
 // function declarations second
 String networkTime();
-void connectToWifi(const String& ssid, const String& password);
+int connectToWifi();
+int connectToWifi(const String& ssid, const String& password);
 int getBitcoinPrice();
 unsigned long webUnixTime();
 void printWifiStatus(Print& stream);
 void printEspInfo();
+void OTAupdate();
 
 class VFD : public SoftwareSerial
 {
@@ -51,12 +55,15 @@ namespace Memory
     String getSsid();
     int    setNetworkPassword(const String& networkPassword);
     String getNetworkPassword();
-    enum e {SSID, NETWORKPASSWORD = 64};
+    enum e {SSID = 0, NETWORKPASSWORD = 64};
 };
 
-typedef char ssid[32];
-typedef char password[64];
-typedef std::tuple<ssid, password> connection;
+namespace Time
+{
+    currentTime();
+    setTimeZone();
+    int timeZone;
+};
 
 VFD vfd(D0, D1);
 
@@ -70,12 +77,15 @@ void setup()
     while(!vfd);
 
     vfd.clear();
-    connectToWifi(networkSSID, networkPassword);
+    connectToWifi();
 
-    vfd.clear();
-    vfd.print("WiFi IP");
-    vfd.newline();
-    vfd.print(WiFi.localIP());
+    if(WiFi.status() == WL_CONNECTED)
+    {
+        vfd.clear();
+        vfd.print("WiFi IP");
+        vfd.newline();
+        vfd.print(WiFi.localIP());
+    }
 
     delay(1000);
 
@@ -86,15 +96,15 @@ void setup()
     //vfd.setCharacterPrintDelay(0);
 
     vfd.setPrintSpeed(10);
-    Memory::setSsid(networkSSID);
-    Memory::setNetworkPassword(networkPassword);
+    //Memory::setSsid(networkSSID);
+    //Memory::setNetworkPassword(networkPassword);
 }
 
 void loop()
 {
     //Serial.println("max attempt connection " + WL_MAX_ATTEMPT_CONNECTION);
     // bitcoin price
-    if(0)
+    if(1)
     {
         int price = getBitcoinPrice();
         Serial.print("Bitcoin price: ");
@@ -112,28 +122,39 @@ void loop()
         vfd.print(time);
         delay(4000);
     }
-    vfd.print(Memory::getSsid());
-    Serial.print(Memory::getSsid());
-    vfd.print(Memory::getNetworkPassword());
-    Serial.print(Memory::getNetworkPassword());
+    //OTAupdate();
 }
 
-void connectToWifi(const String& ssid, const String& password)
+int connectToWifi()
 {
+    return connectToWifi(Memory::getSsid(), Memory::getNetworkPassword());
+}
+
+int connectToWifi(const String& ssid, const String& password)
+{
+    if(WiFi.status() == WL_CONNECTED)
+    {
+        return 1;
+    }
     if(!ssid)
-    {}
-    if(!password)
-    {}
+    {
+        vfd.print("no ssid given");
+        return -1;
+    }
+    int time = millis();
     WiFi.begin(ssid.c_str(), password.c_str());
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
-        Serial.print(".");
+        vfd.print(".");
+        if(millis() - time > 20000)
+        {
+            Serial.print("\nrestarting device");
+            ESP.restart();
+            return -1;
+        }
     }
-    Serial.println();
-    Serial.println("WiFi connected");
-    Serial.print("IP address: ");
-    Serial.println(WiFi.localIP());
+    return 1;
 }
 
 int getBitcoinPrice()
@@ -425,6 +446,7 @@ int Memory::setSsid(const String& ssid)
     }
     EEPROM.write(e::SSID + ssid.length(), '\0');
     EEPROM.commit();
+    return 1;
 }
 
 String Memory::getSsid()
@@ -456,6 +478,7 @@ int Memory::setNetworkPassword(const String& networkPassword)
     }
     EEPROM.write(e::NETWORKPASSWORD + networkPassword.length(), '\0');
     EEPROM.commit();
+    return 1;
 }
 
 String Memory::getNetworkPassword()
@@ -463,11 +486,95 @@ String Memory::getNetworkPassword()
     EEPROM.begin(512);
     String networkPassword;
     char c;
-    for(int i = e::NETWORKPASSWORD; (c = EEPROM.read(i)) != '\0' && i < 64; ++i)
+    for(int i = 0; (c = EEPROM.read(e::NETWORKPASSWORD + i)) != '\0' && i < 64; ++i)
     {
         networkPassword += (char)c;
     }
     return networkPassword;
+}
+
+void OTAupdate()
+{
+    //Serial.print("\nmode set to station");
+    //WiFi.mode(WIFI_STA);
+    Serial.print("\nconnect to wifi... again");
+    connectToWifi();
+    Serial.print("\nafter wifi func");
+    while (WiFi.waitForConnectResult() != WL_CONNECTED) {
+        Serial.println("Connection Failed! Rebooting...");
+        delay(5000);
+        ESP.restart();
+    }
+    Serial.print("\nafter while loop");
+
+    // Port defaults to 8266
+    // ArduinoOTA.setPort(8266);
+
+    // Hostname defaults to esp8266-[ChipID]
+    // ArduinoOTA.setHostname("myesp8266");
+
+    // No authentication by default
+    // ArduinoOTA.setPassword((const char *)"123");
+
+    ArduinoOTA.onStart([]() {
+        Serial.println("Start");
+        vfd.println("Start");
+    });
+    ArduinoOTA.onEnd([]() {
+        Serial.println("\nEnd");
+        vfd.println("\nEnd");
+    });
+    ArduinoOTA.onProgress([](unsigned int progress, unsigned int total) {
+        Serial.printf("Progress: %u%%\r", (progress / (total / 100)));
+        vfd.printf("Progress: %u%%\r", (progress / (total / 100)));
+    });
+    ArduinoOTA.onError([](ota_error_t error) {
+        Serial.printf("Error[%u]: ", error);
+        vfd.printf("Error[%u]: ", error);
+        if (error == OTA_AUTH_ERROR)
+        {
+            Serial.println("Auth Failed");
+            vfd.println("Auth Failed");
+        }
+        else if (error == OTA_BEGIN_ERROR)
+        {
+            Serial.println("Begin Failed");
+            vfd.println("Begin Failed");
+        }
+        else if (error == OTA_CONNECT_ERROR)
+        {
+            Serial.println("Connect Failed");
+            vfd.println("Connect Failed");
+        }
+        else if (error == OTA_RECEIVE_ERROR)
+        {
+            Serial.println("Receive Failed");
+            vfd.println("Receive Failed");
+        }
+        else if (error == OTA_END_ERROR)
+        {
+            Serial.println("End Failed");
+            vfd.println("End Failed");
+        }
+    });
+
+    ArduinoOTA.begin();
+    Serial.println("Ready");
+    Serial.print("IP address: ");
+    Serial.println(WiFi.localIP());
+    vfd.newline();
+    vfd.println("hostname");
+    vfd.print(ArduinoOTA.getHostname());
+    delay(1000);
+    vfd.newline();
+    vfd.print("updating");
+
+    while(1)
+    {
+        ArduinoOTA.handle();
+        delay(500);
+    }
+    Serial.print("\nafter while 1.. should never get here");
 }
 
 void printEspInfo()
