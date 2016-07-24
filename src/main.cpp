@@ -60,8 +60,8 @@ namespace Memory
 
 namespace Time
 {
-    currentTime();
-    setTimeZone();
+    int currentTime();
+    int setTimeZone();
     int timeZone;
 };
 
@@ -124,6 +124,7 @@ void loop()
     }
     //OTAupdate();
 }
+
 
 int connectToWifi()
 {
