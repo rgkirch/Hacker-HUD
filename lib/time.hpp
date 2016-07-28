@@ -1,10 +1,10 @@
-class Time
+class espTime
 {
 public:
-    Time();
+    espTime();
     int currentTime();
     int setTimeZone();
     int timeZone;
 };
 
-Time Time;
+extern espTime Time;
