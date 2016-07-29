@@ -9,19 +9,19 @@
 #include <SPI.h>
 #include <EEPROM.h>
 
-#include <vfd.hpp>
+#include "vfd.hpp"
 
 #include <tuple>
+#include "globals.hpp"
 
 //#define WL_MAX_ATTEMPT_CONNECTION 10
 //#define WL_DELAY_START_CONNECTION 5000
 
 // global variables first
 const int httpPort = 80;
-
-String networkSSID = "HellSpot Slow"; //    your network SSID (name)
-String networkPassword = "ILikeWiFi"; // your network password
-const unsigned int udpLocalPort = 2390; // local port to listen for UDP packets
+extern String networkSSID; // your network SSID (name)
+extern String networkPassword; // your network password
+extern const unsigned int udpLocalPort; // local port to listen for UDP packets
 
 // function declarations second
 String networkTime();
@@ -64,8 +64,8 @@ void setup()
     //vfd.setCharacterPrintDelay(0);
 
     vfd.setPrintSpeed(10);
-    //Memory::setSsid(networkSSID);
-    //Memory::setNetworkPassword(networkPassword);
+    //Memory.setSsid(networkSSID);
+    //Memory.setNetworkPassword(networkPassword);
 }
 
 void loop()
@@ -96,7 +96,7 @@ void loop()
 
 int connectToWifi()
 {
-    return connectToWifi(Memory::getSsid(), Memory::getNetworkPassword());
+    return connectToWifi(Memory.getSsid(), Memory.getNetworkPassword());
 }
 
 int connectToWifi(const String& ssid, const String& password)
@@ -341,61 +341,6 @@ String networkTime()
         return time;
     }
     return "for a better clock";
-}
-
-size_t VFD::write(uint8_t b)
-{
-    if(delayTime > 0)
-    {
-        delay(delayTime);
-    }
-    return SoftwareSerial::write(b);
-}
-
-void VFD::clear()
-{
-    write(e::CLEAR);
-    write(e::FORMFEED);
-}
-void VFD::newline()
-{
-    write(e::LINEFEED);
-    write(e::CARRIAGERETURN);
-}
-
-void VFD::enableScroll()
-{
-    write(e::ENABLESCROLL);
-}
-
-void VFD::disableScroll()
-{
-    write(e::DISABLESCROLL);
-}
-
-void VFD::slowprint(String string)
-{
-    for(int i = 0; i < string.length(); ++i)
-    {
-        print(string[i]);
-        delay(100);
-    }
-}
-
-void VFD::setPrintSpeed(int charsPerSecond)
-{
-    if(charsPerSecond > 0)
-    {
-        delayTime = 1000 / charsPerSecond;
-    }
-}
-
-void VFD::setCharacterPrintDelay(int time)
-{
-    if(time >= 0)
-    {
-        delayTime = time;
-    }
 }
 
 void OTAupdate()

@@ -1,4 +1,6 @@
 #include <SoftwareSerial.h>
+#include <EEPROM.h>
+#include <WString.h>
 
 class VFD : public SoftwareSerial
 {
@@ -19,3 +21,26 @@ private:
 };
 
 
+class espTime
+{
+public:
+    espTime();
+    int currentTime();
+    int setTimeZone();
+    int timeZone;
+};
+
+extern espTime Time;
+
+class MemoryClass : EEPROMClass
+{
+public:
+    MemoryClass();
+    int    setSsid(const String& ssid);
+    String getSsid();
+    int    setNetworkPassword(const String& networkPassword);
+    String getNetworkPassword();
+    enum e {SSID = 0, NETWORKPASSWORD = 64};
+};
+
+extern MemoryClass Memory;
