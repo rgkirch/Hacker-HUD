@@ -21,16 +21,18 @@ private:
 };
 
 
-class espTime
+class TimeClass
 {
 public:
-    espTime();
+    TimeClass();
     int currentTime();
     int setTimeZone();
     int timeZone;
+private:
+    int networkTime();
 };
 
-extern espTime Time;
+extern TimeClass Time;
 
 class MemoryClass : EEPROMClass
 {
