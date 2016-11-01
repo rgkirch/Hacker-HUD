@@ -10,14 +10,14 @@ Coyt Barringer
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>
-#   include <WiFiClientSecure.h>
+#include <WiFiClientSecure.h>
 
 #include <ArduinoJson.h>
 
 #include <Adafruit_MCP9808.h>
 #include <Wire.h>
 
-#include "VFD.h"
+#include <VFD.h>
 /*
 #define USE_SSL 1
 #if USE_SSL
@@ -35,6 +35,10 @@ const char* password = "ILikeWiFi"; //ILikeWiFi
 
 const char* host = "api.coindesk.com";
 const char* hostEth = "api.nanopool.org";
+const char* hostTime = "script.google.com";
+
+//global variables -----
+String realTime;
 
 //Initialize Objects -----
 SoftwareSerial mySerial(D5,D6);//rx,tx
@@ -145,6 +149,15 @@ float fetchBtcPrice() {
   int rateIndex = jsonAnswer.indexOf("rate_float");
   String priceString = jsonAnswer.substring(rateIndex + 12, rateIndex + 18);
   priceString.trim();
+
+  rateIndex = jsonAnswer.indexOf("updated");
+  realTime = jsonAnswer.substring(rateIndex + 10, rateIndex + 31);
+  realTime.trim();
+
+  rateIndex = jsonAnswer.indexOf("updated");
+  realTime = jsonAnswer.substring(rateIndex + 10, rateIndex + 28);
+  realTime.trim();
+
   float price = priceString.toFloat();
   return price;
 }
@@ -226,6 +239,84 @@ float fetchEthHash() {
   return price;
 }
 
+//fnc to display ETH price -----
+float fetchEthPrice() {
+
+  // Connect to API
+  Serial.print("connecting to ");
+  Serial.println(hostEth);
+
+  // Use WiFiClient class to create TCP connections
+
+  WiFiClientSecure client;
+  const int httpPort = 443;
+  if (!client.connect(hostEth, httpPort)) {
+    Serial.println("connection failed");
+    return 00;
+  }
+
+  // We now create a URI for the request
+  String url = "/v1/eth/prices";
+
+  Serial.print("Requesting URL: ");
+  Serial.println(url);
+
+  // This will send the request to the server
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + hostEth + "\r\n" +
+               "Connection: close\r\n\r\n");
+  unsigned long timeout = millis();
+  while (client.available() == 0) {
+    if (millis() - timeout > 5000) {
+      Serial.println(">>> Client Timeout !");
+      client.stop();
+      return 00;
+    }
+  }
+
+  // Read all the lines of the reply from server and print them to Serial
+  String answer;
+  while(client.available()){
+    String line = client.readStringUntil('\r');
+    answer += line;
+  }
+
+  client.stop();
+  Serial.println();
+  Serial.println("closing connection");
+
+  // Process answer
+  Serial.println();
+  Serial.println("Answer: ");
+  Serial.println(answer);
+
+  // Convert to JSON
+  String jsonAnswer;
+  int jsonIndex;
+
+  for (int i = 0; i < answer.length(); i++) {
+    if (answer[i] == '{') {
+      jsonIndex = i;
+      break;
+    }
+  }
+
+  // Get JSON data
+  jsonAnswer = answer.substring(jsonIndex);
+  Serial.println();
+  Serial.println("JSON answer: ");
+  Serial.println(jsonAnswer);
+  jsonAnswer.trim();
+
+  // Get rate as float
+  int rateIndex = jsonAnswer.indexOf("price_usd");
+  String priceString = jsonAnswer.substring(rateIndex + 11, rateIndex + 17);
+  priceString.trim();
+  float price = priceString.toFloat();
+  return price;
+}
+
+
 //Setup -----
 void setup() {
   Serial.begin(115200);
@@ -262,13 +353,17 @@ void setup() {
 //Loop -----
 void loop() {
 
-  myVFD.print("Hacker HUD V1.0");
-  delay(2000);
+  myVFD.print("  Hacker HUD V1.0  ");
+  delay(3000);
   myVFD.print("Current Temp: " + (String)readTemp()); //print current temp reading to VFD
   delay(3000);
   myVFD.print("$" + (String)fetchBtcPrice() + " /BTC" ); //display BTC price
   delay(3000);
-  myVFD.print("MH/s: " + (String)fetchEthHash() + " Hashrate" ); //display BTC price
+  myVFD.print("$" + (String)fetchEthPrice() + " /ETH" ); //display BTC price
+  delay(3000);
+  myVFD.print("Miner: " + (String)fetchEthHash() + " MH/s"); //display BTC price
+  delay(3000);
+  myVFD.print(realTime); //display BTC price
   delay(3000);
 
 }

@@ -1,0 +1,88 @@
+//fnc to display ETH hashrate -----
+String getTime() {
+
+  // Connect to API
+  Serial.print("connecting to ");
+  Serial.println(hostTime);
+
+  // Use WiFiClient class to create TCP connections
+
+  WiFiClientSecure client;
+  const int httpPort = 443;
+  if (!client.connect(hostTime, httpPort)) {
+    Serial.println("connection failed");
+    return "na";
+  }
+
+  // We now create a URI for the request
+  String url = "/macros/s/AKfycbyd5AcbAnWi2Yn0xhFRbyzS4qMq1VucMVgVvhul5XqS9HkAyJY/exec?tz=US/Eastern";
+
+  Serial.print("Requesting URL: ");
+  Serial.println(url);
+
+  // This will send the request to the server
+  client.print(String("GET ") + url + " HTTP/1.1\r\n" +
+               "Host: " + hostEth + "\r\n" +
+               "Connection: close\r\n\r\n");
+  unsigned long timeout = millis();
+  while (client.available() == 0) {
+    if (millis() - timeout > 5000) {
+      Serial.println(">>> Client Timeout !");
+      client.stop();
+      return "na";
+    }
+  }
+
+  // Read all the lines of the reply from server and print them to Serial
+  String answer;
+  while(client.available()){
+    String line = client.readStringUntil('\r');
+    answer += line;
+  }
+
+  client.stop();
+  Serial.println();
+  Serial.println("closing connection");
+
+  // Process answer
+  Serial.println();
+  Serial.println("Answer: ");
+  Serial.println(answer);
+
+  // Convert to JSON
+  String jsonAnswer;
+  int jsonIndex;
+
+  for (int i = 0; i < answer.length(); i++) {
+    if (answer[i] == '{') {
+      jsonIndex = i;
+      break;
+    }
+  }
+
+  // Get JSON data
+  jsonAnswer = answer.substring(jsonIndex);
+  Serial.println();
+  Serial.println("JSON answer: ");
+  Serial.println(jsonAnswer);
+  jsonAnswer.trim();
+
+  // Get rate as float
+  int rateIndex = jsonAnswer.indexOf("hours");
+  String hourString = jsonAnswer.substring(rateIndex + 8, rateIndex + 9);
+  hourString.trim();
+
+  // Get rate as float
+  rateIndex = jsonAnswer.indexOf("minutes");
+  String minuteString = jsonAnswer.substring(rateIndex + 10, rateIndex + 11);
+  minuteString.trim();
+
+  // Get rate as float
+  rateIndex = jsonAnswer.indexOf("seconds");
+  String secondString = jsonAnswer.substring(rateIndex + 10, rateIndex + 11);
+  secondString.trim();
+
+  String timeString = (hourString + " " + minuteString + " " + secondString);
+  //float time = priceString.toFloat();
+  return timeString;
+}
