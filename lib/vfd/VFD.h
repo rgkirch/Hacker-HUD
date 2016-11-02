@@ -18,6 +18,9 @@ class VFD
     void brightness(int);
     void print(String text);
     void print(float text);
+    void nextLine();
+    void clear();
+    void simplePrint(String text);
 
   private:
     SoftwareSerial *mySerial;

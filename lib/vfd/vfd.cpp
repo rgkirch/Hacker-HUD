@@ -45,3 +45,21 @@ void VFD::print(float text){
   clearHome();
   mySerial->print(text);
 }
+
+//fnc for moving to next line
+void VFD::nextLine(){
+  mySerial->write('\x1B');
+  mySerial->write('\x6C');
+  mySerial->write('\x01'); //position one
+  mySerial->write('\x02'); //line 2
+}
+
+//fnc for just clearing the display
+void VFD::clear(){
+  mySerial->write('\x0C'); //clear display
+}
+
+//fnc for printing withOUT clearing
+void VFD::simplePrint(String text){
+  mySerial->print(text);
+}
