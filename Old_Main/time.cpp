@@ -24,7 +24,7 @@ struct tm * timeinfo;
 void setup() {
   Serial.begin(115200);
   delay(10); //max delay for wifi to work!
-  // Wifi.begin();
+  Wifi.begin();
 
   myVFD.brightness(1);
 
