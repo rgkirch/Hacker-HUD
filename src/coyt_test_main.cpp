@@ -41,6 +41,7 @@ struct Site {
 //websites and data to parse -----
 Site coinDesk = (Site) {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false};
 jsonThing coinDeskJson {"rate_float", 12, 18};
+jsonThing timeUtc{"updated",10,30};
 
 Site etheriumHashes = (Site) {.url = "/v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1", .host = "api.nanopool.org", .secure = true};
 jsonThing ethereumHashesJson = {"data",6,12};
@@ -54,9 +55,21 @@ VFD myVFD(mySerial);
 
 Adafruit_MCP9808 tempsensor = Adafruit_MCP9808(); //for MCP9808
 
-//Function to connect, retrieve, and parse web data -----
-String scrapeWeb(Site site, jsonThing jsonthing) {
 
+
+
+
+
+
+
+
+
+
+
+//Function to connect and retrieve web data -----
+String scrapeWeb(Site site) {
+
+  String priceString;
   // Connect to API
   Serial.print("connecting to ");
   Serial.println(site.host);
@@ -112,6 +125,13 @@ String scrapeWeb(Site site, jsonThing jsonthing) {
   Serial.println("Answer: ");
   Serial.println(answer);
 
+  delete client;
+  return answer;
+}
+
+//fnc to parse data from web page (json) -----
+String parseData (String answer, jsonThing whatToParse){
+
   // Convert to JSON
   String jsonAnswer;
   int jsonIndex;
@@ -131,13 +151,12 @@ String scrapeWeb(Site site, jsonThing jsonthing) {
   jsonAnswer.trim();
 
   // Get rate as float
-  //char keyword[sizeof(jsonthing.keyword)];
-  //dataFileName.toCharArray(__dataFileName, sizeof(__dataFileName));
-  int rateIndex = jsonAnswer.indexOf(jsonthing.keyword);
-  String priceString = jsonAnswer.substring(rateIndex + jsonthing.begin, rateIndex + jsonthing.end);
+  int rateIndex = jsonAnswer.indexOf(whatToParse.keyword);
+  String priceString = jsonAnswer.substring(rateIndex + whatToParse.begin, rateIndex + whatToParse.end);
   priceString.trim();
+  float price = priceString.toFloat();
+
   Serial.println("end function");
-  delete client;
   return priceString;
 }
 
@@ -191,78 +210,47 @@ float readTemp() {
 }
 
 //fnc for reading time from json response -----
-String readTime(){
-  String jsonTime = "noon";
+String readTime(String realTime){
+
+  // Convert to JSON
+  String timeEst;
+  int index;
+
+  for (int i = 0; i < realTime.length(); i++) {
+    if (realTime[i] == '{') {
+      index = i;
+      break;
+    }
+  }
+
+  /*
+  // Get JSON data
+  timeEst = realTime.substring(index);
+  Serial.println();
+  Serial.println("JSON answer: ");
+  Serial.println(timeEst);
+  jsonAnswer.trim();
+  */
+
+  // Get rate as float
+  String year = realTime.substring(index+18,index+22);
+  String month = realTime.substring(index+10,index+13);
+  String day = realTime.substring(index+14,index+16);
+  String hour = realTime.substring(index+24,index+25);
+  String minute = realTime.substring(index+27,index+28);
+
+  //priceString.trim();
+  String jsonTime = (month + " " + day + ", " + year + " " + hour + ":" + minute);
 
   return jsonTime;
 }
-unsigned long webUnixTime()
-{
-    WiFiClient client;
-    unsigned long time = 0;
 
-    // Just choose any reasonably busy web server, the load is really low
-    if (client.connect("g.cn", 80))
-    {
-        // Make an HTTP 1.1 request which is missing a Host: header
-        // compliant servers are required to answer with an error that includes
-        // a Date: header.
-        client.print(F("GET / HTTP/1.1 \r\n\r\n"));
-
-        char buf[5]; // temporary buffer for characters
-        client.setTimeout(5000);
-        if(client.find((char *)"\r\nDate: ") && client.readBytes(buf, 5) == 5) // look for Date: header; discard
-        {
-            unsigned day = client.parseInt(); // day
-            client.readBytes(buf, 1); // discard
-            client.readBytes(buf, 3); // month
-            int year = client.parseInt(); // year
-            byte hour = client.parseInt(); // hour
-            byte minute = client.parseInt(); // minute
-            byte second = client.parseInt(); // second
-            int daysInPrevMonths;
-            switch (buf[0])
-            {
-                case 'F': daysInPrevMonths = 31; break; // Feb
-                case 'S': daysInPrevMonths = 243; break; // Sep
-                case 'O': daysInPrevMonths = 273; break; // Oct
-                case 'N': daysInPrevMonths = 304; break; // Nov
-                case 'D': daysInPrevMonths = 334; break; // Dec
-                default:
-                if (buf[0] == 'J' && buf[1] == 'a')
-        daysInPrevMonths = 0;		// Jan
-                else if (buf[0] == 'A' && buf[1] == 'p')
-        daysInPrevMonths = 90;		// Apr
-                else switch (buf[2])
-                {
-                case 'r': daysInPrevMonths =    59; break; // Mar
-                case 'y': daysInPrevMonths = 120; break; // May
-                case 'n': daysInPrevMonths = 151; break; // Jun
-                case 'l': daysInPrevMonths = 181; break; // Jul
-                default: // add a default label here to avoid compiler warning
-                case 'g': daysInPrevMonths = 212; break; // Aug
-                }
-            }
-
-            // This code will not work after February 2100
-            // because it does not account for 2100 not being a leap year and because
-            // we use the day variable as accumulator, which would overflow in 2149
-            day += (year - 1970) * 365;	// days from 1970 to the whole past year
-            day += (year - 1969) >> 2;	// plus one day per leap year
-            day += daysInPrevMonths;	// plus days for previous months this year
-            if (daysInPrevMonths >= 59	// if we are past February
-                    && ((year & 3) == 0))	// and this is a leap year
-                day += 1;			// add one day
-            // Remove today, add hours, minutes and seconds this month
-            time = (((day-1ul) * 24 + hour) * 60 + minute) * 60 + second;
-        }
-    }
-    delay(10);
-    client.flush();
-    client.stop();
-
-    return time;
+//return complete Eastern Standard time
+String returnEasternStandardTime(){
+  String time = "penis";
+  return time;
 }
+
 //Setup -----
 void setup() {
   Serial.begin(115200);
@@ -279,20 +267,26 @@ void setup() {
 //Loop -----
 void loop() {
 
+  String coinDeskWebData = scrapeWeb(coinDesk);
+  String btcPrice = parseData(coinDeskWebData, coinDeskJson);
+  String timeEst = readTime(parseData(coinDeskWebData, timeUtc));
+
   myVFD.print("  Hacker HUD V1.0  ");
-  Serial.println(webUnixTime());
+  myVFD.nextLine();
+  myVFD.simplePrint(timeEst);
+
+  //Serial.println(webUnixTime());
   delay(2000);
   myVFD.print("Current Temp: " + (String)readTemp()); //print current temp reading to VFD
   delay(2000);
 
-  String btcPrice = scrapeWeb(coinDesk, coinDeskJson);
-  String ethPrice = scrapeWeb(etheriumPrice, etheriumJson);
-
   myVFD.print("$" + btcPrice + " /BTC" ); //display BTC price
   myVFD.nextLine();
-  myVFD.simplePrint("$ " + ethPrice + " /ETH" ); //display BTC price
+  //myVFD.simplePrint(btcPri);
+
+  myVFD.simplePrint("$" + parseData(scrapeWeb(etheriumPrice),etheriumJson) + " /ETH" ); //display BTC price
   delay(4000);
- myVFD.print("Miner: " + scrapeWeb(etheriumHashes, ethereumHashesJson) + " MH/s"); //display BTC price
+  myVFD.print("Miner: " + parseData(scrapeWeb(etheriumHashes),ethereumHashesJson) + " MH/s"); //display BTC price
   delay(4000);
   // myVFD.print(realTime); //display time
   // delay(3000);
