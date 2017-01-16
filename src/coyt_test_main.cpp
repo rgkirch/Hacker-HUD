@@ -17,6 +17,8 @@ Coyt Barringer
 
 #include <VFD.h>
 
+#include <NtpClientLib.h> //dependent on Time library
+
 //constants -----
 const char* ssid     = "HellSpot Slow"; //HellSpot Slow
 const char* password = "ILikeWiFi"; //ILikeWiFi
@@ -41,10 +43,9 @@ struct Site {
 //websites and data to parse -----
 Site coinDesk = (Site) {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false};
 jsonThing coinDeskJson {"rate_float", 12, 18};
-jsonThing timeUtc{"updated",10,30};
 
 Site etheriumHashes = (Site) {.url = "/v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1", .host = "api.nanopool.org", .secure = true};
-jsonThing ethereumHashesJson = {"data",6,12};
+jsonThing ethereumHashesJson = {"data",6,11};
 
 Site etheriumPrice = (Site) {.url = "/v1/eth/prices", .host = "api.nanopool.org", .secure = true};
 jsonThing etheriumJson {"price_usd", 11, 16};
@@ -151,8 +152,25 @@ String parseData (String answer, jsonThing whatToParse){
   jsonAnswer.trim();
 
   // Get rate as float
-  int rateIndex = jsonAnswer.indexOf(whatToParse.keyword);
-  String priceString = jsonAnswer.substring(rateIndex + whatToParse.begin, rateIndex + whatToParse.end);
+  String priceString = jsonAnswer.substring(jsonAnswer.indexOf(whatToParse.keyword) + whatToParse.begin);
+  int indexOutput = 0;
+
+  if (priceString.indexOf(",") == -1){
+    indexOutput = priceString.indexOf("}");
+  } else if (priceString.indexOf("}") == -1){
+    indexOutput = priceString.indexOf(",");
+  } else {
+    int less;
+    if (priceString.indexOf("}") < priceString.indexOf(",")) {
+      less = priceString.indexOf("}");
+    } else {
+      less = priceString.indexOf(",");
+    }
+    indexOutput = less;
+  }
+  priceString = priceString.substring(0,indexOutput);
+  int decimal = priceString.indexOf(".");
+  if (decimal > -1) priceString = priceString.substring(0,decimal + 3);
   priceString.trim();
   float price = priceString.toFloat();
 
@@ -181,6 +199,24 @@ void InitializeWiFi(){
     delay(4000);
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
+
+    //setup NTP time stuff here
+    NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
+        if (error) {
+            Serial.print("Time Sync error: ");
+            if (error == noResponse)
+                Serial.println("NTP server not reachable");
+            else if (error == invalidAddress)
+                Serial.println("Invalid NTP server address");
+        }
+        else {
+            Serial.print("Got NTP time: ");
+            Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
+        }
+    });
+
+    NTP.begin("pool.ntp.org", -5, true);
+    NTP.setInterval(1800);
 }
 
 //Initialize Temp Sensor Fnc. -----
@@ -245,12 +281,6 @@ String readTime(String realTime){
   return jsonTime;
 }
 
-//return complete Eastern Standard time
-String returnEasternStandardTime(){
-  String time = "penis";
-  return time;
-}
-
 //Setup -----
 void setup() {
   Serial.begin(115200);
@@ -264,31 +294,38 @@ void setup() {
   InitializeTemp(); //Initialize temp sensor
 }
 
+//Re-format getTimeDateString fnc for standard display -----
+String formatTime(String old){
+  mySerial.println(old);
+  int fullHour = old.substring(0,2).toInt();
+  fullHour = fullHour > 12 ? fullHour - 12 : fullHour;
+  String fh = fullHour < 10 ? "0" + String(fullHour) : String(fullHour);
+  String fixedTime =  fh + ":" + old.substring(3,5) + ":" + old.substring(6,8) + "  " + old.substring(12,14) + "/" + old.substring(9,11) + "/" + old.substring(15,19);
+  return fixedTime;
+}
+
 //Loop -----
 void loop() {
 
   String coinDeskWebData = scrapeWeb(coinDesk);
   String btcPrice = parseData(coinDeskWebData, coinDeskJson);
-  String timeEst = readTime(parseData(coinDeskWebData, timeUtc));
 
   myVFD.print("  Hacker HUD V1.0  ");
   myVFD.nextLine();
-  myVFD.simplePrint(timeEst);
+  myVFD.simplePrint(formatTime(NTP.getTimeDateString()));
 
-  //Serial.println(webUnixTime());
-  delay(2000);
+  delay(8000);
   myVFD.print("Current Temp: " + (String)readTemp()); //print current temp reading to VFD
   delay(2000);
 
-  myVFD.print("$" + btcPrice + " /BTC" ); //display BTC price
-  myVFD.nextLine();
-  //myVFD.simplePrint(btcPri);
+  myVFD.print("$" + btcPrice + " /BTC" + '\x0A' + '\x0D' + "$" + parseData(scrapeWeb(etheriumPrice),etheriumJson) + "   /ETH"); //display BTC price
+  //myVFD.nextLine();
 
-  myVFD.simplePrint("$" + parseData(scrapeWeb(etheriumPrice),etheriumJson) + " /ETH" ); //display BTC price
-  delay(4000);
+  //myVFD.simplePrint("$" + parseData(scrapeWeb(etheriumPrice),etheriumJson) + "  /ETH" ); //display BTC price
+  delay(2000);
+  
+
   myVFD.print("Miner: " + parseData(scrapeWeb(etheriumHashes),ethereumHashesJson) + " MH/s"); //display BTC price
-  delay(4000);
-  // myVFD.print(realTime); //display time
-  // delay(3000);
+  delay(2000);
 
 }
