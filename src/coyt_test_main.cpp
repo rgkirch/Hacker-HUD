@@ -215,7 +215,6 @@ void InitializeTemp(){
   // address with tempsensor.begin(0x19) for example
   if (!tempsensor.begin()) {
     Serial.println("Couldn't find MCP9808!");
-    while (1);
   }
 }
 
