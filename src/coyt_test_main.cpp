@@ -120,6 +120,24 @@ String scrapeWeb(Site site) {
   return answer;
 }
 
+void ntpSetup() {
+    NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
+        if (error) {
+            Serial.print("Time Sync error: ");
+            if (error == noResponse)
+                Serial.println("NTP server not reachable");
+            else if (error == invalidAddress)
+                Serial.println("Invalid NTP server address");
+        } else {
+            Serial.print("Got NTP time: ");
+            Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
+        }
+    });
+
+    NTP.begin("pool.ntp.org", -5, true);
+    NTP.setInterval(1800);
+}
+
 //fnc to parse data from web page (json) -----
 String parseData (String answer, jsonThing whatToParse){
 
@@ -191,22 +209,7 @@ void InitializeWiFi(){
     Serial.println(WiFi.localIP());
 
     //setup NTP time stuff here
-    NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
-        if (error) {
-            Serial.print("Time Sync error: ");
-            if (error == noResponse)
-                Serial.println("NTP server not reachable");
-            else if (error == invalidAddress)
-                Serial.println("Invalid NTP server address");
-        }
-        else {
-            Serial.print("Got NTP time: ");
-            Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
-        }
-    });
-
-    NTP.begin("pool.ntp.org", -5, true);
-    NTP.setInterval(1800);
+    ntpSetup();
 }
 
 //Initialize Temp Sensor Fnc. -----
@@ -270,7 +273,6 @@ String readTime(String realTime){
   return jsonTime;
 }
 
-//Setup -----
 void setup() {
   Serial.begin(115200);
   delay(10); //max delay for wifi to work!
