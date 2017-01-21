@@ -51,4 +51,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST} lib/vfd)
+add_executable(${PROJECT_NAME} ${SRC_LIST} lib/vfd lib/vfd/vfdBuilder.cpp lib/vfd/vfdBuilder.h)

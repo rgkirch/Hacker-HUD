@@ -8,20 +8,26 @@
 
 #include <NtpClientLib.h>
 #include "../lib/vfd/vfd.hpp"
+#include "../lib/vfd/vfdBuilder.h"
 
 typedef unsigned char uint8_t;
 
 VFD* myVFD;
 
 void setup() {
-    myVFD = new VFD(D5, D6);
+    vfdBuilder myVfdBuilder;
+    myVfdBuilder.setRx(D5);
+    myVfdBuilder.setTx(D6);
+    myVfdBuilder.setDisplayWidth(20);
+    myVfdBuilder.setDisplayHeight(2);
+    myVFD = myVfdBuilder.buildVFD();
 //    myVFD = new VFD(14, 12);
     Serial.begin(115200);
     yield();
 }
 
 void loop() {
-    unsigned char hello[] = "hello";
+    unsigned char hello[] = "hellt";
     myVFD->print(hello, 5);
     Serial.write("hello");
 }
