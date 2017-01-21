@@ -1,5 +1,0 @@
-#include <WString.h>
-
-String networkSSID = "";
-String networkPassword = "";
-const unsigned int udpLocalPort = ;
