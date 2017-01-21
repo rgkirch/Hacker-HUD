@@ -9,10 +9,25 @@
 #include <NtpClientLib.h>
 #include "../lib/vfd/vfd.hpp"
 #include "../lib/vfd/vfdBuilder.h"
+#include "../lib/wifi/wifi.hpp"
 
 typedef unsigned char uint8_t;
 
+
+const char* host = "api.coindesk.com";
+const char* hostEth = "api.nanopool.org";
+const char* hostTime = "script.google.com";
+
 VFD* myVFD;
+int vfdPrint(const unsigned char *c, int n)
+{
+    if(myVFD == NULL)
+    {
+        return 0;
+    } else {
+        return myVFD->print(c, n);
+    }
+}
 
 void setup() {
     vfdBuilder myVfdBuilder;
@@ -24,10 +39,9 @@ void setup() {
 //    myVFD = new VFD(14, 12);
     Serial.begin(115200);
     yield();
+    InitializeWiFi();
 }
 
 void loop() {
-    unsigned char hello[] = "hellt";
-    myVFD->print(hello, 5);
-    Serial.write("hello");
+    yield();
 }
