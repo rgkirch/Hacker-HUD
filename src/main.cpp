@@ -1,5 +1,12 @@
-//#include <Arduino>
-#include "../lib/Arduino/variants/nodemcu/pins_arduino.h"
+#include <SoftwareSerial.h>
+#include <ESP8266WiFi.h>
+#include <WiFiClient.h>
+#include <WiFiClientSecure.h>
+
+#include <Adafruit_MCP9808.h>
+#include <Wire.h>
+
+#include <NtpClientLib.h>
 #include "../lib/vfd/vfd.hpp"
 
 typedef unsigned char uint8_t;
@@ -16,4 +23,5 @@ void setup() {
 void loop() {
     unsigned char hello[] = "hello";
     myVFD->print(hello, 5);
+    Serial.write("hello");
 }

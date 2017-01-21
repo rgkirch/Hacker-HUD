@@ -1,8 +1,9 @@
 #ifndef VFD_h
 #define VFD_h
 
-#include <Arduino.h>
 #include <SoftwareSerial.h>
+#include <EEPROM.h>
+#include <WString.h>
 
 class VFD
 {
