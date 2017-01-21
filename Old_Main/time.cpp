@@ -8,8 +8,6 @@
 #include <Adafruit_MCP9808.h>
 #include <Wire.h>
 
-#include <VFD.h>
-
 //constants -----
 const char* ssid     = "HellSpot Slow"; //HellSpot Slow
 const char* password = "ILikeWiFi"; //ILikeWiFi
