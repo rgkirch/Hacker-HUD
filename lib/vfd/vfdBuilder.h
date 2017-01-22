@@ -6,6 +6,7 @@
 class vfdBuilder
 {
 public:
+    vfdBuilder();
     VFD* buildVFD();
     int getRx() const;
     void setRx(int rx);

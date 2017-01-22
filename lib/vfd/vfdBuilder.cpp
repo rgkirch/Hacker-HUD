@@ -1,6 +1,17 @@
 #include "vfdBuilder.h"
 
+vfdBuilder::vfdBuilder() {
+    rx = -1;
+    tx = -1;
+    displayWidth = 20;
+    displayHeight = 2;
+}
+
 VFD* vfdBuilder::buildVFD(){
+    if(rx < 0) return nullptr;
+    if(tx < 0) return nullptr;
+    if(displayWidth < 0) return nullptr;
+    if(displayHeight < 0) return nullptr;
     return new VFD(rx, tx, displayWidth, displayHeight);
 }
 
