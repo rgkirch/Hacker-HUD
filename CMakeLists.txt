@@ -51,4 +51,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST} lib/vfd lib/vfd/vfdBuilder.cpp lib/vfd/vfdBuilder.h lib/time/time.cpp lib/time/time.h lib/wifi/wifi.cpp lib/wifi/wifi.hpp)
+add_executable(${PROJECT_NAME} ${SRC_LIST} lib/vfd lib/vfd/vfdBuilder.cpp lib/vfd/vfdBuilder.h lib/time/time.cpp lib/time/time.h lib/wifi/wifi.cpp lib/wifi/wifi.hpp lib/scrape-web/scrapeWeb.cpp lib/scrape-web/scrapeWeb.hpp)
