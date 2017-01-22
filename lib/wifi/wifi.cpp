@@ -1,6 +1,6 @@
 #include "wifi.hpp"
 
-void InitializeWiFi(){
+void connectToWifi(){
     Serial.println(ssid);
     vfdPrint(ssid, strlen(ssid));
 

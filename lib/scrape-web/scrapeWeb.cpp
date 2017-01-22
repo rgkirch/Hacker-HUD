@@ -122,6 +122,7 @@
 //    return priceString;
 //}
 
+// todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
 char* get(const char* host, const char* path)
 {
     if(host == nullptr) return nullptr;
@@ -134,8 +135,15 @@ char* get(const char* host, const char* path)
         {
             if(client.available())
             {
-                String line = client.readStringUntil('\n');
-                Serial.println(line);
+                int size = client.available();
+                Serial.print("client.available ->  ");
+                Serial.println(size);
+                char* buffer = (char*)malloc(sizeof(char) * size + 1);
+                buffer[size] = '\0';
+                for (int i = 0; i < size; ++i) {
+                    buffer[i] = client.read();
+                }
+                Serial.println(buffer);
             }
         }
         client.stop();

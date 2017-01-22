@@ -52,11 +52,12 @@ void setup() {
     myVfdBuilder.setDisplayWidth(20);
     myVfdBuilder.setDisplayHeight(2);
     myVFD = myVfdBuilder.buildVFD();
-    InitializeWiFi();
+    connectToWifi();
     yield();
 }
 
 void loop() {
+    if(WiFi.status() != WL_CONNECTED) connectToWifi();
     const char* host = "api.coindesk.com";
     const char* price = "v1/bpi/currentprice.json";
     get(host, price);

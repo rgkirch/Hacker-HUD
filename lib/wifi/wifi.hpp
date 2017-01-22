@@ -14,6 +14,6 @@ extern int vfdPrint(const char *c, int n);
 const char ssid[] = "HellSpot Slow";
 const char password[] = "ILikeWiFi";
 
-void InitializeWiFi();
+void connectToWifi();
 
 #endif
