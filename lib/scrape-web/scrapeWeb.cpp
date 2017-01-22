@@ -139,11 +139,15 @@ char* get(const char* host, const char* path)
                 Serial.print("client.available ->  ");
                 Serial.println(size);
                 char* buffer = (char*)malloc(sizeof(char) * size + 1);
+                Serial.println("allocated buffer");
                 buffer[size] = '\0';
                 for (int i = 0; i < size; ++i) {
                     buffer[i] = client.read();
                 }
-                Serial.println(buffer);
+//                Serial.println(buffer);
+                Serial.print("free heap -> ");
+                Serial.println(ESP.getFreeHeap());
+                free(buffer);
             }
         }
         client.stop();

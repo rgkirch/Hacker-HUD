@@ -53,6 +53,7 @@ void setup() {
     myVfdBuilder.setDisplayHeight(2);
     myVFD = myVfdBuilder.buildVFD();
     connectToWifi();
+    get("norvig.com", "big.txt");
     yield();
 }
 
@@ -60,7 +61,7 @@ void loop() {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     const char* host = "api.coindesk.com";
     const char* price = "v1/bpi/currentprice.json";
-    get(host, price);
+//    get(host, price);
     delay(5000);
     yield();
 }
