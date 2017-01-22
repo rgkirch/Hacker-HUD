@@ -44,7 +44,6 @@ void printEspInfo()
 }
 
 void setup() {
-    delay(5000);
     Serial.begin(115200);
 //    printEspInfo();
     vfdBuilder myVfdBuilder;

@@ -12,11 +12,9 @@ void InitializeWiFi(){
         Serial.print(".");
         vfdPrint(".", 1);
     }
-    vfdPrint("connected", strlen("connected"));
 
     Serial.println("WiFi connected");
     vfdPrint("WiFi Connected", 14);
-    delay(4000);
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
 }
