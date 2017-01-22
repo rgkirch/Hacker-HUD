@@ -1,5 +1,5 @@
-#ifndef CLION_WIFI_HPP
-#define CLION_WIFI_HPP
+#ifndef WIFI_HPP
+#define WIFI_HPP
 
 #include <ESP8266WiFi.h>
 #include <WiFiClient.h>

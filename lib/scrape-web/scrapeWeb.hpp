@@ -1,5 +1,9 @@
 #ifndef SCRAPEWEB_HPP
 #define SCRAPEWEB_HPP
+
+#include <WiFiClient.h>
+#include <ESP8266WiFi.h>
+
 //const char* host = "api.coindesk.com";
 //const char* hostEth = "api.nanopool.org";
 //const char* hostTime = "script.google.com";

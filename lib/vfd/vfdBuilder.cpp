@@ -1,4 +1,4 @@
-#include "vfdBuilder.h"
+#include "vfdBuilder.hpp"
 
 vfdBuilder::vfdBuilder() {
     rx = -1;

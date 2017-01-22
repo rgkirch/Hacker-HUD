@@ -1,4 +1,3 @@
-#include <WiFiClient.h>
 #include "scrapeWeb.hpp"
 
 // TODO - work on this

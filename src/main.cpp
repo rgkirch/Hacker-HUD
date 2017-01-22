@@ -8,7 +8,7 @@
 
 #include <NtpClientLib.h>
 #include "../lib/vfd/vfd.hpp"
-#include "../lib/vfd/vfdBuilder.h"
+#include "../lib/vfd/vfdBuilder.hpp"
 #include "../lib/wifi/wifi.hpp"
 #include "../lib/scrape-web/scrapeWeb.hpp"
 #include <NtpClientLib.h>
