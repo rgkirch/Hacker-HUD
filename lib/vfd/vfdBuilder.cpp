@@ -4,15 +4,19 @@ VFD* vfdBuilder::buildVFD(){
     return new VFD(rx, tx, displayWidth, displayHeight);
 }
 
-void vfdBuilder::setRx(unsigned char rx) {
+int vfdBuilder::getRx() const {
+    return rx;
+}
+
+void vfdBuilder::setRx(int rx) {
     vfdBuilder::rx = rx;
 }
 
-unsigned char vfdBuilder::getTx() const {
+int vfdBuilder::getTx() const {
     return tx;
 }
 
-void vfdBuilder::setTx(unsigned char tx) {
+void vfdBuilder::setTx(int tx) {
     vfdBuilder::tx = tx;
 }
 

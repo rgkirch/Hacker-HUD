@@ -7,17 +7,17 @@ class vfdBuilder
 {
 public:
     VFD* buildVFD();
-    unsigned char getRx() const;
-    void setRx(unsigned char rx);
-    unsigned char getTx() const;
-    void setTx(unsigned char tx);
+    int getRx() const;
+    void setRx(int rx);
+    int getTx() const;
+    void setTx(int tx);
     int getDisplayWidth() const;
     void setDisplayWidth(int displayWidth);
     int getDisplayHeight() const;
     void setDisplayHeight(int displayHeight);
 private:
-    unsigned char rx;
-    unsigned char tx;
+    int rx;
+    int tx;
     int displayWidth;
     int displayHeight;
 };

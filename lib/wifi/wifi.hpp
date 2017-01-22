@@ -9,18 +9,15 @@
 //#include <core_pins.h>
 #include "../ntptime/NtpClientLib.h"
 
-extern int vfdPrint(const unsigned char *c, int n);
+extern int vfdPrint(const char *c, int n);
 
 const char ssid[] = "HellSpot Slow";
 const char password[] = "ILikeWiFi";
 
 //Initialize WiFi Connection -----
 void InitializeWiFi(){
-    const unsigned char connecting_to[] = "Connecting to ";
-    Serial.print("Connecting to ");
-    vfdPrint(connecting_to, strlen((const char *) connecting_to));
     Serial.println(ssid);
-    vfdPrint((const unsigned char *) ssid, strlen(ssid));
+    vfdPrint(ssid, strlen(ssid));
 
     WiFi.begin(ssid, password);
 
@@ -32,7 +29,7 @@ void InitializeWiFi(){
 
     Serial.println("");
     Serial.println("WiFi connected");
-    vfdPrint((const unsigned char *) "WiFi Connected", 14);
+    vfdPrint("WiFi Connected", 14);
     delay(4000);
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());

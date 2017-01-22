@@ -19,9 +19,9 @@ const char* hostEth = "api.nanopool.org";
 const char* hostTime = "script.google.com";
 
 VFD* myVFD;
-int vfdPrint(const unsigned char *c, int n)
+int vfdPrint(const char *c, int n)
 {
-    if(myVFD == NULL)
+    if(myVFD == nullptr)
     {
         return 0;
     } else {
