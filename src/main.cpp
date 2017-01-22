@@ -10,6 +10,7 @@
 #include "../lib/vfd/vfd.hpp"
 #include "../lib/vfd/vfdBuilder.h"
 #include "../lib/wifi/wifi.hpp"
+#include "../lib/scrape-web/scrapeWeb.hpp"
 #include <NtpClientLib.h>
 
 typedef unsigned char uint8_t;
@@ -24,52 +25,42 @@ int vfdPrint(const char *c, int n)
         return myVFD->print(c, n);
     }
 }
+void printEspInfo()
+{
+    Serial.println(ESP.getVcc());
+    Serial.println(ESP.getFreeHeap());
+    Serial.println(ESP.getChipId());
+    Serial.println(ESP.getSdkVersion());
+    Serial.println(ESP.getCoreVersion());
+    Serial.println(ESP.getBootVersion());
+    Serial.println(ESP.getBootMode());
+    Serial.println(ESP.getCpuFreqMHz());
+    Serial.println(ESP.getFlashChipId());
+    Serial.println(ESP.getFlashChipRealSize()); //gets the actual chip size based on the flash id
+    Serial.println(ESP.getFlashChipSize()); //gets the size of the flash as set by the compiler
+    Serial.println(ESP.getFlashChipSpeed());
+    Serial.println(ESP.getFlashChipMode());
+    Serial.println(ESP.getFlashChipSizeByChipId());
+}
 
 void setup() {
+    delay(5000);
+    Serial.begin(115200);
+//    printEspInfo();
     vfdBuilder myVfdBuilder;
     myVfdBuilder.setRx(D5);
     myVfdBuilder.setTx(D6);
     myVfdBuilder.setDisplayWidth(20);
     myVfdBuilder.setDisplayHeight(2);
     myVFD = myVfdBuilder.buildVFD();
-    Serial.begin(115200);
-    yield();
     InitializeWiFi();
+    yield();
 }
 
 void loop() {
-    const char* host = "www.example.com";
-    WiFiClient client;
-
-    Serial.printf("\n[Connecting to %s ... ", host);
-    if (client.connect(host, 80))
-    {
-        Serial.println("connected]");
-
-        Serial.println("[Sending a request]");
-        client.print(String("GET /") + " HTTP/1.1\r\n" +
-                     "Host: " + host + "\r\n" +
-                     "Connection: close\r\n" +
-                     "\r\n"
-        );
-
-        Serial.println("[Response:]");
-        while (client.connected())
-        {
-            if (client.available())
-            {
-                String line = client.readStringUntil('\n');
-                Serial.println(line);
-            }
-        }
-        client.stop();
-        Serial.println("\n[Disconnected]");
-    }
-    else
-    {
-        Serial.println("connection failed!]");
-        client.stop();
-    }
+    const char* host = "api.coindesk.com";
+    const char* price = "v1/bpi/currentprice.json";
+    get(host, price);
     delay(5000);
     yield();
 }
