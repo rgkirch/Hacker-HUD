@@ -1,0 +1,1 @@
+client.available() can return up to 5840 - wifiClient can buffer that much

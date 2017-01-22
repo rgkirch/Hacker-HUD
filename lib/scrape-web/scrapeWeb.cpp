@@ -127,6 +127,7 @@ char* get(const char* host, const char* path)
 {
     if(host == nullptr) return nullptr;
     if(path == nullptr) return nullptr;
+    int delayTime = 10000;
     WiFiClient client;
     if (client.connect(host, 80))
     {
@@ -136,20 +137,15 @@ char* get(const char* host, const char* path)
             if(client.available())
             {
                 int size = client.available();
-                Serial.print("client.available ->  ");
-                Serial.println(size);
-                char* buffer = (char*)malloc(sizeof(char) * size + 1);
-                Serial.println("allocated buffer");
-                buffer[size] = '\0';
-                for (int i = 0; i < size; ++i) {
-                    buffer[i] = client.read();
-                }
-//                Serial.println(buffer);
-                Serial.print("free heap -> ");
-                Serial.println(ESP.getFreeHeap());
-                free(buffer);
+                Serial.print(" ");
+                Serial.print(size);
+                while(client.available()) client.read();
+                delay(delayTime);
+                delayTime += 100;
             }
         }
+        Serial.print("delayed -> ");
+        Serial.println(delayTime);
         client.stop();
         Serial.println("\n[Disconnected]");
     }
