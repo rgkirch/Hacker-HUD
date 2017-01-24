@@ -122,7 +122,61 @@
 //    return priceString;
 //}
 
-char* get(const char* host, const char* path)
+class JsonDownloader
+{
+    std::vector<char> getValue()
+    {
+        WiFiClient client;
+        if (client.connect(host, 80))
+        {
+            client.print(request);
+            while(client.connected())
+            {
+                if(client.available())
+                {
+                    try
+                    {
+                        std::vector<char> buffer.push_back(client->read());
+                    } catch exception(e) {
+                        Serial.println(e);
+                    }
+                }
+            }
+            client.stop();
+            Serial.println("\n[Disconnected]");
+        }
+        else
+        {
+            Serial.println("connection failed!]");
+            client.stop();
+        }
+    }
+    std::vector<char> request;
+    std::vector<std::vector<char>> jsonKeys;
+    std::vector<std::vector<char>> jsonValues;
+}
+class JsonDownloaderBuilder
+{
+    JsonDownloader buildJsonDownloader()
+    {
+        request.reserve(one.size() + two.size() + three.size() + host.size() + path.size());
+        request.insert(std::begin(request), std::begin(one), std::end(one));
+        request.insert(std::begin(request), std::begin(host), std::end(host));
+        request.insert(std::begin(request), std::begin(two), std::end(two));
+        request.insert(std::begin(request), std::begin(path), std::end(path));
+        request.insert(std::begin(request), std::begin(three), std::end(three));
+    }
+    void setHost()
+    void setPath();
+    std::vector<char> host;
+    std::vector<char> path;
+    std::vector<char> request;
+    std::vector<char> one("GET /");
+    std::vector<char> two(" HTTP/1.1\r\nHost: ");
+    std::vector<char> three("\r\n" + "Connection: close\r\n" + "\r\n" );
+}
+
+char* getJsonValues(std::vector<char> host, std::vector<char> path)
 {
     if(host == nullptr) return nullptr;
     if(path == nullptr) return nullptr;
