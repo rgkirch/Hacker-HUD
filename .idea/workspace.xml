@@ -2,15 +2,15 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" buildAllGenerated="true">
     <generated>
-      <config projectName="clion" targetName="PLATFORMIO_UPLOAD" />
       <config projectName="clion" targetName="PLATFORMIO_PROGRAM" />
-      <config projectName="clion" targetName="PLATFORMIO_TEST" />
+      <config projectName="clion" targetName="PLATFORMIO_UPLOAD" />
+      <config projectName="clion" targetName="PLATFORMIO_BUILD" />
       <config projectName="clion" targetName="PLATFORMIO_UPDATE_ALL" />
+      <config projectName="clion" targetName="PLATFORMIO_UPLOADFS" />
+      <config projectName="clion" targetName="PLATFORMIO_REBUILD_PROJECT_INDEX" />
+      <config projectName="clion" targetName="PLATFORMIO_TEST" />
       <config projectName="clion" targetName="clion" />
       <config projectName="clion" targetName="PLATFORMIO_CLEAN" />
-      <config projectName="clion" targetName="PLATFORMIO_REBUILD_PROJECT_INDEX" />
-      <config projectName="clion" targetName="PLATFORMIO_BUILD" />
-      <config projectName="clion" targetName="PLATFORMIO_UPLOADFS" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -20,9 +20,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4943d9a7-869b-4619-a0ba-12b8ad201e28" name="Default" comment="">
-      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/src/notes.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/notes.txt" afterPath="$PROJECT_DIR$/src/notes.txt" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -51,48 +53,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="213">
-              <caret line="30" column="36" lean-forward="false" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="time.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/time/time.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="80">
-              <caret line="3" column="3" lean-forward="false" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="3" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="wifi.cpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1200">
-              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="wifi.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="440">
-              <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="time.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/time/time.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="603">
+              <caret line="56" column="12" lean-forward="true" selection-start-line="56" selection-start-column="12" selection-end-line="56" selection-end-column="12" />
               <folding />
             </state>
           </provider>
@@ -101,38 +63,71 @@
       <file leaf-file-name="vfd.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="320">
+            <state relative-caret-position="400">
               <caret line="10" column="4" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scrapeWeb.hpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="scrapeWeb.hpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="200">
-              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
-              <folding />
+            <state relative-caret-position="800">
+              <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="21" selection-end-column="18" />
+              <folding>
+                <element signature="e#106#116#0" expanded="true" />
+                <element signature="e#135#145#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="533">
-              <caret line="129" column="25" lean-forward="false" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="notes.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/notes.txt">
+      <file leaf-file-name="WiFiClient.h" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src/WiFiClient.h">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="0">
-              <caret line="0" column="73" lean-forward="false" selection-start-line="0" selection-start-column="73" selection-end-line="0" selection-end-column="73" />
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="40">
+              <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Arduino.h" pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoespressif8266/cores/esp8266/Arduino.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="800">
+              <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Arduino.h" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/Arduino/cores/esp8266/Arduino.h">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="427">
+              <caret line="251" column="33" lean-forward="false" selection-start-line="251" selection-start-column="33" selection-end-line="251" selection-end-column="33" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="WiFiClient.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="457">
+              <caret line="87" column="23" lean-forward="false" selection-start-line="87" selection-start-column="23" selection-end-line="87" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -156,6 +151,8 @@
       <find>hostTime</find>
       <find>host</find>
       <find>char* host</find>
+      <find>connect</find>
+      <find>min</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -182,13 +179,13 @@
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.h" />
         <option value="$PROJECT_DIR$/src/example.com.txt" />
         <option value="$PROJECT_DIR$/src/coindesk.com_currentprice.json.txt" />
-        <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
         <option value="$PROJECT_DIR$/lib/time/time.hpp" />
         <option value="$PROJECT_DIR$/lib/wifi/wifi.hpp" />
         <option value="$PROJECT_DIR$/lib/wifi/wifi.cpp" />
-        <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/src/notes.txt" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
+        <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
       </list>
     </option>
   </component>
@@ -442,7 +439,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="GO_FMT" value="false" />
-    <property name="SearchEverywhereHistoryKey" value="sc&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;main&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;wifi.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.cpp&#10;vfdprint&#9;null&#9;null&#10;todo&#9;ACTION&#9;ActivateTODOToolWindow&#10;scra&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;string&#9;FILE&#9;file://C:/Users/Richie/.platformio/packages/framework-arduinoteensy/cores/teensy3/WString.h&#10;readstringuntil&#9;null&#9;null&#10;wificlient&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp&#10;scr&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;time.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.hpp&#10;wifi.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;time&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;time.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;initializewifi&#9;null&#9;null&#10;vfdbu&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.cpp&#10;setup&#9;null&#9;null&#10;vfd.hp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;initializewif&#9;null&#9;null&#10;vfd&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;wifi&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;wif&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;readme&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/readme.txt&#10;m&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;vfd.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;.gitignor&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/.gitignore&#10;vfd.h&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/VFD.h&#10;coyt&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/coyt_test_main.cpp&#10;===&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="sc&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;wificl&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp&#10;wificlient.h&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.h&#10;wificlient&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp&#10;scra&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;web&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;notes&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/notes.txt&#10;main&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;wifi.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.cpp&#10;vfdprint&#9;null&#9;null&#10;todo&#9;ACTION&#9;ActivateTODOToolWindow&#10;string&#9;FILE&#9;file://C:/Users/Richie/.platformio/packages/framework-arduinoteensy/cores/teensy3/WString.h&#10;readstringuntil&#9;null&#9;null&#10;scr&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;time.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.hpp&#10;wifi.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;time&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;time.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;initializewifi&#9;null&#9;null&#10;vfdbu&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.cpp&#10;setup&#9;null&#9;null&#10;vfd.hp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;initializewif&#9;null&#9;null&#10;vfd&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;wifi&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;wif&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;readme&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/readme.txt&#10;m&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;vfd.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;.gitignor&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/.gitignore&#10;vfd.h&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/VFD.h&#10;coyt&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/coyt_test_main.cpp&#10;===&#9;null&#9;null" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="ChangesBrowser.SHOW_FLATTEN" value="false" />
@@ -710,7 +707,9 @@
       <workItem from="1484621482151" duration="22000" />
       <workItem from="1485021151129" duration="10692000" />
       <workItem from="1485092891820" duration="10642000" />
-      <workItem from="1485105827678" duration="3119000" />
+      <workItem from="1485105827678" duration="6848000" />
+      <workItem from="1485215460558" duration="6096000" />
+      <workItem from="1485303375983" duration="6680000" />
     </task>
     <task id="LOCAL-00001" summary="clion config stuff?">
       <created>1484612731429</created>
@@ -817,11 +816,18 @@
       <option name="project" value="LOCAL" />
       <updated>1485108144652</updated>
     </task>
-    <option name="localTasksCounter" value="16" />
+    <task id="LOCAL-00016" summary="how long can a connection stay open without reading from it?">
+      <created>1485108969442</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1485108969442</updated>
+    </task>
+    <option name="localTasksCounter" value="17" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="30399000" />
+    <option name="totallyTimeSpent" value="46904000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -899,53 +905,14 @@
     <MESSAGE value="just needed to remove the delay at th ebegining of setup and wifi works now" />
     <MESSAGE value="renamed &quot;InitializeWifi&quot; to &quot;connectToWifi&quot; - buffering the client read, does it have a max size?" />
     <MESSAGE value="testing downloading of a lot of text. i'll add delays to see how long the client can wait between reads" />
-    <option name="LAST_COMMIT_MESSAGE" value="testing downloading of a lot of text. i'll add delays to see how long the client can wait between reads" />
+    <MESSAGE value="how long can a connection stay open without reading from it?" />
+    <option name="LAST_COMMIT_MESSAGE" value="how long can a connection stay open without reading from it?" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="4" column="16" lean-forward="false" selection-start-line="4" selection-start-column="16" selection-end-line="4" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/coyt_test_main.cpp" />
-    <entry file="file://$PROJECT_DIR$/lib/vfd_old/vfd.cpp" />
-    <entry file="file://$PROJECT_DIR$/lib/vfd_old/vfd.hpp" />
-    <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoespressif8266/cores/esp8266/HardwareSerial.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="112" column="0" lean-forward="false" selection-start-line="112" selection-start-column="0" selection-end-line="112" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoespressif8266/cores/esp8266/Arduino.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="427">
-          <caret line="244" column="0" lean-forward="false" selection-start-line="244" selection-start-column="0" selection-end-line="244" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$USER_HOME$/.platformio/packages/toolchain-xtensa/xtensa-lx106-elf/include/stdint.h">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="11" column="0" lean-forward="false" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/.platformio/packages/toolchain-xtensa/xtensa-lx106-elf/include/string.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1160">
@@ -966,7 +933,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1280">
           <caret line="32" column="38" lean-forward="false" selection-start-line="32" selection-start-column="38" selection-end-line="32" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -982,7 +948,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
           <caret line="12" column="37" lean-forward="false" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1081,7 +1046,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-413">
           <caret line="271" column="15" lean-forward="false" selection-start-line="271" selection-start-column="15" selection-end-line="271" selection-end-column="15" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1096,15 +1060,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="507">
           <caret line="262" column="9" lean-forward="false" selection-start-line="262" selection-start-column="9" selection-end-line="262" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1119,7 +1074,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1440">
           <caret line="36" column="5" lean-forward="false" selection-start-line="36" selection-start-column="5" selection-end-line="36" selection-end-column="5" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1127,21 +1081,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="46920">
           <caret line="1173" column="5" lean-forward="false" selection-start-line="1173" selection-start-column="5" selection-end-line="1173" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="213">
-          <caret line="30" column="36" lean-forward="false" selection-start-line="30" selection-start-column="36" selection-end-line="30" selection-end-column="36" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/time/time.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="80">
+        <state relative-caret-position="120">
           <caret line="3" column="3" lean-forward="false" selection-start-line="3" selection-start-column="3" selection-end-line="3" selection-end-column="3" />
           <folding />
         </state>
@@ -1149,7 +1094,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1200">
+        <state relative-caret-position="1600">
           <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
           <folding />
         </state>
@@ -1171,26 +1116,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/ESP8266WiFiGeneric.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="10" column="4" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+        <state relative-caret-position="0">
+          <caret line="90" column="4" lean-forward="false" selection-start-line="90" selection-start-column="4" selection-end-line="90" selection-end-column="4" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/include/slist.h">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="200">
-          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+        <state relative-caret-position="803">
+          <caret line="32" column="12" lean-forward="false" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1200">
+          <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/notes.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="73" lean-forward="false" selection-start-line="0" selection-start-column="73" selection-end-line="0" selection-end-column="73" />
+        <state relative-caret-position="40">
+          <caret line="1" column="92" lean-forward="false" selection-start-line="1" selection-start-column="92" selection-end-line="1" selection-end-column="92" />
           <folding />
         </state>
       </provider>
@@ -1203,11 +1156,86 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="10" column="4" lean-forward="false" selection-start-line="10" selection-start-column="4" selection-end-line="10" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="457">
+          <caret line="87" column="23" lean-forward="false" selection-start-line="87" selection-start-column="23" selection-end-line="87" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/cores/esp8266/Arduino.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="427">
+          <caret line="251" column="33" lean-forward="false" selection-start-line="251" selection-start-column="33" selection-end-line="251" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="603">
+          <caret line="56" column="12" lean-forward="true" selection-start-line="56" selection-start-column="12" selection-end-line="56" selection-end-column="12" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/cores/esp8266/spiffs_api.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1120">
+          <caret line="28" column="1" lean-forward="false" selection-start-line="28" selection-start-column="1" selection-end-line="28" selection-end-column="1" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/SoftwareSerial/src/SoftwareSerial.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoespressif8266/cores/esp8266/Arduino.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="800">
+          <caret line="251" column="0" lean-forward="false" selection-start-line="251" selection-start-column="0" selection-end-line="251" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="533">
-          <caret line="129" column="25" lean-forward="false" selection-start-line="129" selection-start-column="25" selection-end-line="129" selection-end-column="25" />
+        <state relative-caret-position="40">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
           <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/.platformio/packages/framework-arduinoespressif8266/libraries/ESP8266WiFi/src/WiFiClient.h">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="800">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="21" selection-end-column="18" />
+          <folding>
+            <element signature="e#106#116#0" expanded="true" />
+            <element signature="e#135#145#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>

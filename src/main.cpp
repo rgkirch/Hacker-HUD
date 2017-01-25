@@ -53,7 +53,7 @@ void setup() {
     myVfdBuilder.setDisplayHeight(2);
     myVFD = myVfdBuilder.buildVFD();
     connectToWifi();
-    get("norvig.com", "big.txt");
+//    getJsonValue("norvig.com", "big.txt");
     yield();
 }
 

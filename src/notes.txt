@@ -1,1 +1,2 @@
 client.available() can return up to 5840 - wifiClient can buffer that much
+client disconnected with a 15500 ms delay as the last successfull delay between client.read()
