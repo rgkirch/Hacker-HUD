@@ -23,7 +23,6 @@
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -72,8 +71,8 @@
       <file leaf-file-name="scrapeWeb.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="32" column="56" lean-forward="false" selection-start-line="32" selection-start-column="56" selection-end-line="32" selection-end-column="56" />
+            <state relative-caret-position="1160">
+              <caret line="34" column="70" lean-forward="false" selection-start-line="34" selection-start-column="70" selection-end-line="34" selection-end-column="70" />
               <folding>
                 <element signature="e#106#116#0" expanded="true" />
                 <element signature="e#135#145#0" expanded="true" />
@@ -86,7 +85,7 @@
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="602">
-              <caret line="78" column="8" lean-forward="false" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
+              <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -710,7 +709,7 @@
       <workItem from="1485215460558" duration="6096000" />
       <workItem from="1485303375983" duration="8420000" />
       <workItem from="1485384058632" duration="3718000" />
-      <workItem from="1485470512407" duration="2947000" />
+      <workItem from="1485470512407" duration="3948000" />
     </task>
     <task id="LOCAL-00001" summary="clion config stuff?">
       <created>1484612731429</created>
@@ -831,11 +830,18 @@
       <option name="project" value="LOCAL" />
       <updated>1485312249037</updated>
     </task>
-    <option name="localTasksCounter" value="18" />
+    <task id="LOCAL-00018" summary="broken, using strings, can't have exceptions though">
+      <created>1485473512811</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1485473512811</updated>
+    </task>
+    <option name="localTasksCounter" value="19" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="55309000" />
+    <option name="totallyTimeSpent" value="56310000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -915,7 +921,8 @@
     <MESSAGE value="testing downloading of a lot of text. i'll add delays to see how long the client can wait between reads" />
     <MESSAGE value="how long can a connection stay open without reading from it?" />
     <MESSAGE value="what am i doing? it compiles" />
-    <option name="LAST_COMMIT_MESSAGE" value="what am i doing? it compiles" />
+    <MESSAGE value="broken, using strings, can't have exceptions though" />
+    <option name="LAST_COMMIT_MESSAGE" value="broken, using strings, can't have exceptions though" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1220,8 +1227,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="32" column="56" lean-forward="false" selection-start-line="32" selection-start-column="56" selection-end-line="32" selection-end-column="56" />
+        <state relative-caret-position="1160">
+          <caret line="34" column="70" lean-forward="false" selection-start-line="34" selection-start-column="70" selection-end-line="34" selection-end-column="70" />
           <folding>
             <element signature="e#106#116#0" expanded="true" />
             <element signature="e#135#145#0" expanded="true" />
@@ -1232,7 +1239,7 @@
     <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="602">
-          <caret line="78" column="8" lean-forward="false" selection-start-line="78" selection-start-column="8" selection-end-line="78" selection-end-column="8" />
+          <caret line="121" column="0" lean-forward="false" selection-start-line="121" selection-start-column="0" selection-end-line="121" selection-end-column="0" />
           <folding />
         </state>
       </provider>

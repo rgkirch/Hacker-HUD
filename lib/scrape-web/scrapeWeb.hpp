@@ -32,6 +32,6 @@ struct Site {
 
 std::string parseJson(std::string text, std::string key);
 std::string makeGetRequest(std::string host, std::string path);
-int getJsonValue(const bool secureClient, std::vector<char> host, std::vector<char> path, const char* key);
+int getJsonValue(const bool secureClient, std::string host, std::string path, const char* key);
 
 #endif

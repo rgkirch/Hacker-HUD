@@ -72,27 +72,36 @@ String scrapeSite(Site site) {
 // maybe just search for one at a time
 //fnc to parse data from web page (json) -----
 std::string parseJson(std::string text, std::string key){
-    try {
-        int index;
-        int begin;
-        int end;
-        if((index = text.find(key)) == std::string::npos) return std::string(); // key is there but value may be cut off
-        if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return std::string(); // need more data
-        if(text.at(begin) == '"') // it's a string - look for end quote
+    if(key.length() < text.length()) return std::string();
+    if(text.length() < 3) return std::string();
+    int index;
+    int begin;
+    int end;
+    if((index = text.find(key)) == std::string::npos) return std::string(); // key is there but value may be cut off
+    if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return std::string(); // need more data
+    if(text.length() <= begin) return std::string();
+    if(text.at(begin) == '"') // it's a string - look for end quote
+    {
+        begin++;
+        if(text.length() <= begin) return std::string();
+        end = begin;
+        while(!(text.at(end) == '"' && text.at(end - 1) != '\\')) // find first unescaped quote
         {
-            begin++;
-            end = begin;
-            while(!(text.at(end) == '"' && text.at(end - 1) != '\\')) // find first unescaped quote
-            {
-                end++;
-            }
-        } else { // it's a number
+            end++;
+            if(text.length() <= end) return std::string();
+        }
+    } else { // it's a number
+        if(text.find(',', begin) == std::string::npos && text.find('}', begin) == std::string::npos) {
+            return std::string();
+        } else if(text.find(',', begin) == std::string::npos && text.find('}', begin) < 0) {
+            end = text.find('}', begin);
+        } else if(text.find(',', begin) > 0 && text.find('}', begin) == std::string::npos) {
+            end = text.find(',', begin);
+        } else {
             end = min(text.find(',', begin), text.find('}', begin));
         }
-        return text.substr(begin, end);
-    } catch (std::out_of_range) {
-        return std::string();
     }
+    return text.substr(begin, end);
 }
 
 std::string makeGetRequest(std::string host, std::string path)
@@ -109,7 +118,7 @@ std::string makeGetRequest(std::string host, std::string path)
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
 // todo - maybe make this a class and use the builder pattern on it as well
 // todo - don't build with strings, use strcat
-int getJsonValue(const bool secureClient, std::vector<char> host, std::vector<char> path, const char* key)
+int getJsonValue(const bool secureClient, std::string host, std::string path, const char* key)
 {
     if(key == nullptr) return 0;
     WiFiClient* client;
