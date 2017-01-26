@@ -69,66 +69,40 @@ String scrapeSite(Site site) {
     return answer;
 }
 
+// maybe just search for one at a time
 //fnc to parse data from web page (json) -----
-String parseData (String answer, jsonThing whatToParse){
-
-    // Convert to JSON
-    String jsonAnswer;
-    int jsonIndex;
-
-    for (int i = 0; i < answer.length(); i++) {
-        if (answer[i] == '{') {
-            jsonIndex = i;
-            break;
+std::string parseJson(std::string text, std::string key){
+    try {
+        int index;
+        int begin;
+        int end;
+        if((index = text.find(key)) == std::string::npos) return std::string(); // key is there but value may be cut off
+        if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return std::string(); // need more data
+        if(text.at(begin) == '"') // it's a string - look for end quote
+        {
+            begin++;
+            end = begin;
+            while(!(text.at(end) == '"' && text.at(end - 1) != '\\')) // find first unescaped quote
+            {
+                end++;
+            }
+        } else { // it's a number
+            end = min(text.find(',', begin), text.find('}', begin));
         }
+        return text.substr(begin, end);
+    } catch (std::out_of_range) {
+        return std::string();
     }
-
-    // Get JSON data
-    jsonAnswer = answer.substring(jsonIndex);
-    Serial.println();
-    Serial.println("JSON answer: ");
-    Serial.println(jsonAnswer);
-    jsonAnswer.trim();
-
-    // Get rate as float
-    String priceString = jsonAnswer.substring(jsonAnswer.indexOf(whatToParse.keyword) + whatToParse.begin);
-    int indexOutput = 0;
-
-    if (priceString.indexOf(",") == -1){
-        indexOutput = priceString.indexOf("}");
-    } else if (priceString.indexOf("}") == -1){
-        indexOutput = priceString.indexOf(",");
-    } else {
-        int less;
-        if (priceString.indexOf("}") < priceString.indexOf(",")) {
-            less = priceString.indexOf("}");
-        } else {
-            less = priceString.indexOf(",");
-        }
-        indexOutput = less;
-    }
-    priceString = priceString.substring(0,indexOutput);
-    int decimal = priceString.indexOf(".");
-    if (decimal > -1) priceString = priceString.substring(0,decimal + 3);
-    priceString.trim();
-    float price = priceString.toFloat();
-
-    Serial.println("end function");
-    return priceString;
 }
 
-std::vector<char> makeGetRequest(std::vector<char> host, std::vector<char> path)
+std::string makeGetRequest(std::string host, std::string path)
 {
-    std::vector<char> request;
-    std::vector<char> one = {'G', 'E', 'T', ' ', '/'};
-    std::vector<char> two = {' ', 'H', 'T', 'T', 'P', '/', '1', '.', '1', '\r', '\n', 'H', 'o', 's', 't', ':', ' '};
-    std::vector<char> three = {'\r', '\n', 'C', 'o', 'n', 'n', 'e', 'c', 't', 'i', 'o', 'n', ':', ' ', 'c', 'l', 'o', 's', 'e', '\r', '\n', '\r', '\n'};
-    request.reserve(one.size() + two.size() + three.size() + host.size() + path.size());
-    request.insert(std::begin(request), std::begin(one), std::end(one));
-    request.insert(std::begin(request), std::begin(host), std::end(host));
-    request.insert(std::begin(request), std::begin(two), std::end(two));
-    request.insert(std::begin(request), std::begin(path), std::end(path));
-    request.insert(std::begin(request), std::begin(three), std::end(three));
+    std::string request;
+//    request.reserve(one.size() + two.size() + three.size() + host.size() + path.size());
+    std::string one = {"GET /"};
+    std::string two = {" HTTP/1.1\r\nHost: "};
+    std::string three = {"\r\nConnection: close\r\n\r\n"};
+    request.append(one).append(host).append(two).append(path).append(three);
     return request;
 }
 

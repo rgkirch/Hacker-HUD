@@ -14,7 +14,6 @@
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
 
-
 //const char* host = "api.coindesk.com";
 //const char* hostEth = "api.nanopool.org";
 //const char* hostTime = "script.google.com";
@@ -31,7 +30,8 @@ struct Site {
     bool secure;
 };
 
-std::vector<char> makeGetRequest(std::vector<char> host, std::vector<char> path);
+std::string parseJson(std::string text, std::string key);
+std::string makeGetRequest(std::string host, std::string path);
 int getJsonValue(const bool secureClient, std::vector<char> host, std::vector<char> path, const char* key);
 
 #endif
