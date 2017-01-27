@@ -21,3 +21,11 @@ int VFD::print(const char *c, int n) {
     }
     return counter;
 }
+
+void VFD::print(std::string str)
+{
+    for (char c:str)
+    {
+        softwareSerial->write(c);
+    }
+}

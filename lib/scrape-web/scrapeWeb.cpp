@@ -1,5 +1,6 @@
 #include "scrapeWeb.hpp"
 extern std::string stringNotFound;
+extern void serialPrintln(std::string str);
 
 // TODO - work on this
 //websites and data to parse -----
@@ -112,7 +113,7 @@ std::string makeGetRequest(std::string host, std::string path)
     std::string one = {"GET /"};
     std::string two = {" HTTP/1.1\r\nHost: "};
     std::string three = {"\r\nConnection: close\r\n\r\n"};
-    request.append(one).append(host).append(two).append(path).append(three);
+    request.append(one).append(path).append(two).append(host).append(three);
     return request;
 }
 
@@ -144,7 +145,9 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
             {
                 buffer.push_back(client->read());
             }
-            std::string value = parseJson(buffer, key);
+            Serial.println("buffer to search");
+            serialPrintln(buffer);
+            value = parseJson(buffer, key);
             text = buffer.substr(buffer.find(key.data()));
         }
     }

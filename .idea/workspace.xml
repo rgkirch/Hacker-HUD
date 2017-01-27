@@ -22,7 +22,8 @@
     <list default="true" id="4943d9a7-869b-4619-a0ba-12b8ad201e28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/vfd/vfd.cpp" afterPath="$PROJECT_DIR$/lib/vfd/vfd.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/vfd/vfd.hpp" afterPath="$PROJECT_DIR$/lib/vfd/vfd.hpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platformio.ini" afterPath="$PROJECT_DIR$/platformio.ini" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
@@ -43,38 +44,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="845">
-              <caret line="65" column="4" lean-forward="false" selection-start-line="65" selection-start-column="4" selection-end-line="65" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="globals.h" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/globals/globals.h">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="globals.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/globals.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="vfd.hpp" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="640">
+              <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -83,38 +54,28 @@
       <file leaf-file-name="scrapeWeb.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1205">
-              <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+            <state relative-caret-position="845">
+              <caret line="32" column="12" lean-forward="false" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="false">
+      <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="946">
-              <caret line="147" column="40" lean-forward="false" selection-start-line="147" selection-start-column="40" selection-end-line="147" selection-end-column="40" />
+            <state relative-caret-position="815">
+              <caret line="137" column="0" lean-forward="false" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CMakeLists.txt" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="49" column="57" lean-forward="false" selection-start-line="49" selection-start-column="57" selection-end-line="49" selection-end-column="57" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="platformio.ini" pinned="false" current-in-tab="true">
+      <file leaf-file-name="platformio.ini" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/platformio.ini">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1080">
-              <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+            <state relative-caret-position="1120">
+              <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -179,8 +140,6 @@
         <option value="$PROJECT_DIR$/src/coyt_test_main.cpp" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/lib/time/time.h" />
-        <option value="$PROJECT_DIR$/lib/vfd/vfd.cpp" />
-        <option value="$PROJECT_DIR$/lib/vfd/vfd.hpp" />
         <option value="$PROJECT_DIR$/lib/vfd/vfdBuilder.h" />
         <option value="$PROJECT_DIR$/lib/vfd/vfdBuilder.cpp" />
         <option value="$PROJECT_DIR$/lib/time/time.cpp" />
@@ -193,10 +152,12 @@
         <option value="$PROJECT_DIR$/src/notes.txt" />
         <option value="$PROJECT_DIR$/lib/globals/globals.h" />
         <option value="$PROJECT_DIR$/src/globals.hpp" />
-        <option value="$PROJECT_DIR$/src/main.cpp" />
-        <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
         <option value="$PROJECT_DIR$/platformio.ini" />
+        <option value="$PROJECT_DIR$/lib/vfd/vfd.hpp" />
+        <option value="$PROJECT_DIR$/lib/vfd/vfd.cpp" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
+        <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
       </list>
     </option>
   </component>
@@ -744,7 +705,7 @@
       <workItem from="1485215460558" duration="6096000" />
       <workItem from="1485303375983" duration="8420000" />
       <workItem from="1485384058632" duration="3718000" />
-      <workItem from="1485470512407" duration="8972000" />
+      <workItem from="1485470512407" duration="10325000" />
     </task>
     <task id="LOCAL-00001" summary="clion config stuff?">
       <created>1484612731429</created>
@@ -886,11 +847,18 @@
       <option name="project" value="LOCAL" />
       <updated>1485478904133</updated>
     </task>
-    <option name="localTasksCounter" value="21" />
+    <task id="LOCAL-00021" summary="compiler erro .text will not fit in region iram_seg">
+      <created>1485480111707</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1485480111707</updated>
+    </task>
+    <option name="localTasksCounter" value="22" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="61334000" />
+    <option name="totallyTimeSpent" value="62687000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -973,7 +941,8 @@
     <MESSAGE value="broken, using strings, can't have exceptions though" />
     <MESSAGE value="code compiles, haven't finished what i was working on though" />
     <MESSAGE value="compiles, i hope it works. haven't tested it yet" />
-    <option name="LAST_COMMIT_MESSAGE" value="compiles, i hope it works. haven't tested it yet" />
+    <MESSAGE value="compiler erro .text will not fit in region iram_seg" />
+    <option name="LAST_COMMIT_MESSAGE" value="compiler erro .text will not fit in region iram_seg" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -997,13 +966,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="480">
           <caret line="14" column="15" lean-forward="false" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="12" column="37" lean-forward="false" selection-start-line="12" selection-start-column="37" selection-end-line="12" selection-end-column="37" />
         </state>
       </provider>
     </entry>
@@ -1234,23 +1196,39 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
+    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="946">
-          <caret line="147" column="40" lean-forward="false" selection-start-line="147" selection-start-column="40" selection-end-line="147" selection-end-column="40" />
+        <state relative-caret-position="1080">
+          <caret line="49" column="57" lean-forward="false" selection-start-line="49" selection-start-column="57" selection-end-line="49" selection-end-column="57" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
+    <entry file="file://$PROJECT_DIR$/platformio.ini">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1205">
-          <caret line="36" column="0" lean-forward="false" selection-start-line="36" selection-start-column="0" selection-end-line="36" selection-end-column="0" />
+        <state relative-caret-position="1120">
+          <caret line="28" column="0" lean-forward="false" selection-start-line="28" selection-start-column="0" selection-end-line="28" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
+    <entry file="file://$PROJECT_DIR$/src/coindesk.com_currentprice.json.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="480">
+          <caret line="12" column="9" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1853">
+          <caret line="87" column="23" lean-forward="false" selection-start-line="87" selection-start-column="23" selection-end-line="87" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/globals/globals.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
@@ -1266,50 +1244,44 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/globals/globals.h">
+    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="440">
+          <caret line="13" column="8" lean-forward="false" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
+          <folding>
+            <element signature="e#29#56#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="405">
+          <caret line="15" column="65" lean-forward="false" selection-start-line="15" selection-start-column="65" selection-end-line="15" selection-end-column="65" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="845">
+          <caret line="32" column="12" lean-forward="false" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="845">
-          <caret line="65" column="4" lean-forward="false" selection-start-line="65" selection-start-column="4" selection-end-line="65" selection-end-column="4" />
+        <state relative-caret-position="640">
+          <caret line="46" column="0" lean-forward="false" selection-start-line="46" selection-start-column="0" selection-end-line="46" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp">
+    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1853">
-          <caret line="87" column="23" lean-forward="false" selection-start-line="87" selection-start-column="23" selection-end-line="87" selection-end-column="23" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/coindesk.com_currentprice.json.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="12" column="9" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/CMakeLists.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="49" column="57" lean-forward="false" selection-start-line="49" selection-start-column="57" selection-end-line="49" selection-end-column="57" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/platformio.ini">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1080">
-          <caret line="27" column="0" lean-forward="false" selection-start-line="27" selection-start-column="0" selection-end-line="27" selection-end-column="0" />
+        <state relative-caret-position="815">
+          <caret line="137" column="0" lean-forward="false" selection-start-line="137" selection-start-column="0" selection-end-line="137" selection-end-column="0" />
           <folding />
         </state>
       </provider>

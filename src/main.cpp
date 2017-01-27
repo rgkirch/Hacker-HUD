@@ -16,6 +16,17 @@
 
 typedef unsigned char uint8_t;
 
+void *memchr(const void *s, int c, size_t n)
+{
+    unsigned char *p = (unsigned char*)s;
+    while( n-- )
+        if( *p != (unsigned char)c )
+            p++;
+        else
+            return p;
+    return 0;
+}
+
 VFD* myVFD;
 int vfdPrint(const char *c, int n)
 {
@@ -25,6 +36,18 @@ int vfdPrint(const char *c, int n)
     } else {
         return myVFD->print(c, n);
     }
+}
+void serialPrint(std::string str)
+{
+    for (char c:str)
+    {
+        Serial.print(c);
+    }
+}
+void serialPrintln(std::string str)
+{
+    serialPrint(str);
+    Serial.println();
 }
 void printEspInfo()
 {
@@ -63,7 +86,10 @@ void loop() {
     std::string host = {"api.coindesk.com"};
     std::string price = {"v1/bpi/currentprice.json"};
     std::string rateFloat = {"rate_float"};
-    getJsonValue(false, host, price, rateFloat);
+    Serial.print("makeGetRequest -> ");
+    serialPrintln(makeGetRequest(host, price));
+    std::string rate = getJsonValue(false, host, price, rateFloat);
+    myVFD->print(rate);
 //    get(host, price);
     delay(5000);
     yield();
