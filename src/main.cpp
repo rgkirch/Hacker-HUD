@@ -3,8 +3,8 @@
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 
-#include <Adafruit_MCP9808.h>
-#include <Wire.h>
+//#include <Adafruit_MCP9808.h>
+//#include <Wire.h>
 
 #include <NtpClientLib.h>
 #include "../lib/vfd/vfd.hpp"
@@ -12,7 +12,6 @@
 #include "../lib/wifi/wifi.hpp"
 #include "../lib/scrape-web/scrapeWeb.hpp"
 #include "globals.hpp"
-#include <NtpClientLib.h>
 
 typedef unsigned char uint8_t;
 

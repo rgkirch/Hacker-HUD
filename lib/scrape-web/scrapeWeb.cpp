@@ -1,6 +1,7 @@
 #include "scrapeWeb.hpp"
 extern std::string stringNotFound;
 extern void serialPrintln(std::string str);
+extern void serialPrint(std::string str);
 
 // TODO - work on this
 //websites and data to parse -----
@@ -74,26 +75,43 @@ String scrapeSite(Site site) {
 // maybe just search for one at a time
 //fnc to parse data from web page (json) -----
 std::string parseJson(std::string text, std::string key){
-    if(key.length() < text.length()) return stringNotFound;
+    Serial.print("string not found ");
+    serialPrintln(stringNotFound);
+    Serial.print("text.length ");
+    Serial.println(text.length());
+    Serial.print("key.length ");
+    Serial.println(key.length());
+    Serial.println(1);
+    if(text.length() < key.length()) return stringNotFound;
+    Serial.println(1.5);
     if(text.length() < 3) return stringNotFound;
     int index;
     int begin;
     int end;
+    Serial.println(2);
     if((index = text.find(key.data())) == std::string::npos) return stringNotFound;// key is there but value may be cut off
+    Serial.println(3);
     if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return stringNotFound; // need more data
+    Serial.println(4);
     if(text.length() <= begin) return stringNotFound;
+    Serial.println(5);
     if(text.at(begin) == '"') // it's a string - look for end quote
     {
+        Serial.println(6);
         begin++;
         if(text.length() <= begin) return stringNotFound;
+        Serial.println(7);
         end = begin;
         while(!(text.at(end) == '"' && text.at(end - 1) != '\\')) // find first unescaped quote
         {
+            Serial.println(8);
             end++;
             if(text.length() <= end) return stringNotFound;
         }
     } else { // it's a number
+        Serial.println(9);
         if(text.find(',', begin) == std::string::npos && text.find('}', begin) == std::string::npos) {
+            Serial.println(10);
             return stringNotFound;
         } else if(text.find(',', begin) == std::string::npos && text.find('}', begin) < 0) {
             end = text.find('}', begin);
@@ -103,6 +121,7 @@ std::string parseJson(std::string text, std::string key){
             end = min(text.find(',', begin), text.find('}', begin));
         }
     }
+    Serial.println(11);
     return text.substr(begin, end);
 }
 
@@ -119,7 +138,6 @@ std::string makeGetRequest(std::string host, std::string path)
 
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
 // todo - maybe make this a class and use the builder pattern on it as well
-// todo - don't build with strings, use strcat
 std::string getJsonValue(const bool secureClient, std::string host, std::string path, std::string key)
 {
     std::string value = stringNotFound;
@@ -133,8 +151,11 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
         client = new WiFiClient;
         httpPort = 80;
     }
-    if (client->connect(makeGetRequest(host, path).data(), httpPort))
+    if (client->connect(host.data(), httpPort))
     {
+        client->print(makeGetRequest(host, path).data());
+        Serial.print(millis());
+        Serial.println(" client connected");
         std::string text;
         while(value == stringNotFound)
         {
@@ -148,10 +169,20 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
             Serial.println("buffer to search");
             serialPrintln(buffer);
             value = parseJson(buffer, key);
-            text = buffer.substr(buffer.find(key.data()));
+            Serial.println("after call to parse Json");
+            int keyIndex;
+            if(keyIndex = buffer.find(key.data()) != std::string::npos)
+            {
+                text = buffer.substr(keyIndex);
+            } else text = buffer;
         }
     }
     client->stop();
     free(client);
+    Serial.print("key <");
+    serialPrint(key);
+    Serial.print("> value <");
+    serialPrintln(value);
+    Serial.println(">");
     return value;
 }
