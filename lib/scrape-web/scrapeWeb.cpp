@@ -1,4 +1,5 @@
 #include "scrapeWeb.hpp"
+extern std::string stringNotFound;
 
 // TODO - work on this
 //websites and data to parse -----
@@ -72,27 +73,27 @@ String scrapeSite(Site site) {
 // maybe just search for one at a time
 //fnc to parse data from web page (json) -----
 std::string parseJson(std::string text, std::string key){
-    if(key.length() < text.length()) return std::string();
-    if(text.length() < 3) return std::string();
+    if(key.length() < text.length()) return stringNotFound;
+    if(text.length() < 3) return stringNotFound;
     int index;
     int begin;
     int end;
-    if((index = text.find(key)) == std::string::npos) return std::string(); // key is there but value may be cut off
-    if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return std::string(); // need more data
-    if(text.length() <= begin) return std::string();
+    if((index = text.find(key)) == std::string::npos) return stringNotFound;// key is there but value may be cut off
+    if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return stringNotFound; // need more data
+    if(text.length() <= begin) return stringNotFound;
     if(text.at(begin) == '"') // it's a string - look for end quote
     {
         begin++;
-        if(text.length() <= begin) return std::string();
+        if(text.length() <= begin) return stringNotFound;
         end = begin;
         while(!(text.at(end) == '"' && text.at(end - 1) != '\\')) // find first unescaped quote
         {
             end++;
-            if(text.length() <= end) return std::string();
+            if(text.length() <= end) return stringNotFound;
         }
     } else { // it's a number
         if(text.find(',', begin) == std::string::npos && text.find('}', begin) == std::string::npos) {
-            return std::string();
+            return stringNotFound;
         } else if(text.find(',', begin) == std::string::npos && text.find('}', begin) < 0) {
             end = text.find('}', begin);
         } else if(text.find(',', begin) > 0 && text.find('}', begin) == std::string::npos) {
@@ -118,9 +119,9 @@ std::string makeGetRequest(std::string host, std::string path)
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
 // todo - maybe make this a class and use the builder pattern on it as well
 // todo - don't build with strings, use strcat
-int getJsonValue(const bool secureClient, std::string host, std::string path, const char* key)
+std::string getJsonValue(const bool secureClient, std::string host, std::string path, std::string key)
 {
-    if(key == nullptr) return 0;
+    std::string value = stringNotFound;
     WiFiClient* client;
     int httpPort;
     if(secureClient)
@@ -131,20 +132,23 @@ int getJsonValue(const bool secureClient, std::string host, std::string path, co
         client = new WiFiClient;
         httpPort = 80;
     }
-    if (client->connect(host.data(), httpPort))
+    if (client->connect(makeGetRequest(host, path).data(), httpPort))
     {
-        auto get = makeGetRequest(host, path);
-        client->print(get.data());
-        std::vector<char> buffer;
-        for(int bufferIndex = 0; bufferIndex < 2000 && client->connected();) {
-            for(int i = min(2000 - bufferIndex, client->available()); i > 0; ++i) {
-                buffer[bufferIndex] = (char)client->read();
-                ++bufferIndex;
+        std::string text;
+        while(value == stringNotFound)
+        {
+            std::string buffer;
+            buffer.reserve(text.length() + client->available());
+            buffer.append(text);
+            for(int i = 0; i < client->available(); ++i)
+            {
+                buffer.push_back(client->read());
             }
+            std::string value = parseJson(buffer, key);
+            text = buffer.substr(buffer.find(key));
         }
-        client->stop();
-    } else {
-        client->stop();
     }
-    return 0;
+    client->stop();
+    free(client);
+    return value;
 }

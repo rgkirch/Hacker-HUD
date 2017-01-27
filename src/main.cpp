@@ -11,6 +11,7 @@
 #include "../lib/vfd/vfdBuilder.hpp"
 #include "../lib/wifi/wifi.hpp"
 #include "../lib/scrape-web/scrapeWeb.hpp"
+#include "globals.hpp"
 #include <NtpClientLib.h>
 
 typedef unsigned char uint8_t;
