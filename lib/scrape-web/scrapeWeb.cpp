@@ -75,58 +75,35 @@ String scrapeSite(Site site) {
 // maybe just search for one at a time
 //fnc to parse data from web page (json) -----
 std::string parseJson(std::string text, std::string key){
-    Serial.print("text.length ");
-    Serial.println(text.length());
-    Serial.print("key.length ");
-    Serial.println(key.length());
-    Serial.println(1);
-    if(text.length() < key.length()) return stringNotFound;
-    Serial.println(1.5);
-    if(text.length() < 3) return stringNotFound;
     int index;
     int begin;
     int end;
-    Serial.println(2);
+    if(text.length() < key.length()) return stringNotFound;
+    if(text.length() < 3) return stringNotFound;
     if((index = text.find(key.data())) == std::string::npos) return stringNotFound;// key is there but value may be cut off
-    Serial.println(3);
     if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return stringNotFound; // need more data
-    Serial.println(4);
     if(text.length() <= begin) return stringNotFound;
-    Serial.println(5);
     if(text.at(begin) == '"') // it's a string - look for end quote
     {
-        Serial.println(6);
         begin++;
         if(text.length() <= begin) return stringNotFound;
-        Serial.println(7);
         end = begin;
         while(!(text.at(end) == '"' && text.at(end - 1) != '\\')) // find first unescaped quote
         {
-            Serial.println(8);
             end++;
             if(text.length() <= end) return stringNotFound;
         }
     } else { // it's a number
-        Serial.println(9);
         if(text.find(',', begin) == std::string::npos && text.find('}', begin) == std::string::npos) {
-            Serial.println(10);
             return stringNotFound;
         } else if(text.find(',', begin) == std::string::npos && text.find('}', begin) > 0) {
             end = text.find('}', begin);
         } else if(text.find(',', begin) > 0 && text.find('}', begin) == std::string::npos) {
             end = text.find(',', begin);
         } else {
-            Serial.print("found comma at ");
-            Serial.println(text.find(',', begin));
-            Serial.print("found brace at ");
-            Serial.println(text.find('}', begin));
             end = min(text.find(',', begin), text.find('}', begin));
         }
     }
-    Serial.print("begin is ");
-    Serial.println(begin);
-    Serial.print("end is ");
-    Serial.println(end);
     return text.substr(begin, end - begin);
 }
 
@@ -143,6 +120,7 @@ std::string makeGetRequest(std::string host, std::string path)
 
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
 // todo - maybe make this a class and use the builder pattern on it as well
+// todo don't use a new client that you have to free... prefer stack objects
 std::string getJsonValue(const bool secureClient, std::string host, std::string path, std::string key)
 {
     std::string value = stringNotFound;
@@ -159,8 +137,6 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
     if (client->connect(host.data(), httpPort))
     {
         client->print(makeGetRequest(host, path).data());
-        Serial.print(millis());
-        Serial.println(" client connected");
         std::string text;
         while(value == stringNotFound)
         {
@@ -171,10 +147,7 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
             {
                 buffer.push_back(client->read());
             }
-            Serial.println("buffer to search");
-            serialPrintln(buffer);
             value = parseJson(buffer, key);
-            Serial.println("after call to parse Json");
             int keyIndex;
             if(keyIndex = buffer.find(key.data()) != std::string::npos)
             {
@@ -184,10 +157,5 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
     }
     client->stop();
     free(client);
-    Serial.print("key <");
-    serialPrint(key);
-    Serial.print("> value <");
-    serialPrint(value);
-    Serial.println(">");
     return value;
 }

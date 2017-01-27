@@ -85,7 +85,6 @@ void loop() {
     std::string host = {"api.coindesk.com"};
     std::string price = {"v1/bpi/currentprice.json"};
     std::string rateFloat = {"rate_float"};
-    if(rateFloat.find(rateFloat)) Serial.println("FOUND RATE FLOAT IN RATE FLOAT");
     std::string rate = getJsonValue(false, host, price, rateFloat);
     myVFD->print(rate);
 //    get(host, price);
