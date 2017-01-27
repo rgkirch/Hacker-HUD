@@ -19,10 +19,9 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="4943d9a7-869b-4619-a0ba-12b8ad201e28" name="Default" comment="compiles, runs, logic not working right for json search">
+    <list default="true" id="4943d9a7-869b-4619-a0ba-12b8ad201e28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/platformio.ini" afterPath="$PROJECT_DIR$/platformio.ini" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -42,8 +41,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="560">
-              <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
+            <state relative-caret-position="1000">
+              <caret line="88" column="23" lean-forward="false" selection-start-line="88" selection-start-column="23" selection-end-line="88" selection-end-column="23" />
               <folding />
             </state>
           </provider>
@@ -52,8 +51,8 @@
       <file leaf-file-name="scrapeWeb.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1205">
-              <caret line="32" column="12" lean-forward="false" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -62,8 +61,18 @@
       <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1546">
-              <caret line="185" column="17" lean-forward="false" selection-start-line="185" selection-start-column="17" selection-end-line="185" selection-end-column="17" />
+            <state relative-caret-position="860">
+              <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="notes.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/notes.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="40">
+              <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -82,8 +91,8 @@
       <file leaf-file-name="coindesk.com_currentprice.json.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/coindesk.com_currentprice.json.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="480">
-              <caret line="12" column="9" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
+            <state relative-caret-position="880">
+              <caret line="20" column="154" lean-forward="false" selection-start-line="20" selection-start-column="154" selection-end-line="20" selection-end-column="154" />
               <folding />
             </state>
           </provider>
@@ -120,6 +129,7 @@
       <find>min</find>
       <find>find</find>
       <find>connect</find>
+      <find>text.length</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -147,14 +157,14 @@
         <option value="$PROJECT_DIR$/lib/time/time.hpp" />
         <option value="$PROJECT_DIR$/lib/wifi/wifi.hpp" />
         <option value="$PROJECT_DIR$/lib/wifi/wifi.cpp" />
-        <option value="$PROJECT_DIR$/src/notes.txt" />
         <option value="$PROJECT_DIR$/lib/globals/globals.h" />
         <option value="$PROJECT_DIR$/src/globals.hpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
         <option value="$PROJECT_DIR$/lib/vfd/vfd.hpp" />
         <option value="$PROJECT_DIR$/lib/vfd/vfd.cpp" />
-        <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/platformio.ini" />
+        <option value="$PROJECT_DIR$/src/notes.txt" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
       </list>
     </option>
@@ -703,7 +713,7 @@
       <workItem from="1485215460558" duration="6096000" />
       <workItem from="1485303375983" duration="8420000" />
       <workItem from="1485384058632" duration="3718000" />
-      <workItem from="1485470512407" duration="15124000" />
+      <workItem from="1485470512407" duration="16508000" />
     </task>
     <task id="LOCAL-00001" summary="clion config stuff?">
       <created>1484612731429</created>
@@ -859,11 +869,25 @@
       <option name="project" value="LOCAL" />
       <updated>1485481452794</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="compiles, runs, logic not working right for json search">
+      <created>1485486943031</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1485486943031</updated>
+    </task>
+    <task id="LOCAL-00024" summary="changed a &lt; to a &gt; to fix a thing">
+      <created>1485487360942</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1485487360942</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="67486000" />
+    <option name="totallyTimeSpent" value="68870000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -948,7 +972,9 @@
     <MESSAGE value="compiles, i hope it works. haven't tested it yet" />
     <MESSAGE value="compiler erro .text will not fit in region iram_seg" />
     <MESSAGE value="it's printing penis so I'm throwing in wild print statements" />
-    <option name="LAST_COMMIT_MESSAGE" value="it's printing penis so I'm throwing in wild print statements" />
+    <MESSAGE value="compiles, runs, logic not working right for json search" />
+    <MESSAGE value="changed a &lt; to a &gt; to fix a thing" />
+    <option name="LAST_COMMIT_MESSAGE" value="changed a &lt; to a &gt; to fix a thing" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1150,13 +1176,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/notes.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="1" column="92" lean-forward="false" selection-start-line="1" selection-start-column="92" selection-end-line="1" selection-end-column="92" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/vfd/vfdBuilder.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1000">
@@ -1210,14 +1229,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/coindesk.com_currentprice.json.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="12" column="9" lean-forward="false" selection-start-line="12" selection-start-column="9" selection-end-line="12" selection-end-column="9" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/globals/globals.h">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1260,14 +1271,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="14" column="0" lean-forward="true" selection-start-line="14" selection-start-column="0" selection-end-line="14" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/platformio.ini">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1160">
@@ -1276,18 +1279,42 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/notes.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="40">
+          <caret line="1" column="0" lean-forward="false" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1000">
+          <caret line="88" column="23" lean-forward="false" selection-start-line="88" selection-start-column="23" selection-end-line="88" selection-end-column="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/coindesk.com_currentprice.json.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="880">
+          <caret line="20" column="154" lean-forward="false" selection-start-line="20" selection-start-column="154" selection-end-line="20" selection-end-column="154" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1205">
-          <caret line="32" column="12" lean-forward="false" selection-start-line="32" selection-start-column="12" selection-end-line="32" selection-end-column="12" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1546">
-          <caret line="185" column="17" lean-forward="false" selection-start-line="185" selection-start-column="17" selection-end-line="185" selection-end-column="17" />
+        <state relative-caret-position="860">
+          <caret line="92" column="0" lean-forward="false" selection-start-line="92" selection-start-column="0" selection-end-line="92" selection-end-column="0" />
           <folding />
         </state>
       </provider>

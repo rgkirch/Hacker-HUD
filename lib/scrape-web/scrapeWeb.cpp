@@ -75,8 +75,6 @@ String scrapeSite(Site site) {
 // maybe just search for one at a time
 //fnc to parse data from web page (json) -----
 std::string parseJson(std::string text, std::string key){
-    Serial.print("string not found ");
-    serialPrintln(stringNotFound);
     Serial.print("text.length ");
     Serial.println(text.length());
     Serial.print("key.length ");
@@ -118,11 +116,18 @@ std::string parseJson(std::string text, std::string key){
         } else if(text.find(',', begin) > 0 && text.find('}', begin) == std::string::npos) {
             end = text.find(',', begin);
         } else {
+            Serial.print("found comma at ");
+            Serial.println(text.find(',', begin));
+            Serial.print("found brace at ");
+            Serial.println(text.find('}', begin));
             end = min(text.find(',', begin), text.find('}', begin));
         }
     }
-    Serial.println(11);
-    return text.substr(begin, end);
+    Serial.print("begin is ");
+    Serial.println(begin);
+    Serial.print("end is ");
+    Serial.println(end);
+    return text.substr(begin, end - begin);
 }
 
 std::string makeGetRequest(std::string host, std::string path)
