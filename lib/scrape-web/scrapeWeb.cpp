@@ -113,7 +113,7 @@ std::string parseJson(std::string text, std::string key){
         if(text.find(',', begin) == std::string::npos && text.find('}', begin) == std::string::npos) {
             Serial.println(10);
             return stringNotFound;
-        } else if(text.find(',', begin) == std::string::npos && text.find('}', begin) < 0) {
+        } else if(text.find(',', begin) == std::string::npos && text.find('}', begin) > 0) {
             end = text.find('}', begin);
         } else if(text.find(',', begin) > 0 && text.find('}', begin) == std::string::npos) {
             end = text.find(',', begin);
@@ -182,7 +182,7 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
     Serial.print("key <");
     serialPrint(key);
     Serial.print("> value <");
-    serialPrintln(value);
+    serialPrint(value);
     Serial.println(">");
     return value;
 }
