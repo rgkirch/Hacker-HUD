@@ -62,6 +62,8 @@ void loop() {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     std::string host = {"api.coindesk.com"};
     std::string price = {"v1/bpi/currentprice.json"};
+    std::string rateFloat = {"rate_float"};
+    getJsonValue(false, host, price, rateFloat);
 //    get(host, price);
     delay(5000);
     yield();

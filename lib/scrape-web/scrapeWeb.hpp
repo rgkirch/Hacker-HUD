@@ -3,16 +3,16 @@
 
 #include <WiFiClient.h>
 #include <ESP8266WiFi.h>
-
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
-#include <vector>
-#define min(a,b) ((a)<(b)?(a):(b))
-#define max(a,b) ((a)>(b)?(a):(b))
+//
+//#ifdef min
+//#undef min
+//#endif
+//#ifdef max
+//#undef max
+//#endif
+//#include <vector>
+//#define min(a,b) ((a)<(b)?(a):(b))
+//#define max(a,b) ((a)>(b)?(a):(b))
 
 //const char* host = "api.coindesk.com";
 //const char* hostEth = "api.nanopool.org";

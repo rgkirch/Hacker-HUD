@@ -78,7 +78,7 @@ std::string parseJson(std::string text, std::string key){
     int index;
     int begin;
     int end;
-    if((index = text.find(key)) == std::string::npos) return stringNotFound;// key is there but value may be cut off
+    if((index = text.find(key.data())) == std::string::npos) return stringNotFound;// key is there but value may be cut off
     if((begin = text.find(':', index + key.length()) + 1) == std::string::npos) return stringNotFound; // need more data
     if(text.length() <= begin) return stringNotFound;
     if(text.at(begin) == '"') // it's a string - look for end quote
@@ -145,7 +145,7 @@ std::string getJsonValue(const bool secureClient, std::string host, std::string 
                 buffer.push_back(client->read());
             }
             std::string value = parseJson(buffer, key);
-            text = buffer.substr(buffer.find(key));
+            text = buffer.substr(buffer.find(key.data()));
         }
     }
     client->stop();
