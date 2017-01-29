@@ -28,6 +28,8 @@ void *memchr(const void *s, int c, size_t n)
 
 std::unique_ptr<VFD> myVFD;
 std::unique_ptr<Site> coindesk;
+std::unique_ptr<Site> etheriumHashRate;
+std::unique_ptr<Site> etheriumPrice;
 
 int vfdPrint(const char *c, int n)
 {
@@ -44,6 +46,10 @@ void serialPrint(std::string str)
     {
         Serial.print(c);
     }
+}
+void serialPrint(const char* str)
+{
+    if(str != nullptr) Serial.print(str);
 }
 void serialPrintln(std::string str)
 {
@@ -73,6 +79,10 @@ void setup() {
 //    printEspInfo();
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
     coindesk = Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build();
+    etheriumHashRate = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("/v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1")).setSecure(true).build();
+//jsonThing ethereumHashesJson = {"data",6,12};
+    etheriumPrice = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("/v1/eth/prices")).setSecure(true).build();
+//jsonThing etheriumJson {"price_usd", 11, 16};
     connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
     yield();
@@ -81,8 +91,18 @@ void setup() {
 void loop() {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     std::string rateFloat = {"rate_float"};
-    std::string rate = getJsonValue(*coindesk, rateFloat);
-    myVFD->print(rate);
+    std::string rate;
+//    rate = getJsonValue(*coindesk, rateFloat);
+//    myVFD->print(rate);
+//    serialPrintln(rate);
+//    rate = getJsonValue(*etheriumHashRate, std::string("data"));
+//    myVFD->print(rate);
+//    serialPrintln(rate);
+//    rate = getJsonValue(*etheriumPrice, std::string("price_usd"));
+//    myVFD->print(rate);
+//    serialPrintln(rate);
+    std::string str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
+    serialPrintln(str);
     delay(5000);
     yield();
 }

@@ -4,7 +4,8 @@
 
 int Site::connect() const
 {
-    return this->client->connect(host.data(), httpPort);
+    this->client->connect(host.data(), httpPort);
+    return client->connected();
 }
 
 int Site::print(std::string str) const

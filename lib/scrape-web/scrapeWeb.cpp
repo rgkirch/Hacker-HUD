@@ -143,6 +143,7 @@ std::string getJsonValue(const Site& client, std::string key)
     std::string value = stringNotFound;
     if(client.connect())
     {
+        // todo - move this into site?
         client.print(makeGetRequest(client.getHost(), client.getPath()));
         std::string text;
         while(value == stringNotFound)
@@ -164,4 +165,35 @@ std::string getJsonValue(const Site& client, std::string key)
     }
     client.stop();
     return value;
+}
+
+std::string get(std::string host, std::string path, bool secure)
+{
+    std::string text;
+    WiFiClient* client;
+    int httpPort;
+    if(secure)
+    {
+        client = new WiFiClientSecure();
+        httpPort = 443;
+    } else {
+        client = new WiFiClient();
+        httpPort = 80;
+    }
+    if(client->connect(host.data(), httpPort))
+    {
+        std::string request = makeGetRequest(host, path);
+        client->print(request.data());
+        while(client->connected())
+        {
+            int available = client->available();
+            text.reserve(text.length() + available);
+            for(int i = 0; i < available; ++i)
+            {
+                text.push_back(client->read());
+            }
+        }
+        client->stop();
+    }
+    return text;
 }

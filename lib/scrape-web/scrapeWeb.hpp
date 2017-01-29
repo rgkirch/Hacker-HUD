@@ -22,5 +22,6 @@
 std::string parseJson(std::string text, std::string key);
 std::string makeGetRequest(std::string host, std::string path);
 std::string getJsonValue(const Site& client, std::string key);
+std::string get(std::string host, std::string path, bool secure);
 
 #endif
