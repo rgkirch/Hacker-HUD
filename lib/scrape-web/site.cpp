@@ -6,19 +6,27 @@ Site Site::Builder::build()
     if(secure)
     {
         client = new WiFiClientSecure();
+        this->httpPort = 443;
     } else {
         client = new WiFiClient();
+        this->httpPort = 80;
     }
-    return Site(this->host, this->path, client);
+    return Site(this->host, this->path, this->httpPort, client);
 }
 
-Site::Builder& Site::Builder::setHost(const std::string &host) {
+Site::Builder& Site::Builder::setHost(std::string host) {
     this->host = host;
     return *this;
 }
 
-Site::Builder& Site::Builder::setPath(const std::string &path) {
+Site::Builder& Site::Builder::setPath(std::string path) {
     this->path = path;
+    return *this;
+}
+
+Site::Builder& Site::Builder::setHttpPort(int httpPort)
+{
+    this->httpPort = httpPort;
     return *this;
 }
 
