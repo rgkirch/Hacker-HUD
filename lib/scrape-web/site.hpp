@@ -32,7 +32,7 @@ private:
     int httpPort;
     bool secure = false;
 public:
-    Site* build();
+    std::unique_ptr<Site> build();
     Builder() = default;
     Site::Builder& setHost(std::string host);
     Site::Builder& setPath(std::string path);

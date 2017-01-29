@@ -138,7 +138,7 @@ std::string makeGetRequest(std::string host, std::string path)
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
 // todo - maybe make this a class and use the builder pattern on it as well
 // todo don't use a new client that you have to free... prefer stack objects
-std::string getJsonValue(Site *client, std::string key)
+std::string getJsonValue(const std::unique_ptr<Site>& client, std::string key)
 {
     std::string value = stringNotFound;
     if(client->connect())

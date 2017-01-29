@@ -21,6 +21,6 @@
 
 std::string parseJson(std::string text, std::string key);
 std::string makeGetRequest(std::string host, std::string path);
-std::string getJsonValue(Site *client, std::string key);
+std::string getJsonValue(const std::unique_ptr<Site>& client, std::string key);
 
 #endif

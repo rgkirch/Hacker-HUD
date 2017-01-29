@@ -35,7 +35,7 @@ const std::string &Site::getPath() const {
     return path;
 }
 
-Site* Site::Builder::build()
+std::unique_ptr<Site> Site::Builder::build()
 {
     WiFiClient* client;
     if(secure)
@@ -46,7 +46,7 @@ Site* Site::Builder::build()
         client = new WiFiClient();
         this->httpPort = 80;
     }
-    return new Site(this->host, this->path, this->httpPort, client);
+    return std::unique_ptr<Site>(new Site(this->host, this->path, this->httpPort, client));
 }
 
 Site::Builder& Site::Builder::setHost(std::string host) {
