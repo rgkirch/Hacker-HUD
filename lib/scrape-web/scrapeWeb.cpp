@@ -156,7 +156,7 @@ std::string getJsonValue(const Site& client, std::string key)
             }
             value = parseJson(buffer, key);
             int keyIndex;
-            if(keyIndex = buffer.find(key.data()) != std::string::npos)
+            if(keyIndex = buffer.find(key) != std::string::npos)
             {
                 text = buffer.substr(keyIndex);
             } else text = buffer;
