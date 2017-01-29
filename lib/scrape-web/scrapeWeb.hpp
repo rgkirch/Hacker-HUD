@@ -2,6 +2,7 @@
 #define SCRAPEWEB_HPP
 
 #include <WiFiClient.h>
+#include <WiFiClientSecure.h>
 #include <ESP8266WiFi.h>
 #include "site.hpp"
 //
@@ -23,5 +24,7 @@ std::string parseJson(std::string text, std::string key);
 std::string makeGetRequest(std::string host, std::string path);
 std::string getJsonValue(const Site& client, std::string key);
 std::string get(std::string host, std::string path, bool secure);
+std::string get(std::string host, std::string path);
+std::string secureGet(std::string host, std::string path);
 
 #endif

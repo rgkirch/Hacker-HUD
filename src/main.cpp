@@ -79,9 +79,9 @@ void setup() {
 //    printEspInfo();
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
     coindesk = Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build();
-    etheriumHashRate = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("/v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1")).setSecure(true).build();
+    etheriumHashRate = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1")).setSecure(true).build();
 //jsonThing ethereumHashesJson = {"data",6,12};
-    etheriumPrice = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("/v1/eth/prices")).setSecure(true).build();
+    etheriumPrice = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/prices")).setSecure(true).build();
 //jsonThing etheriumJson {"price_usd", 11, 16};
     connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
@@ -92,6 +92,7 @@ void loop() {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     std::string rateFloat = {"rate_float"};
     std::string rate;
+    std::string str;
 //    rate = getJsonValue(*coindesk, rateFloat);
 //    myVFD->print(rate);
 //    serialPrintln(rate);
@@ -101,7 +102,13 @@ void loop() {
 //    rate = getJsonValue(*etheriumPrice, std::string("price_usd"));
 //    myVFD->print(rate);
 //    serialPrintln(rate);
-    std::string str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
+    str = get(std::string("httpbin.org"), std::string("ip"), true);
+//    std::string str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
+//    std::string str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
+    Serial.println("not secure ");
+    serialPrintln(str);
+    str = get(std::string("httpbin.org"), std::string("ip"), false);
+    Serial.println("secure ");
     serialPrintln(str);
     delay(5000);
     yield();

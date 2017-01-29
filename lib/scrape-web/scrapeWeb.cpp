@@ -169,31 +169,68 @@ std::string getJsonValue(const Site& client, std::string key)
 
 std::string get(std::string host, std::string path, bool secure)
 {
-    std::string text;
-    WiFiClient* client;
-    int httpPort;
     if(secure)
     {
-        client = new WiFiClientSecure();
-        httpPort = 443;
+        return secureGet(host, path);
     } else {
-        client = new WiFiClient();
-        httpPort = 80;
+        return get(host, path);
     }
-    if(client->connect(host.data(), httpPort))
+}
+std::string secureGet(std::string host, std::string path)
+{
+    std::string text;
+    WiFiClientSecure client;
+    int httpPort = 443;
+    Serial.print("connecting to  -> ");
+    serialPrintln(host);
+    Serial.print("on port  -> ");
+    Serial.println(httpPort);
+    if(client.connect(host.data(), httpPort))
     {
         std::string request = makeGetRequest(host, path);
-        client->print(request.data());
-        while(client->connected())
+        client.print(request.data());
+        Serial.print("request -> ");
+        serialPrintln(request);
+        while(client.connected())
         {
-            int available = client->available();
+            int available = client.available();
+            Serial.println(available);
             text.reserve(text.length() + available);
             for(int i = 0; i < available; ++i)
             {
-                text.push_back(client->read());
+                text.push_back(client.read());
             }
         }
-        client->stop();
+        client.stop();
+    }
+    return text;
+}
+std::string get(std::string host, std::string path)
+{
+    std::string text;
+    WiFiClient client;
+    int httpPort = 80;
+    Serial.print("connecting to  -> ");
+    serialPrintln(host);
+    Serial.print("on port  -> ");
+    Serial.println(httpPort);
+    if(client.connect(host.data(), httpPort))
+    {
+        std::string request = makeGetRequest(host, path);
+        client.print(request.data());
+        Serial.print("request -> ");
+        serialPrintln(request);
+        while(client.connected())
+        {
+            int available = client.available();
+            Serial.println(available);
+            text.reserve(text.length() + available);
+            for(int i = 0; i < available; ++i)
+            {
+                text.push_back(client.read());
+            }
+        }
+        client.stop();
     }
     return text;
 }
