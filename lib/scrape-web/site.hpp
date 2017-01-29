@@ -11,12 +11,19 @@ public:
     class Builder;
     int connect();
     int print(std::string);
+    int available();
+    int read();
+    void stop();
+    const std::string &getHost() const;
+    const std::string &getPath() const;
+    const int getHttpPort() const;
+
 private:
-    Site(const std::string &host, const std::string &path, int httpPort, const WiFiClient *client) : host(host), path(path), httpPort(httpPort), client(client) {}
+    Site(const std::string &host, const std::string &path, int httpPort, WiFiClient *client) : host(host), path(path), httpPort(httpPort), client(client) {}
     const std::string host;
     const std::string path;
     const int httpPort;
-    const WiFiClient *client;
+    WiFiClient *client;
 };
 
 class Site::Builder {

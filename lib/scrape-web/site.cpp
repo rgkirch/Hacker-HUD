@@ -1,4 +1,5 @@
 #include "site.hpp"
+#include "scrapeWeb.hpp"
 
 
 int Site::connect()
@@ -8,7 +9,34 @@ int Site::connect()
 
 int Site::print(std::string str)
 {
-    return this->client->print(str.data());
+    return client->print(str.data());
+}
+
+int Site::available()
+{
+    return client->available();
+}
+
+int Site::read()
+{
+    return client->read();
+}
+
+void Site::stop()
+{
+    client-> stop();
+}
+
+const std::string &Site::getHost() const {
+    return host;
+}
+
+const std::string &Site::getPath() const {
+    return path;
+}
+
+const int Site::getHttpPort() const {
+    return httpPort;
 }
 
 Site* Site::Builder::build()

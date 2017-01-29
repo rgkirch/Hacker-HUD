@@ -143,7 +143,7 @@ std::string getJsonValue(Site *client, std::string key)
     std::string value = stringNotFound;
     if(client->connect())
     {
-        client->print(makeGetRequest(host, path));
+        client->print(makeGetRequest(client->getHost(), client->getPath()));
         std::string text;
         while(value == stringNotFound)
         {
@@ -163,6 +163,5 @@ std::string getJsonValue(Site *client, std::string key)
         }
     }
     client->stop();
-    free(client);
     return value;
 }
