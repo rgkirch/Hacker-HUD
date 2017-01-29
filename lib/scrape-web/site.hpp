@@ -9,11 +9,11 @@
 class Site {
 public:
     class Builder;
-    int connect();
-    int print(std::string);
-    int available();
-    int read();
-    void stop();
+    int connect() const;
+    int print(std::string) const;
+    int available() const;
+    int read() const;
+    void stop() const;
     const std::string &getHost() const;
     const std::string &getPath() const;
 

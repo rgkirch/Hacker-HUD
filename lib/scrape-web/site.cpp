@@ -2,27 +2,27 @@
 #include "scrapeWeb.hpp"
 
 
-int Site::connect()
+int Site::connect() const
 {
-    return client->connect(host.data(), httpPort);
+    return this->client->connect(host.data(), httpPort);
 }
 
-int Site::print(std::string str)
+int Site::print(std::string str) const
 {
-    return client->print(str.data());
+    return this->client->print(str.data());
 }
 
-int Site::available()
+int Site::available() const
 {
-    return client->available();
+    return this->client->available();
 }
 
-int Site::read()
+int Site::read() const
 {
     return client->read();
 }
 
-void Site::stop()
+void Site::stop() const
 {
     client-> stop();
 }
