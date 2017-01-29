@@ -104,11 +104,12 @@ void loop() {
 //    serialPrintln(rate);
 //    std::string str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
 //    std::string str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
-    Serial.println("not secure ");
-    str = get(std::string("httpbin.org"), std::string("ip"), false);
-    serialPrintln(str);
+//    Serial.println("not secure ");
+//    str = get(std::string("httpbin.org"), std::string("ip"), false);
+//    serialPrintln(str);
     Serial.println("secure ");
-    str = get(std::string("httpbin.org"), std::string("ip"), true);
+//    str = get(std::string("httpbin.org"), std::string("ip"), true);
+    str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
     serialPrintln(str);
     delay(5000);
     yield();

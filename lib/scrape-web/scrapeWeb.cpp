@@ -185,24 +185,34 @@ std::string secureGet(std::string host, std::string path)
     serialPrintln(host);
     Serial.print("on port  -> ");
     Serial.println(httpPort);
-    if(client.connect(host.data(), httpPort))
+    client.connect(host.data(), httpPort);
+    for(int timeout = millis() + 5000; !client.connected() && millis() < timeout;)
     {
-        std::string request = makeGetRequest(host, path);
-        client.print(request.data());
-        Serial.print("request -> ");
-        serialPrintln(request);
-        while(client.connected())
-        {
-            int available = client.available();
-            Serial.println(available);
-            text.reserve(text.length() + available);
-            for(int i = 0; i < available; ++i)
-            {
-                text.push_back(client.read());
-            }
-        }
-        client.stop();
+        yield();
     }
+//    if(!client.connected()) return std::string();
+    Serial.println("failed to connect");
+    std::string request = makeGetRequest(host, path);
+    client.print(request.data());
+    Serial.print("request -> ");
+    serialPrintln(request);
+    for(int timeout = millis() + 5000; !client.available() && millis() < timeout;)
+    {
+        yield();
+    }
+//    if(!client.available()) return std::string();
+    Serial.println("nothing available");
+    while(client.connected())
+    {
+        int available = client.available();
+        Serial.println(available);
+        text.reserve(text.length() + available);
+        for(int i = 0; i < available; ++i)
+        {
+            text.push_back(client.read());
+        }
+    }
+    client.stop();
     return text;
 }
 std::string get(std::string host, std::string path)
