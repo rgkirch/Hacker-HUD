@@ -8,7 +8,6 @@
 
 #include <NtpClientLib.h>
 #include "../lib/vfd/vfd.hpp"
-#include "../lib/vfd/vfdBuilder.hpp"
 #include "../lib/wifi/wifi.hpp"
 #include "../lib/scrape-web/scrapeWeb.hpp"
 #include "globals.hpp"
@@ -69,12 +68,14 @@ void printEspInfo()
 void setup() {
     Serial.begin(115200);
 //    printEspInfo();
-    vfdBuilder myVfdBuilder;
-    myVfdBuilder.setRx(D5);
-    myVfdBuilder.setTx(D6);
-    myVfdBuilder.setDisplayWidth(20);
-    myVfdBuilder.setDisplayHeight(2);
-    myVFD = myVfdBuilder.buildVFD();
+//    VFD::Builder myVfdBuilder;
+//    myVfdBuilder.setRx(D5);
+//    myVfdBuilder.setTx(D6);
+//    myVfdBuilder.setDisplayWidth(20);
+//    myVfdBuilder.setDisplayHeight(2);
+//    myVFD = myVfdBuilder.build();
+    std::string host = {"api.coindesk.com"};
+    std::string price = {"v1/bpi/currentprice.json"};
     connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
     yield();
@@ -82,12 +83,9 @@ void setup() {
 
 void loop() {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
-    std::string host = {"api.coindesk.com"};
-    std::string price = {"v1/bpi/currentprice.json"};
     std::string rateFloat = {"rate_float"};
-    std::string rate = getJsonValue(false, host, price, rateFloat);
-    myVFD->print(rate);
-//    get(host, price);
+//    std::string rate = getJsonValue(false, host, price, rateFloat);
+//    myVFD->print(rate);
     delay(5000);
     yield();
 }

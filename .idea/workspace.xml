@@ -2,15 +2,15 @@
 <project version="4">
   <component name="CMakeRunConfigurationManager" shouldGenerate="true" buildAllGenerated="true">
     <generated>
-      <config projectName="clion" targetName="PLATFORMIO_PROGRAM" />
       <config projectName="clion" targetName="PLATFORMIO_UPLOAD" />
-      <config projectName="clion" targetName="PLATFORMIO_BUILD" />
-      <config projectName="clion" targetName="PLATFORMIO_UPDATE_ALL" />
-      <config projectName="clion" targetName="PLATFORMIO_UPLOADFS" />
-      <config projectName="clion" targetName="PLATFORMIO_REBUILD_PROJECT_INDEX" />
+      <config projectName="clion" targetName="PLATFORMIO_PROGRAM" />
       <config projectName="clion" targetName="PLATFORMIO_TEST" />
+      <config projectName="clion" targetName="PLATFORMIO_UPDATE_ALL" />
       <config projectName="clion" targetName="clion" />
       <config projectName="clion" targetName="PLATFORMIO_CLEAN" />
+      <config projectName="clion" targetName="PLATFORMIO_REBUILD_PROJECT_INDEX" />
+      <config projectName="clion" targetName="PLATFORMIO_BUILD" />
+      <config projectName="clion" targetName="PLATFORMIO_UPLOADFS" />
     </generated>
   </component>
   <component name="CMakeSettings" AUTO_RELOAD="true">
@@ -20,9 +20,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="4943d9a7-869b-4619-a0ba-12b8ad201e28" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/scrape-web/site.cpp" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/lib/scrape-web/site.hpp" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/vfd/vfdBuilder.cpp" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/lib/vfd/vfdBuilder.hpp" afterPath="" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/CMakeLists.txt" afterPath="$PROJECT_DIR$/CMakeLists.txt" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/vfd/vfd.cpp" afterPath="$PROJECT_DIR$/lib/vfd/vfd.cpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/vfd/vfd.hpp" afterPath="$PROJECT_DIR$/lib/vfd/vfd.hpp" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -38,11 +46,81 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="true">
+      <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="80">
+              <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vfd.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="569">
+              <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="vfd.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="360">
+              <caret line="16" column="6" lean-forward="false" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="wifi.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="606">
+              <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="wifi.hpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="440">
+              <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="560">
-              <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+            <state relative-caret-position="-760">
+              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="site.cpp" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lib/scrape-web/site.cpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="site.hpp" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/lib/scrape-web/site.hpp">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="200">
+              <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -51,8 +129,8 @@
       <file leaf-file-name="scrapeWeb.hpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="108">
-              <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+            <state relative-caret-position="206">
+              <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
               <folding />
             </state>
           </provider>
@@ -101,7 +179,6 @@
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/lib/time/time.h" />
         <option value="$PROJECT_DIR$/lib/vfd/vfdBuilder.h" />
-        <option value="$PROJECT_DIR$/lib/vfd/vfdBuilder.cpp" />
         <option value="$PROJECT_DIR$/lib/time/time.cpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.h" />
         <option value="$PROJECT_DIR$/src/example.com.txt" />
@@ -111,13 +188,17 @@
         <option value="$PROJECT_DIR$/lib/wifi/wifi.cpp" />
         <option value="$PROJECT_DIR$/lib/globals/globals.h" />
         <option value="$PROJECT_DIR$/src/globals.hpp" />
-        <option value="$PROJECT_DIR$/lib/vfd/vfd.hpp" />
-        <option value="$PROJECT_DIR$/lib/vfd/vfd.cpp" />
         <option value="$PROJECT_DIR$/platformio.ini" />
         <option value="$PROJECT_DIR$/src/notes.txt" />
-        <option value="$PROJECT_DIR$/src/main.cpp" />
-        <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
+        <option value="$PROJECT_DIR$/lib/vfd/vfdBuilder.cpp" />
+        <option value="$PROJECT_DIR$/lib/vfd/vfd.cpp" />
+        <option value="$PROJECT_DIR$/lib/vfd/vfd.hpp" />
+        <option value="$PROJECT_DIR$/lib/vfd/vfdBuilder.hpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
+        <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
+        <option value="$PROJECT_DIR$/lib/scrape-web/site.cpp" />
+        <option value="$PROJECT_DIR$/lib/scrape-web/site.hpp" />
       </list>
     </option>
   </component>
@@ -391,7 +472,7 @@
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="GO_FMT" value="false" />
-    <property name="SearchEverywhereHistoryKey" value="scra&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;wificl&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp&#10;platfor&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/platformio.ini&#10;cm&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/CMakeLists.txt&#10;main&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;gl&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/globals.hpp&#10;globals.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/globals.hpp&#10;sc&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;wificlient.h&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.h&#10;wificlient&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp&#10;web&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;notes&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/notes.txt&#10;wifi.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.cpp&#10;vfdprint&#9;null&#9;null&#10;todo&#9;ACTION&#9;ActivateTODOToolWindow&#10;string&#9;FILE&#9;file://C:/Users/Richie/.platformio/packages/framework-arduinoteensy/cores/teensy3/WString.h&#10;readstringuntil&#9;null&#9;null&#10;scr&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;time.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.hpp&#10;wifi.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;time&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;time.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;initializewifi&#9;null&#9;null&#10;vfdbu&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.cpp&#10;setup&#9;null&#9;null&#10;vfd.hp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;initializewif&#9;null&#9;null&#10;vfd&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;wifi&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;wif&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;readme&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/readme.txt&#10;m&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;vfd.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;.gitignor&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/.gitignore&#10;vfd.h&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/VFD.h&#10;coyt&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/coyt_test_main.cpp&#10;===&#9;null&#9;null" />
+    <property name="SearchEverywhereHistoryKey" value="site&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/site.cpp&#10;buildercpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.cpp&#10;bui&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.hpp&#10;vfdbu&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.hpp&#10;vfdhpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;vfdcpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.cpp&#10;scrhpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;scrapecpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;scrape&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;vfd.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.cpp&#10;vfd.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.hpp&#10;vfd&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.cpp&#10;builder&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfdBuilder.cpp&#10;main&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;scra&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;wificl&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp&#10;platfor&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/platformio.ini&#10;cm&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/CMakeLists.txt&#10;gl&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/globals.hpp&#10;globals.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/globals.hpp&#10;sc&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.hpp&#10;wificlient.h&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.h&#10;wificlient&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp&#10;web&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;notes&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/notes.txt&#10;wifi.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.cpp&#10;vfdprint&#9;null&#9;null&#10;todo&#9;ACTION&#9;ActivateTODOToolWindow&#10;string&#9;FILE&#9;file://C:/Users/Richie/.platformio/packages/framework-arduinoteensy/cores/teensy3/WString.h&#10;readstringuntil&#9;null&#9;null&#10;scr&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/scrape-web/scrapeWeb.cpp&#10;time.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.hpp&#10;wifi.hpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;time&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;time.cpp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/time/time.cpp&#10;initializewifi&#9;null&#9;null&#10;setup&#9;null&#9;null&#10;vfd.hp&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/vfd.hpp&#10;initializewif&#9;null&#9;null&#10;wifi&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;wif&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/wifi/wifi.hpp&#10;readme&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/readme.txt&#10;m&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/main.cpp&#10;.gitignor&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/.gitignore&#10;vfd.h&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/lib/vfd/VFD.h&#10;coyt&#9;FILE&#9;file://G:/rgkirch/Hacker-HUD/src/coyt_test_main.cpp&#10;===&#9;null&#9;null" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
     <property name="js.eslint.eslintPackage" value="" />
     <property name="ChangesBrowser.SHOW_FLATTEN" value="false" />
@@ -401,7 +482,7 @@
       <recent name="G:\rgkirch\Hacker-HUD" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.PLATFORMIO_BUILD">
+  <component name="RunManager" selected="Application.PLATFORMIO_UPLOAD">
     <configuration default="true" type="CMakeGoogleTestRunConfigurationType" factoryName="Google Test" PASS_PARENT_ENVS_2="true" PROJECT_NAME="clion" TARGET_NAME="clion" CONFIG_NAME="Debug" TEST_MODE="SUITE_TEST">
       <envs />
       <method />
@@ -665,7 +746,7 @@
       <workItem from="1485384058632" duration="3718000" />
       <workItem from="1485470512407" duration="18731000" />
       <workItem from="1485578503371" duration="13000" />
-      <workItem from="1485614824872" duration="9449000" />
+      <workItem from="1485614824872" duration="15140000" />
     </task>
     <task id="LOCAL-00001" summary="clion config stuff?">
       <created>1484612731429</created>
@@ -863,11 +944,18 @@
       <option name="project" value="LOCAL" />
       <updated>1485489866597</updated>
     </task>
-    <option name="localTasksCounter" value="29" />
+    <task id="LOCAL-00029" summary="made builder pattern for site">
+      <created>1485644282694</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1485644282694</updated>
+    </task>
+    <option name="localTasksCounter" value="30" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="80555000" />
+    <option name="totallyTimeSpent" value="86246000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -882,16 +970,17 @@
     <frame x="0" y="0" width="2052" height="1152" extended-state="6" />
     <editor active="false" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.20224172" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32994923" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Messages" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32806692" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32994923" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="CMake" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32992566" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.6719331" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.5609137" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20224172" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="LuaJ" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32994923" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
@@ -899,7 +988,6 @@
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32994923" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
     <layout-to-restore>
@@ -950,7 +1038,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="same as coyts" />
     <MESSAGE value="moved ntp time to a function&#10;code works" />
     <MESSAGE value="ok, project is building with platformio, clion linting is broken" />
     <MESSAGE value="delete old files" />
@@ -975,15 +1062,14 @@
     <MESSAGE value="json parse is working - still has a bunch of prints though" />
     <MESSAGE value="deleted extra prints" />
     <MESSAGE value="Merge remote-tracking branch 'refs/remotes/origin/feature/timeShare' into feature/timeShare&#10;&#10;# Conflicts:&#10;#&#9;lib/scrape-web/scrapeWeb.cpp&#10;" />
-    <option name="LAST_COMMIT_MESSAGE" value="Merge remote-tracking branch 'refs/remotes/origin/feature/timeShare' into feature/timeShare&#10;&#10;# Conflicts:&#10;#&#9;lib/scrape-web/scrapeWeb.cpp&#10;" />
+    <MESSAGE value="made builder pattern for site" />
+    <option name="LAST_COMMIT_MESSAGE" value="made builder pattern for site" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/Old_Main/working.cpp" />
-    <entry file="file://$PROJECT_DIR$/src/bitcointicker.txt" />
     <entry file="file://$PROJECT_DIR$/src/snipits.txt" />
     <entry file="file://$PROJECT_DIR$/src/wificlient.txt" />
     <entry file="file://$PROJECT_DIR$/src/globals.txt" />
@@ -992,13 +1078,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1280">
           <caret line="32" column="38" lean-forward="false" selection-start-line="32" selection-start-column="38" selection-end-line="32" selection-end-column="38" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/vfd/vfdBuilder.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="480">
-          <caret line="14" column="15" lean-forward="false" selection-start-line="14" selection-start-column="15" selection-end-line="14" selection-end-column="15" />
         </state>
       </provider>
     </entry>
@@ -1135,20 +1214,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1600">
-          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/time/time.hpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
@@ -1174,13 +1239,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1200">
           <caret line="95" column="0" lean-forward="false" selection-start-line="95" selection-start-column="0" selection-end-line="95" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/vfd/vfdBuilder.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1000">
-          <caret line="25" column="5" lean-forward="false" selection-start-line="25" selection-start-column="5" selection-end-line="25" selection-end-column="5" />
         </state>
       </provider>
     </entry>
@@ -1241,20 +1299,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="440">
-          <caret line="13" column="8" lean-forward="false" selection-start-line="13" selection-start-column="8" selection-end-line="13" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
-          <caret line="15" column="65" lean-forward="false" selection-start-line="15" selection-start-column="65" selection-end-line="15" selection-end-column="65" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClient.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="4200">
@@ -1287,26 +1331,90 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+    <entry file="file://$PROJECT_DIR$/lib/vfd/vfdBuilder.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1493">
-          <caret line="88" column="4" lean-forward="false" selection-start-line="88" selection-start-column="4" selection-end-line="88" selection-end-column="4" />
+        <state relative-caret-position="0">
+          <caret line="0" column="24" lean-forward="false" selection-start-line="0" selection-start-column="24" selection-end-line="0" selection-end-column="24" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
+    <entry file="file://$PROJECT_DIR$/lib/vfd/vfdBuilder.hpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="108">
-          <caret line="24" column="0" lean-forward="false" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="560">
-          <caret line="111" column="0" lean-forward="false" selection-start-line="111" selection-start-column="0" selection-end-line="111" selection-end-column="0" />
+        <state relative-caret-position="-760">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="440">
+          <caret line="11" column="11" lean-forward="false" selection-start-line="11" selection-start-column="11" selection-end-line="11" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/wifi/wifi.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="606">
+          <caret line="40" column="0" lean-forward="false" selection-start-line="40" selection-start-column="0" selection-end-line="40" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="16" column="6" lean-forward="false" selection-start-line="16" selection-start-column="6" selection-end-line="16" selection-end-column="6" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="569">
+          <caret line="31" column="0" lean-forward="false" selection-start-line="31" selection-start-column="0" selection-end-line="31" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/scrape-web/site.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="80">
+          <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="206">
+          <caret line="20" column="0" lean-forward="false" selection-start-line="20" selection-start-column="0" selection-end-line="20" selection-end-column="0" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/scrape-web/site.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="5" column="0" lean-forward="false" selection-start-line="5" selection-start-column="0" selection-end-line="5" selection-end-column="0" />
           <folding />
         </state>
       </provider>
