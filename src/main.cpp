@@ -11,6 +11,7 @@
 #include "../lib/wifi/wifi.hpp"
 #include "../lib/scrape-web/scrapeWeb.hpp"
 #include "globals.hpp"
+#include "../lib/scrape-web/site.hpp"
 
 typedef unsigned char uint8_t;
 
@@ -68,14 +69,8 @@ void printEspInfo()
 void setup() {
     Serial.begin(115200);
 //    printEspInfo();
-    VFD::Builder myVfdBuilder;
-    myVfdBuilder.setRx(D5);
-    myVfdBuilder.setTx(D6);
-    myVfdBuilder.setDisplayWidth(20);
-    myVfdBuilder.setDisplayHeight(2);
-    myVFD = myVfdBuilder.build();
-    std::string host = {"api.coindesk.com"};
-    std::string price = {"v1/bpi/currentprice.json"};
+    myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
+    Site coindesk = Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build();
     connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
     yield();
