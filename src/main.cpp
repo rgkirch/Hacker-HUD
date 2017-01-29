@@ -102,13 +102,13 @@ void loop() {
 //    rate = getJsonValue(*etheriumPrice, std::string("price_usd"));
 //    myVFD->print(rate);
 //    serialPrintln(rate);
-    str = get(std::string("httpbin.org"), std::string("ip"), true);
 //    std::string str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
 //    std::string str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
     Serial.println("not secure ");
-    serialPrintln(str);
     str = get(std::string("httpbin.org"), std::string("ip"), false);
+    serialPrintln(str);
     Serial.println("secure ");
+    str = get(std::string("httpbin.org"), std::string("ip"), true);
     serialPrintln(str);
     delay(5000);
     yield();

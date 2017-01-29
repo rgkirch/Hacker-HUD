@@ -21,8 +21,6 @@
   <component name="ChangeListManager">
     <list default="true" id="4943d9a7-869b-4619-a0ba-12b8ad201e28" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" afterPath="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main.cpp" afterPath="$PROJECT_DIR$/src/main.cpp" />
     </list>
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
@@ -42,8 +40,8 @@
       <file leaf-file-name="main.cpp" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="166">
-              <caret line="104" column="39" lean-forward="false" selection-start-line="104" selection-start-column="39" selection-end-line="104" selection-end-column="39" />
+            <state relative-caret-position="766">
+              <caret line="110" column="4" lean-forward="false" selection-start-line="110" selection-start-column="4" selection-end-line="110" selection-end-column="4" />
               <folding />
             </state>
           </provider>
@@ -122,8 +120,8 @@
       <file leaf-file-name="scrapeWeb.cpp" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="640">
-              <caret line="234" column="0" lean-forward="false" selection-start-line="234" selection-start-column="0" selection-end-line="234" selection-end-column="0" />
+            <state relative-caret-position="360">
+              <caret line="187" column="12" lean-forward="false" selection-start-line="187" selection-start-column="12" selection-end-line="187" selection-end-column="12" />
               <folding>
                 <element signature="e#0#24#0" expanded="true" />
               </folding>
@@ -211,8 +209,8 @@
         <option value="$PROJECT_DIR$/lib/scrape-web/site.hpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/site.cpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp" />
-        <option value="$PROJECT_DIR$/src/main.cpp" />
         <option value="$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp" />
+        <option value="$PROJECT_DIR$/src/main.cpp" />
       </list>
     </option>
   </component>
@@ -762,7 +760,7 @@
       <workItem from="1485384058632" duration="3718000" />
       <workItem from="1485470512407" duration="18731000" />
       <workItem from="1485578503371" duration="13000" />
-      <workItem from="1485614824872" duration="32581000" />
+      <workItem from="1485614824872" duration="32823000" />
     </task>
     <task id="LOCAL-00001" summary="clion config stuff?">
       <created>1484612731429</created>
@@ -1058,11 +1056,18 @@
       <option name="project" value="LOCAL" />
       <updated>1485712149019</updated>
     </task>
-    <option name="localTasksCounter" value="43" />
+    <task id="LOCAL-00043" summary="the WiFiClientSecure client; seems to be working...">
+      <created>1485717980569</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1485717980569</updated>
+    </task>
+    <option name="localTasksCounter" value="44" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="103687000" />
+    <option name="totallyTimeSpent" value="103929000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -1145,7 +1150,6 @@
     <option name="myLimit" value="2678400000" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="how long can a connection stay open without reading from it?" />
     <MESSAGE value="what am i doing? it compiles" />
     <MESSAGE value="broken, using strings, can't have exceptions though" />
     <MESSAGE value="code compiles, haven't finished what i was working on though" />
@@ -1170,7 +1174,8 @@
     <MESSAGE value="parse json takes a const reference to the Site not a unique_ptr" />
     <MESSAGE value="call find on std::string not std::string::data()" />
     <MESSAGE value="fixed: don't wait on available, wait on connect" />
-    <option name="LAST_COMMIT_MESSAGE" value="fixed: don't wait on available, wait on connect" />
+    <MESSAGE value="the WiFiClientSecure client; seems to be working..." />
+    <option name="LAST_COMMIT_MESSAGE" value="the WiFiClientSecure client; seems to be working..." />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager />
@@ -1489,14 +1494,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main.cpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="166">
-          <caret line="104" column="39" lean-forward="false" selection-start-line="104" selection-start-column="39" selection-end-line="104" selection-end-column="39" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/Arduino/libraries/ESP8266WiFi/src/WiFiClientSecure.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="520">
@@ -1529,14 +1526,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="160">
-          <caret line="4" column="25" lean-forward="false" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/lib/vfd/vfd.cpp">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="760">
@@ -1553,10 +1542,26 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/main.cpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="766">
+          <caret line="110" column="4" lean-forward="false" selection-start-line="110" selection-start-column="4" selection-end-line="110" selection-end-column="4" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.hpp">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="160">
+          <caret line="4" column="25" lean-forward="false" selection-start-line="4" selection-start-column="25" selection-end-line="4" selection-end-column="25" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/lib/scrape-web/scrapeWeb.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="640">
-          <caret line="234" column="0" lean-forward="false" selection-start-line="234" selection-start-column="0" selection-end-line="234" selection-end-column="0" />
+        <state relative-caret-position="360">
+          <caret line="187" column="12" lean-forward="false" selection-start-line="187" selection-start-column="12" selection-end-line="187" selection-end-column="12" />
           <folding>
             <element signature="e#0#24#0" expanded="true" />
           </folding>
