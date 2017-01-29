@@ -68,12 +68,12 @@ void printEspInfo()
 void setup() {
     Serial.begin(115200);
 //    printEspInfo();
-//    VFD::Builder myVfdBuilder;
-//    myVfdBuilder.setRx(D5);
-//    myVfdBuilder.setTx(D6);
-//    myVfdBuilder.setDisplayWidth(20);
-//    myVfdBuilder.setDisplayHeight(2);
-//    myVFD = myVfdBuilder.build();
+    VFD::Builder myVfdBuilder;
+    myVfdBuilder.setRx(D5);
+    myVfdBuilder.setTx(D6);
+    myVfdBuilder.setDisplayWidth(20);
+    myVfdBuilder.setDisplayHeight(2);
+    myVFD = myVfdBuilder.build();
     std::string host = {"api.coindesk.com"};
     std::string price = {"v1/bpi/currentprice.json"};
     connectToWifi();

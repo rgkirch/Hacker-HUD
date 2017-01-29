@@ -29,7 +29,7 @@ private:
     int displayWidth = 20;
     int displayHeight = 2;
 public:
-    Builder();
+    Builder() = default;
     VFD* build();
     VFD::Builder& setRx(int rx);
     VFD::Builder& setTx(int tx);
