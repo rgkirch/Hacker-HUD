@@ -26,7 +26,7 @@ void *memchr(const void *s, int c, size_t n)
     return 0;
 }
 
-VFD* myVFD;
+std::unique_ptr<VFD> myVFD;
 Site* coindesk;
 
 int vfdPrint(const char *c, int n)

@@ -5,6 +5,7 @@
 #include <EEPROM.h>
 #include <WString.h>
 #include <string>
+#include <memory>
 
 class VFD
 {
@@ -30,7 +31,7 @@ private:
     int displayHeight = 2;
 public:
     Builder() = default;
-    VFD* build();
+    std::unique_ptr<VFD> build();
     VFD::Builder& setRx(int rx);
     VFD::Builder& setTx(int tx);
     VFD::Builder& setDisplayWidth(int displayWidth);

@@ -30,12 +30,12 @@ void VFD::print(std::string str)
     }
 }
 
-VFD* VFD::Builder::build(){
+std::unique_ptr<VFD> VFD::Builder::build(){
     if(rx < 0) return nullptr;
     if(tx < 0) return nullptr;
     if(displayWidth < 0) return nullptr;
     if(displayHeight < 0) return nullptr;
-    return new VFD(rx, tx, displayWidth, displayHeight);
+    return std::unique_ptr<VFD>(new VFD(rx, tx, displayWidth, displayHeight));
 }
 
 VFD::Builder& VFD::Builder::setRx(int rx) {
