@@ -19,8 +19,10 @@ Site::Builder& Site::Builder::setHost(const std::string &host) {
 
 Site::Builder& Site::Builder::setPath(const std::string &path) {
     this->path = path;
+    return *this;
 }
 
 Site::Builder& Site::Builder::setSecure(bool secure) {
     this->secure = secure;
+    return *this;
 }
