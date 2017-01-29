@@ -1,6 +1,17 @@
 #include "site.hpp"
 
-Site Site::Builder::build()
+
+int Site::connect()
+{
+    return client->connect(host.data(), httpPort);
+}
+
+int Site::print(std::string str)
+{
+    return this->client->print(str.data());
+}
+
+Site* Site::Builder::build()
 {
     WiFiClient* client;
     if(secure)
@@ -11,7 +22,7 @@ Site Site::Builder::build()
         client = new WiFiClient();
         this->httpPort = 80;
     }
-    return Site(this->host, this->path, this->httpPort, client);
+    return new Site(this->host, this->path, this->httpPort, client);
 }
 
 Site::Builder& Site::Builder::setHost(std::string host) {

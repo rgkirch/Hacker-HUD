@@ -27,6 +27,8 @@ void *memchr(const void *s, int c, size_t n)
 }
 
 VFD* myVFD;
+Site* coindesk;
+
 int vfdPrint(const char *c, int n)
 {
     if(myVFD == nullptr)
@@ -70,7 +72,7 @@ void setup() {
     Serial.begin(115200);
 //    printEspInfo();
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
-    Site coindesk = Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build();
+    coindesk = Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build();
     connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
     yield();
@@ -79,7 +81,7 @@ void setup() {
 void loop() {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     std::string rateFloat = {"rate_float"};
-//    std::string rate = getJsonValue(false, host, price, rateFloat);
+    std::string rate = getJsonValue(coindesk, rateFloat);
 //    myVFD->print(rate);
     delay(5000);
     yield();

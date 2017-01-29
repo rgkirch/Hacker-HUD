@@ -1,4 +1,6 @@
 #include "scrapeWeb.hpp"
+#include "site.hpp"
+
 extern std::string stringNotFound;
 extern void serialPrintln(std::string str);
 extern void serialPrint(std::string str);
@@ -136,22 +138,12 @@ std::string makeGetRequest(std::string host, std::string path)
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
 // todo - maybe make this a class and use the builder pattern on it as well
 // todo don't use a new client that you have to free... prefer stack objects
-std::string getJsonValue(const bool secureClient, std::string host, std::string path, std::string key)
+std::string getJsonValue(Site *client, std::string key)
 {
     std::string value = stringNotFound;
-    WiFiClient* client;
-    int httpPort;
-    if(secureClient)
+    if(client->connect())
     {
-        client = new WiFiClientSecure;
-        httpPort = 443;
-    } else {
-        client = new WiFiClient;
-        httpPort = 80;
-    }
-    if (client->connect(host.data(), httpPort))
-    {
-        client->print(makeGetRequest(host, path).data());
+        client->print(makeGetRequest(host, path));
         std::string text;
         while(value == stringNotFound)
         {

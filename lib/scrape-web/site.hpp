@@ -9,6 +9,8 @@
 class Site {
 public:
     class Builder;
+    int connect();
+    int print(std::string);
 private:
     Site(const std::string &host, const std::string &path, int httpPort, const WiFiClient *client) : host(host), path(path), httpPort(httpPort), client(client) {}
     const std::string host;
@@ -24,7 +26,7 @@ private:
     int httpPort;
     bool secure = false;
 public:
-    Site build();
+    Site* build();
     Builder() = default;
     Site::Builder& setHost(std::string host);
     Site::Builder& setPath(std::string path);

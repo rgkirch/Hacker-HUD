@@ -3,6 +3,7 @@
 
 #include <WiFiClient.h>
 #include <ESP8266WiFi.h>
+#include "site.hpp"
 //
 //#ifdef min
 //#undef min
@@ -20,6 +21,6 @@
 
 std::string parseJson(std::string text, std::string key);
 std::string makeGetRequest(std::string host, std::string path);
-std::string getJsonValue(const bool secureClient, std::string host, std::string path, std::string key);
+std::string getJsonValue(Site *client, std::string key);
 
 #endif
