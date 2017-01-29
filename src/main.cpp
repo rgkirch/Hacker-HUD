@@ -82,7 +82,7 @@ void loop() {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     std::string rateFloat = {"rate_float"};
     std::string rate = getJsonValue(coindesk, rateFloat);
-//    myVFD->print(rate);
+    myVFD->print(rate);
     delay(5000);
     yield();
 }

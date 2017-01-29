@@ -16,7 +16,6 @@ public:
     void stop();
     const std::string &getHost() const;
     const std::string &getPath() const;
-    const int getHttpPort() const;
 
 private:
     Site(const std::string &host, const std::string &path, int httpPort, WiFiClient *client) : host(host), path(path), httpPort(httpPort), client(client) {}
@@ -37,7 +36,6 @@ public:
     Builder() = default;
     Site::Builder& setHost(std::string host);
     Site::Builder& setPath(std::string path);
-    Site::Builder& setHttpPort(int httpPort);
     Site::Builder& setSecure(bool secure);
 };
 

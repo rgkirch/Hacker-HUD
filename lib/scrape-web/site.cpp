@@ -35,10 +35,6 @@ const std::string &Site::getPath() const {
     return path;
 }
 
-const int Site::getHttpPort() const {
-    return httpPort;
-}
-
 Site* Site::Builder::build()
 {
     WiFiClient* client;
@@ -60,12 +56,6 @@ Site::Builder& Site::Builder::setHost(std::string host) {
 
 Site::Builder& Site::Builder::setPath(std::string path) {
     this->path = path;
-    return *this;
-}
-
-Site::Builder& Site::Builder::setHttpPort(int httpPort)
-{
-    this->httpPort = httpPort;
     return *this;
 }
 
