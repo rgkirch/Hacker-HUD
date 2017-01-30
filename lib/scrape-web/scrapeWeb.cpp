@@ -128,10 +128,11 @@ std::string makeGetRequest(std::string host, std::string path)
 {
     std::string request;
 //    request.reserve(one.size() + two.size() + three.size() + host.size() + path.size());
-    std::string one = {"GET /"};
-    std::string two = {" HTTP/1.1\r\nHost: "};
-    std::string three = {"\r\nConnection: close\r\n\r\n"};
-    request.append(one).append(path).append(two).append(host).append(three);
+    std::string get = {"GET /"};
+    std::string http = {" HTTP/1.1\r\nHost: "};
+    std::string userAgent = {"\r\nUser-Agent: rgkirch"};
+    std::string close = {"\r\nConnection: close\r\n\r\n"};
+    request.append(get).append(path).append(http).append(host).append(userAgent).append(close);
     return request;
 }
 
@@ -186,22 +187,30 @@ std::string secureGet(std::string host, std::string path)
     Serial.print("on port  -> ");
     Serial.println(httpPort);
     client.connect(host.data(), httpPort);
-    for(int timeout = millis() + 5000; !client.connected() && millis() < timeout;)
+//    for(int timeout = millis() + 10000; !client.connected() && millis() < timeout;)
+    while(!client.connected())
     {
         yield();
     }
-//    if(!client.connected()) return std::string();
-    Serial.println("failed to connect");
+    if(!client.connected())
+    {
+        Serial.println("failed to connect");
+        return std::string();
+    }
     std::string request = makeGetRequest(host, path);
     client.print(request.data());
     Serial.print("request -> ");
     serialPrintln(request);
-    for(int timeout = millis() + 5000; !client.available() && millis() < timeout;)
+//    for(int timeout = millis() + 5000; !client.available() && millis() < timeout;)
+    while(!client.available())
     {
         yield();
     }
-//    if(!client.available()) return std::string();
-    Serial.println("nothing available");
+    if(!client.available())
+    {
+        Serial.println("nothing available");
+        return std::string();
+    }
     while(client.connected())
     {
         int available = client.available();
@@ -220,15 +229,12 @@ std::string get(std::string host, std::string path)
     std::string text;
     WiFiClient client;
     int httpPort = 80;
-    Serial.print("connecting to  -> ");
     serialPrintln(host);
-    Serial.print("on port  -> ");
     Serial.println(httpPort);
     if(client.connect(host.data(), httpPort))
     {
         std::string request = makeGetRequest(host, path);
         client.print(request.data());
-        Serial.print("request -> ");
         serialPrintln(request);
         while(client.connected())
         {

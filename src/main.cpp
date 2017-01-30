@@ -30,6 +30,7 @@ std::unique_ptr<VFD> myVFD;
 std::unique_ptr<Site> coindesk;
 std::unique_ptr<Site> etheriumHashRate;
 std::unique_ptr<Site> etheriumPrice;
+std::unique_ptr<Site> github;
 
 int vfdPrint(const char *c, int n)
 {
@@ -82,6 +83,7 @@ void setup() {
     etheriumHashRate = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1")).setSecure(true).build();
 //jsonThing ethereumHashesJson = {"data",6,12};
     etheriumPrice = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/prices")).setSecure(true).build();
+    github = Site::Builder().setHost(std::string("api.github.com")).setPath(std::string("")).setSecure(true).build();
 //jsonThing etheriumJson {"price_usd", 11, 16};
     connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
@@ -102,14 +104,17 @@ void loop() {
 //    rate = getJsonValue(*etheriumPrice, std::string("price_usd"));
 //    myVFD->print(rate);
 //    serialPrintln(rate);
-//    std::string str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
-//    std::string str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
+//    str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
+//    str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
 //    Serial.println("not secure ");
 //    str = get(std::string("httpbin.org"), std::string("ip"), false);
 //    serialPrintln(str);
     Serial.println("secure ");
 //    str = get(std::string("httpbin.org"), std::string("ip"), true);
-    str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
+//    str = get(std::string("api.github.com"), std::string(""), true);
+    str = get(std::string("api.nanopool.org"), std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1"), true);
+//    str = getJsonValue(*github, std::string("message"));
+//    str = getJsonValue(*etheriumPrice, std::string("price_usd"));
     serialPrintln(str);
     delay(5000);
     yield();
