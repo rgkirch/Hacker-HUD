@@ -30,6 +30,15 @@ void VFD::print(std::string str)
     }
 }
 
+void VFD::println(std::string str)
+{
+    for (char c:str)
+    {
+        softwareSerial->write(c);
+    }
+    softwareSerial->write('\n');
+}
+
 std::unique_ptr<VFD> VFD::Builder::build(){
     if(rx < 0) return nullptr;
     if(tx < 0) return nullptr;

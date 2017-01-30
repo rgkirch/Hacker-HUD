@@ -20,6 +20,7 @@ public:
     ~VFD();
     int print(const char *c, int n); // print at most n characters of c, stop printing at null char, return number of characters printed
     void print(std::string str);
+    void println(std::string str);
 };
 
 class VFD::Builder

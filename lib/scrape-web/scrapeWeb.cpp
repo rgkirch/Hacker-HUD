@@ -192,11 +192,12 @@ std::string secureGet(std::string host, std::string path)
     {
         yield();
     }
-    if(!client.connected())
-    {
-        Serial.println("failed to connect");
-        return std::string();
-    }
+//    if(!client.connected())
+//    {
+//        Serial.println("failed to connect");
+//        return std::string();
+//    }
+    delay(1000);
     std::string request = makeGetRequest(host, path);
     client.print(request.data());
     Serial.print("request -> ");

@@ -75,7 +75,8 @@ void printEspInfo()
     Serial.println(ESP.getFlashChipSizeByChipId());
 }
 
-void setup() {
+void setup()
+{
     Serial.begin(115200);
 //    printEspInfo();
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
@@ -90,32 +91,23 @@ void setup() {
     yield();
 }
 
-void loop() {
+void loop()
+{
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     std::string rateFloat = {"rate_float"};
-    std::string rate;
     std::string str;
-//    rate = getJsonValue(*coindesk, rateFloat);
-//    myVFD->print(rate);
-//    serialPrintln(rate);
-//    rate = getJsonValue(*etheriumHashRate, std::string("data"));
-//    myVFD->print(rate);
-//    serialPrintln(rate);
-//    rate = getJsonValue(*etheriumPrice, std::string("price_usd"));
-//    myVFD->print(rate);
-//    serialPrintln(rate);
 //    str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
-//    str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
-//    Serial.println("not secure ");
-//    str = get(std::string("httpbin.org"), std::string("ip"), false);
-//    serialPrintln(str);
-    Serial.println("secure ");
-//    str = get(std::string("httpbin.org"), std::string("ip"), true);
 //    str = get(std::string("api.github.com"), std::string(""), true);
-    str = get(std::string("api.nanopool.org"), std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1"), true);
-//    str = getJsonValue(*github, std::string("message"));
+//    str = get(std::string("api.github.com"), std::string("/repos/esp8266/Arduino/commits/master/status"), true);
+//    str = get(std::string("api.nanopool.org"), std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1"), true);
+//    str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
+//    str = get(std::string("httpbin.org"), std::string("ip"), false);
+//    str = get(std::string("httpbin.org"), std::string("ip"), true);
+    myVFD->println(getJsonValue(*coindesk, rateFloat));
+//    str = getJsonValue(*etheriumHashRate, std::string("data"));
 //    str = getJsonValue(*etheriumPrice, std::string("price_usd"));
-    serialPrintln(str);
-    delay(5000);
+//    str = getJsonValue(*github, std::string("message"));
+//    serialPrintln(str);
+    delay(60000);
     yield();
 }
