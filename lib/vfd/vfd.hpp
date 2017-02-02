@@ -33,7 +33,9 @@ public:
     void cursorRight()          { this->print("\x1B\x5B\x43");};
     void tab()                  { this->print("\x09");};
     void cursorUp()             { this->print("\x1B\x5B\x41");};
-    void newLine()              { this->print("\x0A");};
+    void cursorDown()           { this->print("\x1B\x5B\x42");};
+    void lineFeed()             { this->print("\x0A");};
+    void carriageReturn()       { this->print("\x0D");};
     void home()                 { this->print("\x0B");};
 };
 
