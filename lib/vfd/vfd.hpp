@@ -19,10 +19,15 @@ public:
     VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
     ~VFD();
     int print(const char *c, int n); // print at most n characters of c, stop printing at null char, return number of characters printed
+    void clear();
+    void print(char c);
+    void print(int num);
     void print(std::string str);
     void println(std::string str);
     void write(char c);
-    void clear();
+    void overwriteMode() { this->write('\x1B'); this->write('\x11');};
+    void virticalScrollMode() { this->write('\x1B'); this->write('\x12');};
+    void horizontalScrollMode() { this->write('\x1B'); this->write('\x13');};
 };
 
 class VFD::Builder

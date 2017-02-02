@@ -75,6 +75,9 @@ void printEspInfo()
     Serial.println(ESP.getFlashChipSizeByChipId());
 }
 
+int myIndex = 0;
+char fox[100] = "the quick brown fox jumps over the lazy dog";
+
 void setup()
 {
     Serial.begin(115200);
@@ -86,7 +89,7 @@ void setup()
     etheriumPrice = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/prices")).setSecure(true).build();
     github = Site::Builder().setHost(std::string("api.github.com")).setPath(std::string("")).setSecure(true).build();
 //jsonThing etheriumJson {"price_usd", 11, 16};
-    connectToWifi();
+//    connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
     yield();
 }
@@ -103,12 +106,15 @@ void loop()
 //    str = get(std::string("api.nanopool.org"), std::string("v1/eth/prices"), true);
 //    str = get(std::string("httpbin.org"), std::string("ip"), false);
 //    str = get(std::string("httpbin.org"), std::string("ip"), true);
-    myVFD->println(getJsonValue(*coindesk, rateFloat));
 //    str = getJsonValue(*etheriumHashRate, std::string("data"));
 //    str = getJsonValue(*etheriumPrice, std::string("price_usd"));
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
-    delay(6000);
+//    myVFD->println(getJsonValue(*coindesk, rateFloat));
+    myVFD->print(fox[myIndex]);
+    myIndex++;
+    if(myIndex == 60) myIndex = 0;
+    delay(300);
     yield();
 }
 
