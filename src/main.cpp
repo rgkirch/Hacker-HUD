@@ -32,14 +32,6 @@ std::unique_ptr<Site> etheriumHashRate;
 std::unique_ptr<Site> etheriumPrice;
 std::unique_ptr<Site> github;
 
-template <typename T>
-void vfdPrint(T p)
-{
-    if(myVFD != nullptr)
-    {
-        myVFD->print(p);
-    }
-}
 void serialPrint(std::string str)
 {
     for (char c:str)
