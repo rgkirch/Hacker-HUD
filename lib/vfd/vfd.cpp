@@ -35,10 +35,6 @@ void VFD::println(std::string str)
 //fnc for just clearing the display
 }
 
-void VFD::write(char c) {
-    softwareSerial->write(c);
-}
-
 void VFD::clear()
 {
     this->write('\x0C'); //clear display

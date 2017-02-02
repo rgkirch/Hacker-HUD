@@ -19,10 +19,11 @@ public:
     VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
     ~VFD();
     void clear();
-    template <typename T> void print(T p) { softwareSerial->write(p); }
+    template <typename T> void write(T p) { softwareSerial->write(p); }
+    template <typename T> void print(T p) { softwareSerial->print(p); }
+    template <typename T> void println(T p) { softwareSerial->println(p); }
     void print(std::string str);
     void println(std::string str);
-    void write(char c);
     void overwriteMode() { this->write('\x1B'); this->write('\x11');};
     void virticalScrollMode() { this->write('\x1B'); this->write('\x12');};
     void horizontalScrollMode() { this->write('\x1B'); this->write('\x13');};
