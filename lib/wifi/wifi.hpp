@@ -8,8 +8,9 @@
 //#include <usb_serial.h>
 //#include <core_pins.h>
 #include "../ntptime/NtpClientLib.h"
+#include "../vfd/vfd.hpp"
 
-extern int vfdPrint(const char *c, int n);
+extern std::unique_ptr<VFD> myVFD;
 
 const char ssid[] = "HellSpot Slow";
 const char password[] = "ILikeWiFi";

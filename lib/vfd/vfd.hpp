@@ -18,10 +18,8 @@ private:
 public:
     VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
     ~VFD();
-    int print(const char *c, int n); // print at most n characters of c, stop printing at null char, return number of characters printed
     void clear();
-    void print(char c);
-    void print(int num);
+    template <typename T> void print(T p) { softwareSerial->write(p); }
     void print(std::string str);
     void println(std::string str);
     void write(char c);

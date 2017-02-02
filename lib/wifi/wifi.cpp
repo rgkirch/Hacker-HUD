@@ -2,7 +2,7 @@
 
 void connectToWifi(){
     Serial.println(ssid);
-    vfdPrint(ssid, strlen(ssid));
+    myVFD->print<char const*>(ssid);
 
     WiFi.begin(ssid, password);
 
@@ -10,11 +10,11 @@ void connectToWifi(){
     {
         delay(500);
         Serial.print(".");
-        vfdPrint(".", 1);
+        myVFD->print<char>('.');
     }
 
     Serial.println("WiFi connected");
-    vfdPrint("WiFi Connected", 14);
+    myVFD->print<char const*>("WiFi Connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
 }

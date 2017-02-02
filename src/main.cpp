@@ -32,13 +32,12 @@ std::unique_ptr<Site> etheriumHashRate;
 std::unique_ptr<Site> etheriumPrice;
 std::unique_ptr<Site> github;
 
-int vfdPrint(const char *c, int n)
+template <typename T>
+void vfdPrint(T p)
 {
-    if(myVFD == nullptr)
+    if(myVFD != nullptr)
     {
-        return 0;
-    } else {
-        return myVFD->print(c, n);
+        myVFD->print(p);
     }
 }
 void serialPrint(std::string str)
@@ -111,7 +110,7 @@ void loop()
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
 //    myVFD->println(getJsonValue(*coindesk, rateFloat));
-    myVFD->print(fox[myIndex]);
+    myVFD->write(fox[myIndex]);
     myIndex++;
     if(myIndex == 60) myIndex = 0;
     delay(300);

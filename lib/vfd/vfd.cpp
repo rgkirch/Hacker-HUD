@@ -15,35 +15,6 @@ VFD::~VFD() {
     delete softwareSerial;
 }
 
-void VFD::print(int num)
-{
-    int base = 10;
-    if(num == 0) this->print('0');
-    int length = 0;
-    int numberToPrint = num;
-    while(num != 0)
-    {
-        num /= base;
-        length++;
-    }
-    char* buffer = (char*)malloc(1 + length * sizeof(char));
-    buffer[length] = '\0';
-    sprintf(buffer, "%d", num);
-    this->print(buffer, length);
-}
-
-int VFD::print(const char *c, int n) {
-    if(c == nullptr) return 0;
-    if(n < 0) n = 0;
-    if(n > strlen(c)) n = strlen(c);
-    int counter = 0;
-    for (int i = 0; i < n; ++i) {
-        softwareSerial->write(c[i]);
-        counter++;
-    }
-    return counter;
-}
-
 void VFD::print(std::string str)
 {
     for (char c:str)
@@ -62,10 +33,6 @@ void VFD::println(std::string str)
     this->write('\x02');
 
 //fnc for just clearing the display
-}
-
-void VFD::print(char c) {
-    this->write(c);
 }
 
 void VFD::write(char c) {
