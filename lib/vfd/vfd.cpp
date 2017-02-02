@@ -35,11 +35,6 @@ void VFD::println(std::string str)
 //fnc for just clearing the display
 }
 
-void VFD::clear()
-{
-    this->write('\x0C'); //clear display
-}
-
 std::unique_ptr<VFD> VFD::Builder::build(){
     if(rx < 0) return nullptr;
     if(tx < 0) return nullptr;

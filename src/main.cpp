@@ -102,10 +102,9 @@ void loop()
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
 //    myVFD->println(getJsonValue(*coindesk, rateFloat));
-    myVFD->write(fox[myIndex]);
     myIndex++;
-    if(myIndex == 60) myIndex = 0;
-    delay(300);
+    myVFD->home();
+    myVFD->print(myIndex);
     yield();
 }
 
