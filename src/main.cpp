@@ -108,6 +108,9 @@ void loop()
 //    str = getJsonValue(*etheriumPrice, std::string("price_usd"));
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
-    delay(60000);
+    delay(6000);
     yield();
 }
+
+// wow, that's a lot of wine. I'm forgetting to breathe
+// so, it's...  hang one. woa. umm.ubuc cd5520 <- that shit fuckccc

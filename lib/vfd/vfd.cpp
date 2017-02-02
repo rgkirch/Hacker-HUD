@@ -4,6 +4,11 @@ VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) :
 {
     softwareSerial = new SoftwareSerial(receivePin, transmitPin);
     softwareSerial->begin(9600);
+    //together these Initialize the display
+    softwareSerial->write('\x1B');
+    softwareSerial->write('\x40');
+
+    softwareSerial->write('\x0C'); //clear display
 }
 
 VFD::~VFD() {
@@ -36,7 +41,22 @@ void VFD::println(std::string str)
     {
         softwareSerial->write(c);
     }
-    softwareSerial->write('\n');
+//fnc for moving to next line
+    this->write('\x1B');
+    this->write('\x6C');
+    this->write('\x01'); //position one
+    this->write('\x02'); //line 2
+
+//fnc for just clearing the display
+}
+
+void VFD::write(char c) {
+    softwareSerial->write(c);
+}
+
+void VFD::clear()
+{
+    this->write('\x0C'); //clear display
 }
 
 std::unique_ptr<VFD> VFD::Builder::build(){
