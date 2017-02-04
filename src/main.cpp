@@ -41,21 +41,20 @@ time_t ntpSyncProvider()
     return timeClient.getEpochTime();
 }
 
+template <typename T> void serialPrint(T t)
+{
+    Serial.print(t);
+}
+template <typename T> void serialPrintln(T t)
+{
+    Serial.print(t);
+}
 void serialPrint(std::string str)
 {
     for (char c:str)
     {
         Serial.print(c);
     }
-}
-template <typename T>
-void serialPrintln(T t)
-{
-    Serial.print(t);
-}
-void serialPrint(const char* str)
-{
-    if(str != nullptr) Serial.print(str);
 }
 void serialPrintln(std::string str)
 {
