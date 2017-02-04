@@ -14,15 +14,15 @@
 #include "../lib/scrape-web/scrapeWeb.hpp"
 #include "globals.hpp"
 #include "../lib/scrape-web/site.hpp"
-#ifdef min
-#undef min
-#endif
-#ifdef max
-#undef max
-#endif
+//#ifdef min
+//#undef min
+//#endif
+//#ifdef max
+//#undef max
+//#endif
 //#include <sstream>
-#define min(a,b) ((a)<(b)?(a):(b))
-#define max(a,b) ((a)>(b)?(a):(b))
+//#define min(a,b) ((a)<(b)?(a):(b))
+//#define max(a,b) ((a)>(b)?(a):(b))
 
 typedef unsigned char uint8_t;
 
@@ -101,11 +101,11 @@ void setup()
 
 //    printEspInfo();
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
-    coindesk = Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build();
-    etheriumHashRate = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1")).setSecure(true).build();
+    coindesk = std::unique_ptr<Site>(Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build());
+    etheriumHashRate = std::unique_ptr<Site>(Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1")).setSecure(true).build());
 //jsonThing ethereumHashesJson = {"data",6,12};
-    etheriumPrice = Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/prices")).setSecure(true).build();
-    github = Site::Builder().setHost(std::string("api.github.com")).setPath(std::string("")).setSecure(true).build();
+    etheriumPrice = std::unique_ptr<Site>(Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/prices")).setSecure(true).build());
+    github = std::unique_ptr<Site>(Site::Builder().setHost(std::string("api.github.com")).setPath(std::string("")).setSecure(true).build());
 //jsonThing etheriumJson {"price_usd", 11, 16};
 //    connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
@@ -128,16 +128,15 @@ void loop()
 //    str = getJsonValue(*etheriumPrice, std::string("price_usd"));
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
-//    myVFD->println(getJsonValue(*coindesk, rateFloat));
     timeClient.update();
     myVFD->clear();
     myVFD->home();
 //    std::stringstream out;
 //    out << hour() << ":" << minute() << ":" << second() << std::endl << timeClient.getEpochTime();
-    *myVFD << hour() << ":" << minute() << ":" << second() << "\x0A\x0D" << timeClient.getEpochTime();
+    *myVFD << hour() << ":" << minute() << ":" << second() << "\x0A\x0D" << getJsonValue(*coindesk, rateFloat);
 //    myVFD->print(out.str());
 //    serialPrintln(out.str());
-    delay(200);
+    delay(1000);
     yield();
 }
 // todo -
