@@ -19,24 +19,24 @@ void connectToWifi(){
     Serial.println(WiFi.localIP());
 }
 
-// TODO - do something with this function
-//setup NTP time stuff here
-void setupNTP()
-{
-    NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
-        if (error) {
-            Serial.print("Time Sync error: ");
-            if (error == noResponse)
-                Serial.println("NTP server not reachable");
-            else if (error == invalidAddress)
-                Serial.println("Invalid NTP server address");
-        }
-        else {
-            Serial.print("Got NTP time: ");
-            Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
-        }
-    });
-
-    NTP.begin("pool.ntp.org", -5, true);
-    NTP.setInterval(1800);
-}
+//// TODO - do something with this function
+////setup NTP time stuff here
+//void setupNTP()
+//{
+//    NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
+//        if (error) {
+//            Serial.print("Time Sync error: ");
+//            if (error == noResponse)
+//                Serial.println("NTP server not reachable");
+//            else if (error == invalidAddress)
+//                Serial.println("Invalid NTP server address");
+//        }
+//        else {
+//            Serial.print("Got NTP time: ");
+//            Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
+//        }
+//    });
+//
+//    NTP.begin("pool.ntp.org", -5, true);
+//    NTP.setInterval(1800);
+//}

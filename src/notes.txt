@@ -1,2 +1,10 @@
 client.available() can return up to 5840 - wifiClient can buffer that much
 client disconnected with a 15500 ms delay as the last successfull delay between client.read()
+
+platformio init --ide clion --board nodemcuv2
+Project has been successfully initialized!
+Useful commands:
+`platformio run` - process/build project from the current directory
+`platformio run --target upload` or `platformio run -t upload` - upload firmware to embedded board
+`platformio run --target clean` - clean project (remove compiled files)
+`platformio run --help` - additional information

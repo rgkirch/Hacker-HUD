@@ -1,12 +1,13 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
+#include <NTPClient.h>
+#include <WiFiUdp.h>
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 
 //#include <Adafruit_MCP9808.h>
 //#include <Wire.h>
 
-#include <NtpClientLib.h>
 #include "../lib/vfd/vfd.hpp"
 #include "../lib/wifi/wifi.hpp"
 #include "../lib/scrape-web/scrapeWeb.hpp"
@@ -31,6 +32,8 @@ std::unique_ptr<Site> coindesk;
 std::unique_ptr<Site> etheriumHashRate;
 std::unique_ptr<Site> etheriumPrice;
 std::unique_ptr<Site> github;
+WiFiUDP ntpUDP;
+NTPClient timeClient(ntpUDP);
 
 void serialPrint(std::string str)
 {
@@ -66,7 +69,6 @@ void printEspInfo()
     Serial.println(ESP.getFlashChipSizeByChipId());
 }
 
-int myIndex = 0;
 char fox[100] = "the quick brown fox jumps over the lazy dog";
 
 void setup()
@@ -82,6 +84,7 @@ void setup()
 //jsonThing etheriumJson {"price_usd", 11, 16};
 //    connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
+    timeClient.begin();
     yield();
 }
 
@@ -102,9 +105,10 @@ void loop()
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
 //    myVFD->println(getJsonValue(*coindesk, rateFloat));
-    myIndex++;
+    timeClient.update();
+    Serial.println(timeClient.getFormattedTime());
     myVFD->home();
-    myVFD->print(myIndex);
+    myVFD->print(timeClient.getFormattedTime());
     yield();
 }
 
