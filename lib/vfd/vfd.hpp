@@ -18,6 +18,7 @@ private:
 public:
     VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
     ~VFD();
+    template <typename T> VFD& operator<<(T t) { this->print(t); return *this; }
     template <typename T> void write(T p) { softwareSerial->write(p); }
     template <typename T> void print(T p) { softwareSerial->print(p); }
     template <typename T> void println(T p) { softwareSerial->println(p); }

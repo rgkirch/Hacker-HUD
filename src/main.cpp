@@ -14,6 +14,15 @@
 #include "../lib/scrape-web/scrapeWeb.hpp"
 #include "globals.hpp"
 #include "../lib/scrape-web/site.hpp"
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+//#include <sstream>
+#define min(a,b) ((a)<(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
 
 typedef unsigned char uint8_t;
 
@@ -120,33 +129,16 @@ void loop()
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
 //    myVFD->println(getJsonValue(*coindesk, rateFloat));
-    myVFD->clear();
     timeClient.update();
+    myVFD->clear();
     myVFD->home();
-    myVFD->print(hour());
-    myVFD->print(":");
-    myVFD->print(minute());
-    myVFD->print(":");
-    myVFD->println(second());
-//    myVFD->print(day());
-//    myVFD->print(" ");
-//    myVFD->print(month());
-//    myVFD->print(" ");
-//    myVFD->println(year());
-    myVFD->print(timeClient.getEpochTime());
-    serialPrintln("");
-    myVFD->home();
-    serialPrint(hour());
-    serialPrint(":");
-    serialPrint(minute());
-    serialPrint(":");
-    serialPrintln(second());
-    serialPrint(day());
-    serialPrint(" ");
-    serialPrint(month());
-    serialPrint(" ");
-    serialPrint(year());
+//    std::stringstream out;
+//    out << hour() << ":" << minute() << ":" << second() << std::endl << timeClient.getEpochTime();
+    *myVFD << hour() << ":" << minute() << ":" << second() << "\x0A\x0D" << timeClient.getEpochTime();
+//    myVFD->print(out.str());
+//    serialPrintln(out.str());
     delay(200);
     yield();
 }
+// todo -
 // cd5520
