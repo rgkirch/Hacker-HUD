@@ -2,6 +2,7 @@
 #include <ESP8266WiFi.h>
 #include <NTPClient.h>
 #include <WiFiUdp.h>
+#include <TimeLib.h>
 #include <WiFiClient.h>
 #include <WiFiClientSecure.h>
 
@@ -33,7 +34,12 @@ std::unique_ptr<Site> etheriumHashRate;
 std::unique_ptr<Site> etheriumPrice;
 std::unique_ptr<Site> github;
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+NTPClient timeClient(ntpUDP, -5);
+
+time_t ntpSyncProvider()
+{
+    return timeClient.getEpochTime();
+}
 
 void serialPrint(std::string str)
 {
@@ -41,6 +47,11 @@ void serialPrint(std::string str)
     {
         Serial.print(c);
     }
+}
+template <typename T>
+void serialPrintln(T t)
+{
+    Serial.print(t);
 }
 void serialPrint(const char* str)
 {
@@ -84,6 +95,7 @@ void setup()
 //jsonThing etheriumJson {"price_usd", 11, 16};
 //    connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
+    setSyncProvider(&ntpSyncProvider);
     timeClient.begin();
     yield();
 }
@@ -106,9 +118,18 @@ void loop()
 //    serialPrintln(str);
 //    myVFD->println(getJsonValue(*coindesk, rateFloat));
     timeClient.update();
-    Serial.println(timeClient.getFormattedTime());
     myVFD->home();
-    myVFD->print(timeClient.getFormattedTime());
+    myVFD->print(hour());
+    myVFD->print(":");
+    myVFD->print(minute());
+    myVFD->print(":");
+    myVFD->println(second());
+    myVFD->print(day());
+    myVFD->print(" ");
+    myVFD->print(month());
+    myVFD->print(" ");
+    myVFD->print(year());
+    serialPrintln(timeClient.getEpochTime());
     yield();
 }
 
