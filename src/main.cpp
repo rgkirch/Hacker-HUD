@@ -34,7 +34,7 @@ std::unique_ptr<Site> etheriumHashRate;
 std::unique_ptr<Site> etheriumPrice;
 std::unique_ptr<Site> github;
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP, -5);
+NTPClient timeClient(ntpUDP);
 
 time_t ntpSyncProvider()
 {
@@ -47,7 +47,7 @@ template <typename T> void serialPrint(T t)
 }
 template <typename T> void serialPrintln(T t)
 {
-    Serial.print(t);
+    Serial.println(t);
 }
 void serialPrint(std::string str)
 {
@@ -84,6 +84,12 @@ char fox[100] = "the quick brown fox jumps over the lazy dog";
 void setup()
 {
     Serial.begin(115200);
+    ntpUDP.begin(2390);
+    setSyncProvider(&ntpSyncProvider);
+    timeClient.begin();
+    timeClient.forceUpdate();
+
+
 //    printEspInfo();
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
     coindesk = Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build();
@@ -94,8 +100,6 @@ void setup()
 //jsonThing etheriumJson {"price_usd", 11, 16};
 //    connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
-    setSyncProvider(&ntpSyncProvider);
-    timeClient.begin();
     yield();
 }
 
@@ -116,6 +120,7 @@ void loop()
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
 //    myVFD->println(getJsonValue(*coindesk, rateFloat));
+    myVFD->clear();
     timeClient.update();
     myVFD->home();
     myVFD->print(hour());
@@ -123,14 +128,25 @@ void loop()
     myVFD->print(minute());
     myVFD->print(":");
     myVFD->println(second());
-    myVFD->print(day());
-    myVFD->print(" ");
-    myVFD->print(month());
-    myVFD->print(" ");
-    myVFD->print(year());
-    serialPrintln(timeClient.getEpochTime());
+//    myVFD->print(day());
+//    myVFD->print(" ");
+//    myVFD->print(month());
+//    myVFD->print(" ");
+//    myVFD->println(year());
+    myVFD->print(timeClient.getEpochTime());
+    serialPrintln("");
+    myVFD->home();
+    serialPrint(hour());
+    serialPrint(":");
+    serialPrint(minute());
+    serialPrint(":");
+    serialPrintln(second());
+    serialPrint(day());
+    serialPrint(" ");
+    serialPrint(month());
+    serialPrint(" ");
+    serialPrint(year());
+    delay(200);
     yield();
 }
-
-// wow, that's a lot of wine. I'm forgetting to breathe
-// so, it's...  hang one. woa. umm.ubuc cd5520 <- that shit fuckccc
+// cd5520
