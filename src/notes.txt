@@ -8,3 +8,10 @@ Useful commands:
 `platformio run --target upload` or `platformio run -t upload` - upload firmware to embedded board
 `platformio run --target clean` - clean project (remove compiled files)
 `platformio run --help` - additional information
+
+
+    *myVFD << "\x1B\x51\x42" << "aoeuhtnsaoeuhtnsaoeH" << "\x0D"; successfully wrote to the bottom line
+    *myVFD << "\x1B\x51\x44" << "there can be up to forty characters here" << "\x0D"; // works, scrolls slowly
+    print time and the backspace over seconds char
+    print stuff and fill in with spaces - avoid using clear
+haven't figured out the move cursor to x,y
