@@ -14,4 +14,6 @@ Useful commands:
     *myVFD << "\x1B\x51\x44" << "there can be up to forty characters here" << "\x0D"; // works, scrolls slowly
     print time and the backspace over seconds char
     print stuff and fill in with spaces - avoid using clear
-haven't figured out the move cursor to x,y
+    *myVFD << "\x1B\x6C" << "\x08\x02"; // jump cursor to position x y
+
+baud rate 9600 vs 19200
