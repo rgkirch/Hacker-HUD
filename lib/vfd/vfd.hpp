@@ -15,13 +15,15 @@ private:
     SoftwareSerial* softwareSerial;
     const int width;
     const int height;
+    int cursorIndex;
 public:
     VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
     ~VFD();
     template <typename T> VFD& operator<<(T t) { this->print(t); return *this; }
-    template <typename T> void write(T p) { softwareSerial->write(p); }
-    template <typename T> void print(T p) { softwareSerial->print(p); }
-    template <typename T> void println(T p) { softwareSerial->println(p); }
+    template <typename T> void write(T p)   { cursorIndex = (cursorIndex + softwareSerial->write(p)) % (width * height); }
+    template <typename T> void print(T p)   { cursorIndex = (cursorIndex + softwareSerial->print(p)) % (width * height); }
+    template <typename T> void println(T p) { cursorIndex = (cursorIndex + softwareSerial->println(p)) % (width * height); }
+    void wrap() { for(int i = 0, cursor = cursorIndex; i < (width * height) - cursor; i++) this->print(" "); cursorIndex = 0; }
     void print(std::string str);
     void println(std::string str);
     void overwriteMode()        { this->print("\x1B\x11");};
@@ -49,7 +51,7 @@ private:
     int displayHeight = 2;
 public:
     Builder() = default;
-    std::unique_ptr<VFD> build();
+    VFD *build();
     VFD::Builder& setRx(int rx);
     VFD::Builder& setTx(int tx);
     VFD::Builder& setDisplayWidth(int displayWidth);

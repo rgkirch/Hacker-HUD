@@ -43,7 +43,7 @@ std::unique_ptr<Site> etheriumHashRate;
 std::unique_ptr<Site> etheriumPrice;
 std::unique_ptr<Site> github;
 WiFiUDP ntpUDP;
-NTPClient timeClient(ntpUDP);
+NTPClient timeClient(ntpUDP, -5 * 3600); // offset in ms
 
 time_t ntpSyncProvider()
 {
@@ -98,9 +98,8 @@ void setup()
     timeClient.begin();
     timeClient.forceUpdate();
 
-
 //    printEspInfo();
-    myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
+    myVFD = std::unique_ptr<VFD>(VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build());
     coindesk = std::unique_ptr<Site>(Site::Builder().setHost(std::string("api.coindesk.com")).setPath(std::string("v1/bpi/currentprice.json")).setSecure(false).build());
     etheriumHashRate = std::unique_ptr<Site>(Site::Builder().setHost(std::string("api.nanopool.org")).setPath(std::string("v1/eth/avghashratelimited/0x884e51352e7c68BfC9bA230f487be963a11de11B/1")).setSecure(true).build());
 //jsonThing ethereumHashesJson = {"data",6,12};
@@ -109,14 +108,18 @@ void setup()
 //jsonThing etheriumJson {"price_usd", 11, 16};
 //    connectToWifi();
 //    getJsonValue("norvig.com", "big.txt");
+    myVFD->home();
+    myVFD->clear();
     yield();
 }
+
+
 
 void loop()
 {
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
-    std::string rateFloat = {"rate_float"};
-    std::string str;
+//    std::string rateFloat = {"rate_float"};
+//    std::string str;
 //    str = get(std::string("api.coindesk.com"), std::string("v1/bpi/currentprice.json"), false);
 //    str = get(std::string("api.github.com"), std::string(""), true);
 //    str = get(std::string("api.github.com"), std::string("/repos/esp8266/Arduino/commits/master/status"), true);
@@ -128,16 +131,24 @@ void loop()
 //    str = getJsonValue(*etheriumPrice, std::string("price_usd"));
 //    str = getJsonValue(*github, std::string("message"));
 //    serialPrintln(str);
-    timeClient.update();
-    myVFD->clear();
-    myVFD->home();
+//    myVFD->home();
+//    *myVFD << "\x1B\x25" << "\x01";
+    // define user defined chars << from 80 to 80 << five columns << pattern data
+//    *myVFD << "\x1B\x26" << "\x80\x80" << "\x05" << (char)255 << (char)0 << (char)255 << (char)0 << (char)255;
+//    *myVFD << "\x80";
+//    *myVFD << "\x1B\x6C" << "\x08\x02";
 //    std::stringstream out;
 //    out << hour() << ":" << minute() << ":" << second() << std::endl << timeClient.getEpochTime();
-    *myVFD << hour() << ":" << minute() << ":" << second() << "\x0A\x0D" << getJsonValue(*coindesk, rateFloat);
+//    *myVFD << hour() << ":" << minute() << ":" << second() << "   "; //<< "\x0A\x0D" << getJsonValue(*coindesk, rateFloat);
+//    myVFD->lineFeed();
+//    myVFD->carriageReturn();
+//    *myVFD << timeClient.getHours() << ":" << timeClient.getMinutes() << ":" << timeClient.getSeconds() << "   ";
+    myVFD->home();
+    *myVFD << timeClient.getFormattedTime();
+    myVFD->wrap();
 //    myVFD->print(out.str());
 //    serialPrintln(out.str());
-    delay(1000);
-    yield();
+//    delay(2000);
 }
 // todo -
-// cd5520
+// cd5220

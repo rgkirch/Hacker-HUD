@@ -1,14 +1,15 @@
 #include "vfd.hpp"
 
-VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight)
+VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight), cursorIndex(0)
 {
     softwareSerial = new SoftwareSerial(receivePin, transmitPin);
     softwareSerial->begin(9600);
+    this->print("\x1B\x40\x0C"); // initialize and clear display
     //together these Initialize the display
-    softwareSerial->write('\x1B');
-    softwareSerial->write('\x40');
+//    softwareSerial->write('\x1B');
+//    softwareSerial->write('\x40');
 
-    softwareSerial->write('\x0C'); //clear display
+//    softwareSerial->write('\x0C'); //clear display
 }
 
 VFD::~VFD() {
@@ -35,12 +36,12 @@ void VFD::println(std::string str)
 //fnc for just clearing the display
 }
 
-std::unique_ptr<VFD> VFD::Builder::build(){
+VFD *VFD::Builder::build(){
     if(rx < 0) return nullptr;
     if(tx < 0) return nullptr;
     if(displayWidth < 0) return nullptr;
     if(displayHeight < 0) return nullptr;
-    return std::unique_ptr<VFD>(new VFD(rx, tx, displayWidth, displayHeight));
+    return new VFD(rx, tx, displayWidth, displayHeight);
 }
 
 VFD::Builder& VFD::Builder::setRx(int rx) {
