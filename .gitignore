@@ -8,3 +8,5 @@ cmake-build-debug
 /lib/ArduinoJson/
 CMakeListsPrivate.txt
 .idea
+data/
+lib/Time-master.zip
