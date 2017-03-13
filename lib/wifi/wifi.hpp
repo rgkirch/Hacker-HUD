@@ -9,10 +9,6 @@
 //#include <core_pins.h>
 #include "../vfd/vfd.hpp"
 
-extern std::unique_ptr<VFD> myVFD;
-
-const char ssid[] = "HellSpot Slow";
-const char password[] = "ILikeWiFi";
 
 void connectToWifi();
 

@@ -1,5 +1,5 @@
-#ifndef VFD_h
-#define VFD_h
+#ifndef VFD_HPP
+#define VFD_HPP
 
 #include <SoftwareSerial.h>
 #include <EEPROM.h>

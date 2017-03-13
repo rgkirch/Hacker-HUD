@@ -7,6 +7,7 @@
 #include <string>
 #include "option.hpp"
 #include "site.hpp"
+#include "../../src/site.hpp"
 //
 //#ifdef min
 //#undef min

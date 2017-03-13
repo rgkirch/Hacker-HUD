@@ -41,6 +41,7 @@ VFD *VFD::Builder::build(){
     if(tx < 0) return nullptr;
     if(displayWidth < 0) return nullptr;
     if(displayHeight < 0) return nullptr;
+    if (rx == tx) return nullptr;
     return new VFD(rx, tx, displayWidth, displayHeight);
 }
 

@@ -1,14 +1,13 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <json.hpp>
-#include "site.hpp"
 
 //#include <Adafruit_MCP9808.h>
 //#include <Wire.h>
 
-#include "../lib/vfd/vfd.hpp"
-#include "../lib/wifi/wifi.hpp"
 #include "globals.hpp"
+#include "site.hpp"
+#include "../lib/vfd/vfd.hpp"
 //#ifdef min
 //#undef min
 //#endif
@@ -32,13 +31,12 @@ void *memchr(const void *s, int c, size_t n)
     return 0;
 }
 
-std::unique_ptr<VFD> myVFD;
+VFD *myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
 struct Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort};
 
 void setup()
 {
     Serial.begin(115200);
-    myVFD = std::unique_ptr<VFD>(VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build());
     myVFD->home();
     myVFD->clear();
 }

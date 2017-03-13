@@ -4,10 +4,10 @@
 const int httpPort = 80;
 const int httpsPort = 443;
 
-struct Site {
+typedef struct {
     const char* host;
     const char* path;
     int port;
-};
+} Site;
 
 #endif

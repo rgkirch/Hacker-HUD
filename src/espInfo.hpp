@@ -1,3 +1,6 @@
+#ifndef ESPINFO_HPP
+#define ESPINFO_HPP
+
 void printEspInfo()
 {
     Serial.println(ESP.getVcc());
@@ -15,3 +18,5 @@ void printEspInfo()
     Serial.println(ESP.getFlashChipMode());
     Serial.println(ESP.getFlashChipSizeByChipId());
 }
+
+#endif
