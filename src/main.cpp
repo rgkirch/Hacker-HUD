@@ -31,19 +31,27 @@ void *memchr(const void *s, int c, size_t n)
     return 0;
 }
 
-VFD *myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
-struct Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort};
+VFD *myVFD;
+Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort};
+
+void p(const char *cs)
+{
+    myVFD->print(cs);
+}
+void (*f)(const char*) = p;
 
 void setup()
 {
     Serial.begin(115200);
+    myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
     myVFD->home();
     myVFD->clear();
 }
 
 void loop()
 {
-    if(WiFi.status() != WL_CONNECTED) connectToWifi();
+//    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
+    if(WiFi.status() != WL_CONNECTED) connectToWifi(f);
     myVFD->home();
 }
 // cd5220

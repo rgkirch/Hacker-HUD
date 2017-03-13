@@ -4,10 +4,9 @@
 #include <ESP8266WiFi.h>
 #include "globals.hpp"
 
-template <typename T>
-void connectToWifi(std::function<void(T)> print){
+void connectToWifi(void(*print)(const char*)){
     Serial.println(ssid);
-    print<const char *>(ssid);
+    print(ssid);
 
     WiFi.begin(ssid, password);
 
@@ -15,11 +14,11 @@ void connectToWifi(std::function<void(T)> print){
     {
         delay(500);
         Serial.print(".");
-        print<char>('.');
+        print(".");
     }
 
     Serial.println("WiFi connected");
-    print<char const*>("WiFi Connected");
+    print("WiFi Connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
 }
