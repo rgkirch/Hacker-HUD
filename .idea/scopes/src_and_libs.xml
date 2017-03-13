@@ -1,3 +1,0 @@
-<component name="DependencyValidationManager">
-  <scope name="src and libs" pattern="file[Hacker-HUD]:lib//*||file[Hacker-HUD]:src//*" />
-</component>
