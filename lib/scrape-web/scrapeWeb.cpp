@@ -1,7 +1,7 @@
 #include "scrapeWeb.hpp"
 #include "../option/option.hpp"
 
-Option scrapeSite(Site site) {
+Option<std::string> scrapeSite(Site site) {
     WiFiClient* client;
     if(site.port == httpsPort)
     {
@@ -15,41 +15,24 @@ Option scrapeSite(Site site) {
         return Option::error("client connect failed");
     }
 
-    // We now create a URI for the request "/v1/bpi/currentprice.json"
-//    Serial.print("Requesting URL: ");
-//    Serial.println(site.url);
-//    Serial.print("host: ");
-//    Serial.println(site.host);
-
-    // This will send the request to the server
     client->print(makeGetRequest(site.host, site.path));
     unsigned long timeout = millis();
     while (!client->available()) {
         if (millis() - timeout > 5000) {
-            Serial.println(">>> Client Timeout !");
             client->stop();
+            return Option::error("client timed out");
         }
     }
 
     // Read all the lines of the reply from server and print them to Serial
-    String answer;
     while(client->available())
     {
-        String line = client->readStringUntil('\r');
-        answer += line;
+        Serial.println(client->readStringUntil('\r'));
     }
 
     client->stop();
-    Serial.println();
-    Serial.println("closing connection");
-
-    // Process answer
-    Serial.println();
-    Serial.println("Answer: ");
-    Serial.println(answer);
-
     delete client;
-    return answer;
+    return Option<std::string>("");
 }
 
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer
