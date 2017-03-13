@@ -1,0 +1,187 @@
+//Function to connect and retrieve web data -----
+String scrapeWeb(Site site) {
+
+  String priceString;
+  // Connect to API
+  Serial.print("connecting to ");
+  Serial.println(site.host);
+
+  // Use WiFiClient class to create TCP connections
+  WiFiClient* client;
+  int httpPort;
+  if(site.secure)
+  {
+    client = new WiFiClientSecure;
+    httpPort = 443;
+  } else {
+    client = new WiFiClient;
+    httpPort = 80;
+  }
+
+  if(!client->connect(site.host, httpPort)) {
+    Serial.println("connection failed");
+  }
+
+  // We now create a URI for the request "/v1/bpi/currentprice.json"
+  Serial.print("Requesting URL: ");
+  Serial.println(site.url);
+  Serial.print("host: ");
+  Serial.println(site.host);
+
+  // This will send the request to the server
+  client->print(String("GET ") + String(site.url) + " HTTP/1.1\r\n" +
+               "Host: " + String(site.host) + "\r\n" +
+               "Connection: close\r\n\r\n");
+  unsigned long timeout = millis();
+  while (!client->available()) {
+    if (millis() - timeout > 5000) {
+      Serial.println(">>> Client Timeout !");
+      client->stop();
+    }
+  }
+
+  // Read all the lines of the reply from server and print them to Serial
+  String answer;
+  while(client->available())
+  {
+    String line = client->readStringUntil('\r');
+    answer += line;
+  }
+
+  client->stop();
+  Serial.println();
+  Serial.println("closing connection");
+
+  // Process answer
+  Serial.println();
+  Serial.println("Answer: ");
+  Serial.println(answer);
+
+  delete client;
+  return answer;
+}
+*/
+
+
+
+//-------------------------------------------------------------------------------
+
+
+/*
+//fnc to parse data from web page (json) -----
+String parseData (String answer, jsonThing whatToParse){
+
+  // Convert to JSON
+  String jsonAnswer;
+  int jsonIndex;
+
+  for (int i = 0; i < answer.length(); i++) {
+    if (answer[i] == '{') {
+      jsonIndex = i;
+      break;
+    }
+  }
+
+  // Get JSON data
+  jsonAnswer = answer.substring(jsonIndex);
+  Serial.println();
+  Serial.println("JSON answer: ");
+  Serial.println(jsonAnswer);
+  jsonAnswer.trim();
+
+  // Get rate as float
+  String priceString = jsonAnswer.substring(jsonAnswer.indexOf(whatToParse.keyword) + whatToParse.begin);
+  int indexOutput = 0;
+
+  if (priceString.indexOf(",") == -1){
+    indexOutput = priceString.indexOf("}");
+  } else if (priceString.indexOf("}") == -1){
+    indexOutput = priceString.indexOf(",");
+  } else {
+    int less;
+    if (priceString.indexOf("}") < priceString.indexOf(",")) {
+      less = priceString.indexOf("}");
+    } else {
+      less = priceString.indexOf(",");
+    }
+    indexOutput = less;
+  }
+  priceString = priceString.substring(0,indexOutput);
+  int decimal = priceString.indexOf(".");
+  if (decimal > -1) priceString = priceString.substring(0,decimal + 3);
+  priceString.trim();
+  float price = priceString.toFloat();
+
+  Serial.println("end function");
+  return priceString;
+}
+ */
+
+
+ //------------------------------------------------------------------------
+
+ //fnc for reading time from json response -----
+ String readTime(String realTime){
+
+   // Convert to JSON
+   String timeEst;
+   int index;
+
+   for (int i = 0; i < realTime.length(); i++) {
+     if (realTime[i] == '{') {
+       index = i;
+       break;
+     }
+   }
+
+   /*
+   // Get JSON data
+   timeEst = realTime.substring(index);
+   Serial.println();
+   Serial.println("JSON answer: ");
+   Serial.println(timeEst);
+   jsonAnswer.trim();
+   */
+
+   // Get rate as float
+   String year = realTime.substring(index+18,index+22);
+   String month = realTime.substring(index+10,index+13);
+   String day = realTime.substring(index+14,index+16);
+   String hour = realTime.substring(index+24,index+25);
+   String minute = realTime.substring(index+27,index+28);
+
+   //priceString.trim();
+   String jsonTime = (month + " " + day + ", " + year + " " + hour + ":" + minute);
+
+   return jsonTime;
+ }
+
+
+//------------------------------------------------------------------------------
+
+
+//Re-format getTimeDateString fnc for standard display -----
+String formatTime(String old){
+  mySerial.println(old);
+  int fullHour = old.substring(0,2).toInt();
+  fullHour = fullHour > 12 ? fullHour - 12 : fullHour;
+  String fh = fullHour < 10 ? "0" + String(fullHour) : String(fullHour);
+  String fixedTime =  fh + ":" + old.substring(3,5) + ":" + old.substring(6,8) + "  " + old.substring(12,14) + "/" + old.substring(9,11) + "/" + old.substring(15,19);
+  return fixedTime;
+}
+
+//------------------------
+/*
+//structs -----
+struct jsonThing {
+    const String keyword;
+    int begin;
+    int end;
+};
+
+struct Site {
+    const char* url;
+    const char* host;
+    bool secure;
+};
+ */
