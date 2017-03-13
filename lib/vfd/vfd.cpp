@@ -1,4 +1,4 @@
-#include "vfd.hpp"
+#include "../../src/vfd.hpp"
 
 VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight), cursorIndex(0)
 {
@@ -41,6 +41,7 @@ VFD *VFD::Builder::build(){
     if(tx < 0) return nullptr;
     if(displayWidth < 0) return nullptr;
     if(displayHeight < 0) return nullptr;
+    if (rx == tx) return nullptr;
     return new VFD(rx, tx, displayWidth, displayHeight);
 }
 

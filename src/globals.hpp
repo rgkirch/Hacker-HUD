@@ -1,6 +1,8 @@
-#include <WString.h>
+#ifndef GLOBALS_HPP
+#define GLOBALS_HPP
 
-String networkSSID = "HellSpot Slow";
-String networkPassword = "ILikeWiFi";
-std::string stringNotFound = std::string("c02b7d24a066adb747fdeb12deb21bfa");
-const unsigned int udpLocalPort = 2390;
+const char ssid[] = "HellSpot Slow";
+const char password[] = "ILikeWiFi";
+//const unsigned int udpLocalPort = 2390;
+
+#endif

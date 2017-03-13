@@ -1,8 +1,13 @@
-#include "wifi.hpp"
+#ifndef WIFI_HPP
+#define WIFI_HPP
 
-void connectToWifi(){
+#include <ESP8266WiFi.h>
+#include "globals.hpp"
+
+template <typename T>
+void connectToWifi(std::function<void(T)> print){
     Serial.println(ssid);
-    myVFD->print<char const*>(ssid);
+    print<const char *>(ssid);
 
     WiFi.begin(ssid, password);
 
@@ -10,11 +15,11 @@ void connectToWifi(){
     {
         delay(500);
         Serial.print(".");
-        myVFD->print<char>('.');
+        print<char>('.');
     }
 
     Serial.println("WiFi connected");
-    myVFD->print<char const*>("WiFi Connected");
+    print<char const*>("WiFi Connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
 }
@@ -40,3 +45,5 @@ void connectToWifi(){
 //    NTP.begin("pool.ntp.org", -5, true);
 //    NTP.setInterval(1800);
 //}
+
+#endif
