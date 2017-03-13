@@ -1,4 +1,4 @@
-#include "vfd.hpp"
+#include "../../src/vfd.hpp"
 
 VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight), cursorIndex(0)
 {

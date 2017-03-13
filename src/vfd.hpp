@@ -2,10 +2,10 @@
 #define VFD_HPP
 
 #include <SoftwareSerial.h>
-#include <EEPROM.h>
-#include <WString.h>
+//#include <EEPROM.h>
+//#include <WString.h>
 #include <string>
-#include <memory>
+//#include <memory>
 
 class VFD
 {

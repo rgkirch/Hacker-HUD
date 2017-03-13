@@ -1,3 +1,7 @@
+#ifndef WIFI_HPP
+#define WIFI_HPP
+
+#include <ESP8266WiFi.h>
 #include "globals.hpp"
 
 template <typename T>
@@ -41,3 +45,5 @@ void connectToWifi(std::function<void(T)> print){
 //    NTP.begin("pool.ntp.org", -5, true);
 //    NTP.setInterval(1800);
 //}
+
+#endif

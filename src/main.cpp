@@ -1,13 +1,13 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
-#include <json.hpp>
+//#include <json.hpp>
 
 //#include <Adafruit_MCP9808.h>
 //#include <Wire.h>
 
-#include "globals.hpp"
 #include "site.hpp"
-#include "../lib/vfd/vfd.hpp"
+#include "vfd.hpp"
+#include "wifi.hpp"
 //#ifdef min
 //#undef min
 //#endif
