@@ -32,6 +32,43 @@ std::string makeGetRequest(const char *host, const char *path)
     return request;
 
 }
+Option<std::string> scrapeSite(Site site) {
+    WiFiClient* client;
+    if(site.port == httpsPort)
+    {
+        client = new WiFiClientSecure;
+    } else if (site.port == httpPort){
+        client = new WiFiClient;
+    } else return Option::error("site port incorrect");
+    if (client == NULL) return Option::error("couldn't make client");
+
+    if (not client->connect(site.host, site.port)) {
+        return Option::error("client connect failed");
+    }
+    if (not client->connected()) {
+        return Option::error("client not connected?!?!");
+    }
+    client->print(makeGetRequest(site.host, site.path));
+    unsigned long timeout = millis();
+    while (!client->available()) {
+        yield();
+        if (millis() - timeout > 5000) {
+            client->stop();
+            return Option::error("client timed out");
+        }
+    }
+
+    // Read all the lines of the reply from server and print them to Serial
+    while(client->connected())
+    {
+        int numBytes = client->available();
+        Serial.println(client->readStringUntil('\r'));
+    }
+
+    client->stop();
+    delete client;
+    return Option<std::string>("");
+}
 //std::string makeGetRequest(std::string host, std::string path)
 //{
 //    std::string request;
