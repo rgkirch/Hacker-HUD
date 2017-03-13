@@ -8,3 +8,6 @@ cmake-build-debug
 /lib/Adafruit_MCP9808_Library-master/
 /lib/ArduinoJson/
 CMakeListsPrivate.txt
+data/
+lib/Time-master.zip
+
