@@ -24,6 +24,9 @@ typedef struct{
     const char* url;
     const char* host;
     bool secure;
+    const char* keys[4];
+    int numKeys;
+
 } website;
 
 
@@ -32,10 +35,10 @@ const char* ssid     = "HellSpot Slow";
 const char* password = "ILikeWiFi";
 
 //websites to parse -----
-website coinDesk = {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false};
+website coinDesk = {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false,.keys = {"bpi","USD","rate"},.numKeys = 3};
 //setup data to parse?
 
-website coinMarketCap = {.url = "/api/eth", .host = "coinmarketcap-nexuist.rhcloud.com", .secure = true};
+website coinMarketCap = {.url = "/api/eth", .host = "coinmarketcap-nexuist.rhcloud.com", .secure = true,.keys = {"price","usd"}, .numKeys = 2};
 //setup data to parse?
 
 
@@ -198,6 +201,25 @@ void setup() {
 
 }
 
+String  parseData(website site){
+
+    StaticJsonBuffer<4000> jsonBuffer;
+
+    JsonObject& root = jsonBuffer.parseObject(scrapeWeb(site));
+
+    // Test if parsing succeeds.
+    if (!root.success()) {
+        Serial.println("parseObject() failed");
+        return String("Failed");
+    }
+
+    for(int i = 0; i < site.numKeys - 1; i++){
+      root = root[site.keys[i]];
+    };
+
+    return root[site.numKeys];
+}
+
 //Loop -----
 void loop() {
 
@@ -213,26 +235,15 @@ void loop() {
 
     //Bitcoin Price frame
 
-    const size_t bufferSize = 3*JSON_OBJECT_SIZE(3) + 3*JSON_OBJECT_SIZE(5) + 630;
-    DynamicJsonBuffer jsonBuffer(bufferSize);
 
-    JsonObject& root = jsonBuffer.parseObject(scrapeWeb(coinDesk));
-    JsonObject& bpi = root["bpi"];
-    JsonObject& bpi_USD = bpi["USD"];
-    const char* bpi_USD_rate = bpi_USD["rate"];
 
-    // Test if parsing succeeds.
-    if (!root.success()) {
-        Serial.println("parseObject() failed");
-        return;
-    }
 
     //Serial.print(bpi_USD_rate);
-    myVFD.print("$" + (String)bpi_USD_rate + " /BTC");
+    myVFD.print("$" + parseData(scrapeWeb(coinDesk)) + " /BTC");
     delay(2000);
 
     //ETH Price
-    root = jsonBuffer.parseObject(scrapeWeb(coinMarketCap);
+    //root = jsonBuffer.parseObject(scrapeWeb(coinMarketCap);
 
 
 
