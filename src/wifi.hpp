@@ -1,5 +1,4 @@
-#include "wifi.hpp"
-#include "../../src/globals.hpp"
+#include "globals.hpp"
 
 template <typename T>
 void connectToWifi(std::function<void(T)> print){
