@@ -1,4 +1,5 @@
 #include "scrapeWeb.hpp"
+#include "../option/option.hpp"
 
 Option scrapeSite(Site site) {
     WiFiClient* client;
@@ -7,22 +8,21 @@ Option scrapeSite(Site site) {
         client = new WiFiClientSecure;
     } else if (site.port == httpPort){
         client = new WiFiClient;
-    } else return Option::error();
+    } else return Option::error("site port incorrect");
+    if (client == NULL) return Option::error("couldn't make client");
 
     if(!client->connect(site.host, site.port)) {
-        Serial.println("connection failed");
+        return Option::error("client connect failed");
     }
 
     // We now create a URI for the request "/v1/bpi/currentprice.json"
-    Serial.print("Requesting URL: ");
-    Serial.println(site.url);
-    Serial.print("host: ");
-    Serial.println(site.host);
+//    Serial.print("Requesting URL: ");
+//    Serial.println(site.url);
+//    Serial.print("host: ");
+//    Serial.println(site.host);
 
     // This will send the request to the server
-    client->print(String("GET ") + String(site.url) + " HTTP/1.1\r\n" +
-                  "Host: " + String(site.host) + "\r\n" +
-                  "Connection: close\r\n\r\n");
+    client->print(makeGetRequest(site.host, site.path));
     unsigned long timeout = millis();
     while (!client->available()) {
         if (millis() - timeout > 5000) {
@@ -50,18 +50,6 @@ Option scrapeSite(Site site) {
 
     delete client;
     return answer;
-}
-
-std::string makeGetRequest(std::string host, std::string path)
-{
-    std::string request;
-//    request.reserve(one.size() + two.size() + three.size() + host.size() + path.size());
-    std::string get = {"GET /"};
-    std::string http = {" HTTP/1.1\r\nHost: "};
-    std::string userAgent = {"\r\nUser-Agent: rgkirch"};
-    std::string close = {"\r\nConnection: close\r\n\r\n"};
-    request.append(get).append(path).append(http).append(host).append(userAgent).append(close);
-    return request;
 }
 
 // todo - does client.available() have a max size so that i might have to buffer the incomming message in parts OR can I always read the data into one buffer

@@ -14,6 +14,7 @@ public:
     template <typename E>
     T getOrElse(E e) { if(not this->isError()) return data; else return e; };
     static Option error() { return new Option(); };
+    static Option error(std::string str) { return new Option(); }; // placeholder
 //    static Option error(std::string str) { return new Option(str); }; // make new option, set string, return option
     std::string errorString;
 private:
