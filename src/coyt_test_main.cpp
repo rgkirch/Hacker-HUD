@@ -19,6 +19,8 @@ Coyt Barringer & Richie Kirchofer
 
 #include <ArduinoJson.h>
 
+String inString = "";    // string to hold input
+
 //new types: -----
 typedef struct{
     const char* url;
@@ -35,7 +37,7 @@ const char* ssid     = "HellSpot Slow";
 const char* password = "ILikeWiFi";
 
 //websites to parse -----
-website coinDesk = {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false,.keys = {"bpi","USD","rate"},.numKeys = 3};
+website coinDesk = {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false,.keys = {"bpi","USD","rate_float"},.numKeys = 3};
 //setup data to parse?
 
 website coinMarketCap = {.url = "/api/eth", .host = "coinmarketcap-nexuist.rhcloud.com", .secure = true,.keys = {"price","usd"}, .numKeys = 2};
@@ -121,7 +123,6 @@ String scrapeWeb(website site) {
     }
 
     String realAnswer = answer.substring(answer.indexOf('{'));
-    //Serial.println(realAnswer);
 
     client->stop();
     Serial.println();
@@ -201,9 +202,10 @@ void setup() {
 
 }
 
-String  parseData(website site){
+String parseData(website site){
 
-    StaticJsonBuffer<4000> jsonBuffer;
+    const size_t bufferSize = 4000;
+    DynamicJsonBuffer jsonBuffer(bufferSize);
 
     JsonObject& root = jsonBuffer.parseObject(scrapeWeb(site));
 
@@ -213,11 +215,24 @@ String  parseData(website site){
         return String("Failed");
     }
 
-    for(int i = 0; i < site.numKeys - 1; i++){
-      root = root[site.keys[i]];
-    };
+    //must have at least one key setup
+    if(site.numKeys == 1){
+        return root[site.keys[0]];
+    }
 
-    return root[site.numKeys];
+    else if(site.numKeys == 2){
+        JsonObject& keyOne = root[site.keys[0]];
+        return keyOne[site.keys[1]];
+    }
+    else if(site.numKeys == 3){
+        JsonObject& keyOne = root[site.keys[0]];
+        JsonObject& keyTwo = keyOne[site.keys[1]];
+        return keyTwo[site.keys[2]];
+    }
+    else
+        return "no match found";
+
+
 }
 
 //Loop -----
@@ -228,39 +243,24 @@ void loop() {
     myVFD.print("  Hacker HUD V1.0  ");
     myVFD.nextLine();
     myVFD.simplePrint((NTP.getTimeDateString()));
+    delay(6000);
 
-    delay(8000);
+    //Temp
     myVFD.print("Current Temp: " + (String)readTemp()); //print current temp reading to VFD
-    delay(2000);
+    delay(4000);
 
-    //Bitcoin Price frame
-
-
-
-
-    //Serial.print(bpi_USD_rate);
-    myVFD.print("$" + parseData(scrapeWeb(coinDesk)) + " /BTC");
-    delay(2000);
+    //BTC Price
+    myVFD.print("$" + (String)parseData(coinDesk).toFloat() + " /BTC");
+    delay(4000);
 
     //ETH Price
-    //root = jsonBuffer.parseObject(scrapeWeb(coinMarketCap);
-
+    myVFD.print("$" + (String)parseData(coinMarketCap).toFloat() + " /ETH");
+    delay(4000);
 
 
     //display weather
 
     //display trump tweets
 
-
-
-  //myVFD.print("$" + btcPrice + " /BTC" + '\x0A' + '\x0D' + "$" + parseData(scrapeWeb(etheriumPrice),etheriumJson) + "   /ETH"); //display BTC price
-  //myVFD.nextLine();
-
-  //myVFD.simplePrint("$" + parseData(scrapeWeb(etheriumPrice),etheriumJson) + "  /ETH" ); //display BTC price
-  //delay(2000);
-  
-
-  //myVFD.print("Miner: " + parseData(scrapeWeb(etheriumHashes),ethereumHashesJson) + " MH/s"); //display BTC price
-  //delay(2000);
 
 }
