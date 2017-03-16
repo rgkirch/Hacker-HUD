@@ -5,6 +5,8 @@
 #include <WiFiClientSecure.h>
 #include <ESP8266WiFi.h>
 #include <string>
+#include <ArduinoJson.h>
+
 #include "option.hpp"
 #include "site.hpp"
 //#ifdef min
@@ -24,12 +26,37 @@ std::string makeGetRequest(const char *host, const char *path)
     std::string http = {" HTTP/1.1\r\nHost: "};
     std::string close = {"\r\nConnection: close\r\n\r\n"};
     request.append(get);
-    if (path != nullptr) request.append(path)
-    request.append(http)
-    if (host != nullptr) request.append(host)
+    if (path != nullptr) request.append(path);
+    request.append(http);
+    if (host != nullptr) request.append(host);
     request.append(close);
     return request;
 
+}
+Option<std::string> scrapeJson(Site site) {
+    WiFiClient* client;
+    if(site.port == httpsPort)
+    {
+        client = new WiFiClientSecure;
+    } else if (site.port == httpPort){
+        client = new WiFiClient;
+    } else return Option<std::string>(); //"site port incorrect"
+    if (client == NULL) return Option<std::string>(); //"couldn't make client"
+
+    if (not client->connect(site.host, site.port)) {
+        return Option<std::string>(); //"client connect failed"
+    }
+    if (not client->connected()) {
+        return Option<std::string>(); //"client not connected?!?!"
+    }
+    client->print(makeGetRequest(site.host, site.path).c_str());
+
+    auto o = parseJson(client);
+    std::string str =  o["bpi"]["USD"]["rate_float"];
+
+    client->stop();
+    delete client;
+    return Option<std::string>(str);
 }
 Option<std::string> scrapeSite(Site site) {
     WiFiClient* client;
@@ -38,22 +65,22 @@ Option<std::string> scrapeSite(Site site) {
         client = new WiFiClientSecure;
     } else if (site.port == httpPort){
         client = new WiFiClient;
-    } else return Option::error("site port incorrect");
-    if (client == NULL) return Option::error("couldn't make client");
+    } else return Option<std::string>(); // "site port incorrect"
+    if (client == NULL) return Option<std::string>(); //"couldn't make client"
 
     if (not client->connect(site.host, site.port)) {
-        return Option::error("client connect failed");
+        return Option<std::string>(); //"client connect failed"
     }
     if (not client->connected()) {
-        return Option::error("client not connected?!?!");
+        return Option<std::string>(); //"client not connected?!?!"
     }
-    client->print(makeGetRequest(site.host, site.path));
+    client->print(makeGetRequest(site.host, site.path).c_str());
     unsigned long timeout = millis();
     while (!client->available()) {
         yield();
         if (millis() - timeout > 5000) {
             client->stop();
-            return Option::error("client timed out");
+            return Option<std::string>(); //"client timed out"
         }
     }
 
@@ -66,7 +93,7 @@ Option<std::string> scrapeSite(Site site) {
 
     client->stop();
     delete client;
-    return Option<std::string>("");
+    return Option<std::string>();
 }
 //std::string makeGetRequest(std::string host, std::string path)
 //{

@@ -1,5 +1,6 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
+#include <ArduinoJson.h>
 //#include <json.hpp>
 
 //#include <Adafruit_MCP9808.h>
@@ -8,6 +9,7 @@
 #include "site.hpp"
 #include "vfd.hpp"
 #include "wifi.hpp"
+#include "scrapeWeb.hpp"
 //#ifdef min
 //#undef min
 //#endif
@@ -32,7 +34,19 @@ void *memchr(const void *s, int c, size_t n)
 }
 
 VFD *myVFD;
+
+//class Test {};
+//std::string coindeskShit() {
+//    return o["bpi"]["USD"]["rate_float"];
+//}
+
+//std::function<std::string(Test)> test = std::function<std::string(Test)>([](Test o){ return std::string("hello"); } );
+//std::function<std::string(JsonObject)> test = std::function<std::string(JsonObject)>([](JsonObject o){ return o["bpi"]["USD"]["rate_float"].as<std::string>(); } );
+//Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
 Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort};
+//auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
+//Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
+//Site coinMarketCap {.host = "coinmarketcap-nexuist.rhcloud.com", .path = "/api/eth", .port = httpsPort, .f = [](JsonObject o)->float { return o["price"]["usd"]; } };
 
 void p(const char *cs)
 {
@@ -53,5 +67,6 @@ void loop()
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi(f);
     myVFD->home();
+    myVFD->print(scrapeJson(coindesk).getOrElse(""));
 }
 // cd5220
