@@ -9,7 +9,7 @@ typedef struct {
     const char* host;
     const char* path;
     int port;
-//    std::function<std::string(JsonObject&)> f;
+    std::function<std::string(JsonObject&)> f;
 //    typedef <typename T>
 //    float(*f)(JsonObject);
 } Site;

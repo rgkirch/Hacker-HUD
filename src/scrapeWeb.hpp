@@ -51,12 +51,39 @@ Option<std::string> scrapeJson(Site site) {
     }
     client->print(makeGetRequest(site.host, site.path).c_str());
 
-    auto o = parseJson(client);
-    std::string str =  o["bpi"]["USD"]["rate_float"];
+    unsigned long timeout = millis();
+    while (!client->available()) {
+        yield();
+        if (millis() - timeout > 5000) {
+            client->stop();
+            return Option<std::string>(); //"client timed out"
+        }
+    }
+
+    // Read all the lines of the reply from server and print them to Serial
+    std::string data();
+    char arr[500] = {0};
+    while(client->connected())
+    {
+        int len = client->available();
+        char *buffer = (char*)malloc(len + 1);
+        buffer[len] = '\0';
+        for (int i = 0; i < len; i++)
+        {
+            buffer[i] = client->read();
+        }
+        data.append(buffer, len);
+        free(buffer);
+    }
+    strncpy(arr, data.c_str(), 500);
+
+    DynamicJsonBuffer jsonBuffer;
+    JsonArray& o = JsonBuffer.parseJson(arr);
+//    std::string str =  o["bpi"]["USD"]["rate_float"];
 
     client->stop();
     delete client;
-    return Option<std::string>(str);
+    return Option<std::string>();
 }
 Option<std::string> scrapeSite(Site site) {
     WiFiClient* client;
