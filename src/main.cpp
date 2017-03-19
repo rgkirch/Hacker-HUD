@@ -45,7 +45,7 @@ VFD *myVFD;
 //Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
 Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort};
 //auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
-auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
+//auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
 //Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
 //Site coinMarketCap {.host = "coinmarketcap-nexuist.rhcloud.com", .path = "/api/eth", .port = httpsPort, .f = [](JsonObject o)->float { return o["price"]["usd"]; } };
 

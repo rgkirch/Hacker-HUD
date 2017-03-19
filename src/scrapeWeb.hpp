@@ -41,7 +41,7 @@ Option<std::string> scrapeJson(Site site) {
     } else if (site.port == httpPort){
         client = new WiFiClient;
     } else return Option<std::string>(); //"site port incorrect"
-    if (client == NULL) return Option<std::string>(); //"couldn't make client"
+    if (client == nullptr) return Option<std::string>(); //"couldn't make client"
 
     if (not client->connect(site.host, site.port)) {
         return Option<std::string>(); //"client connect failed"
@@ -61,29 +61,29 @@ Option<std::string> scrapeJson(Site site) {
     }
 
     // Read all the lines of the reply from server and print them to Serial
-    std::string data();
-    char arr[500] = {0};
+    std::string data;
     while(client->connected())
     {
-        int len = client->available();
-        char *buffer = (char*)malloc(len + 1);
-        buffer[len] = '\0';
-        for (int i = 0; i < len; i++)
-        {
-            buffer[i] = client->read();
-        }
-        data.append(buffer, len);
-        free(buffer);
+        data.append(client->readString().c_str());
+//        int len = client->available();
+//        char *buffer = (char*)malloc(len + 1);
+//        buffer[len] = '\0';
+//        for (int i = 0; i < len; i++)
+//        {
+//            buffer[i] = client->read();
+//        }
+//        data.append(buffer, len);
+//        free(buffer);
     }
-    strncpy(arr, data.c_str(), 500);
+//    strncpy(arr, data.c_str(), 500);
 
-    DynamicJsonBuffer jsonBuffer;
-    JsonArray& o = JsonBuffer.parseJson(arr);
+//    DynamicJsonBuffer jsonBuffer;
+//    JsonArray& o = JsonBuffer.parseJson(arr);
 //    std::string str =  o["bpi"]["USD"]["rate_float"];
 
     client->stop();
     delete client;
-    return Option<std::string>();
+    return data;
 }
 Option<std::string> scrapeSite(Site site) {
     WiFiClient* client;
