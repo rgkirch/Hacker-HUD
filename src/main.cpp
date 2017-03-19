@@ -68,6 +68,9 @@ void loop()
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi(f);
     myVFD->home();
-    myVFD->print(scrapeJson(coindesk).getOrElse(""));
+    const std::string &str = scrapeJson(coindesk).getOrElse("");
+    myVFD->print(str);
+    Serial.println(str.c_str());
+    delay(10000);
 }
 // cd5220

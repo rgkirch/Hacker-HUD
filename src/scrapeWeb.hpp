@@ -65,22 +65,12 @@ Option<std::string> scrapeJson(Site site) {
     while(client->connected())
     {
         data.append(client->readString().c_str());
-//        int len = client->available();
-//        char *buffer = (char*)malloc(len + 1);
-//        buffer[len] = '\0';
-//        for (int i = 0; i < len; i++)
-//        {
-//            buffer[i] = client->read();
-//        }
-//        data.append(buffer, len);
-//        free(buffer);
     }
-//    strncpy(arr, data.c_str(), 500);
-
-//    DynamicJsonBuffer jsonBuffer;
-//    JsonArray& o = JsonBuffer.parseJson(arr);
-//    std::string str =  o["bpi"]["USD"]["rate_float"];
-
+    auto i = data.rfind('\n');
+    if (i != data.npos)
+    {
+        data.erase(0, i + 1);
+    }
     client->stop();
     delete client;
     return data;
