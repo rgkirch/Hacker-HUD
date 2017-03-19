@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.2)
-project(clion)
+project(Hacker-HUD)
 
 include(CMakeListsPrivate.txt)
 
@@ -51,4 +51,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(${PROJECT_NAME} ${SRC_LIST} lib/vfd/vfd.h)
+add_executable(${PROJECT_NAME} ${SRC_LIST})

@@ -26,10 +26,14 @@ typedef struct{
     const char* url;
     const char* host;
     bool secure;
+} website;
+
+typedef struct{
     const char* keys[4];
     int numKeys;
+    String output;
+} keyStruct;
 
-} website;
 
 
 //constants -----
@@ -37,12 +41,17 @@ const char* ssid     = "HellSpot Slow";
 const char* password = "ILikeWiFi";
 
 //websites to parse -----
-website coinDesk = {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false,.keys = {"bpi","USD","rate_float"},.numKeys = 3};
+website coinDesk = {.url = "/v1/bpi/currentprice.json", .host = "api.coindesk.com", .secure = false};
+//keyStruct coinDeskArray[] = {{.keys = {"bpi","USD","rate_float"},.numKeys = 3},{}};
 //setup data to parse?
 
-website coinMarketCap = {.url = "/api/eth", .host = "coinmarketcap-nexuist.rhcloud.com", .secure = true,.keys = {"price","usd"}, .numKeys = 2};
+
+//.keys = {"price","usd"}, .numKeys = 2
+website coinMarketCap = {.url = "/api/eth", .host = "coinmarketcap-nexuist.rhcloud.com", .secure = true};
 //setup data to parse?
 
+website openWeatherMap = {.url = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29", .host = "api.openweathermap.org", .secure = false};
+keyStruct openWeatherMapData[] = {{.keys = {"main","temp"},.numKeys = 2},{.keys = {"main","humidity"},.numKeys = 2}};
 
 //Initialize Objects -----
 SoftwareSerial mySerial(D5,D6);//rx,tx
@@ -200,9 +209,11 @@ void setup() {
 
   InitializeTemp(); //Initialize temp sensor
 
+    pinMode(A0, INPUT);
+
 }
 
-String parseData(website site){
+void parseData(website site, keyStruct* keysToParse, int num){
 
     const size_t bufferSize = 4000;
     DynamicJsonBuffer jsonBuffer(bufferSize);
@@ -212,27 +223,36 @@ String parseData(website site){
     // Test if parsing succeeds.
     if (!root.success()) {
         Serial.println("parseObject() failed");
-        return String("Failed");
+        return;
     }
 
-    //must have at least one key setup
-    if(site.numKeys == 1){
-        return root[site.keys[0]];
-    }
+    for (int i = 0; i < num ; i++){
 
-    else if(site.numKeys == 2){
-        JsonObject& keyOne = root[site.keys[0]];
-        return keyOne[site.keys[1]];
-    }
-    else if(site.numKeys == 3){
-        JsonObject& keyOne = root[site.keys[0]];
-        JsonObject& keyTwo = keyOne[site.keys[1]];
-        return keyTwo[site.keys[2]];
-    }
-    else
-        return "no match found";
+        if(keysToParse[i].numKeys == 1){
+            keysToParse[i].output = (const char*)root[keysToParse[i].keys[0]];
+        }
 
+        else if(keysToParse[i].numKeys == 2) {
+            JsonObject& keyOne = root[keysToParse[i].keys[0]];
+            keysToParse[i].output = (const char*)keyOne[keysToParse[i].keys[1]];
+        }
 
+        else if(keysToParse[i].numKeys == 3) {
+            JsonObject& keyOne = root[keysToParse[i].keys[0]];
+            JsonObject& keyTwo = keyOne[keysToParse[i].keys[1]];
+            keysToParse[i].output = (const char*)keyTwo[keysToParse[i].keys[2]];
+        }
+
+        else if(keysToParse[i].numKeys == 4) {
+            JsonObject& keyOne = root[keysToParse[i].keys[0]];
+            JsonObject& keyTwo = keyOne[keysToParse[i].keys[1]];
+            JsonObject& keyThree = keyTwo[keysToParse[i].keys[2]];
+            keysToParse[i].output = (const char*)keyThree[keysToParse[i].keys[3]];
+        }
+
+        else
+            keysToParse[i].output = "nothing found!";
+    }
 }
 
 //Loop -----
@@ -246,21 +266,29 @@ void loop() {
     delay(6000);
 
     //Temp
-    myVFD.print("Current Temp: " + (String)readTemp()); //print current temp reading to VFD
-    delay(4000);
+    //myVFD.print("Current Temp: " + (String)readTemp()); //print current temp reading to VFD
+    //delay(4000);
 
-    //BTC Price
-    myVFD.print("$" + (String)parseData(coinDesk).toFloat() + " /BTC");
-    delay(4000);
-
-    //ETH Price
-    myVFD.print("$" + (String)parseData(coinMarketCap).toFloat() + " /ETH");
-    delay(4000);
+    //BTC and ETH Price frame
+    //String currentBtcPrice = (String)parseData(coinDesk,coinDeskArray,(sizeof(coinDeskArray)/sizeof(keyStruct))).toFloat();
+    //String currentEthPrice = (String)parseData(coinMarketCap).toFloat();
+    //myVFD.print("$" + currentBtcPrice + " /BTC");
+    //myVFD.nextLine();
+    //myVFD.simplePrint("$" + currentEthPrice + " /ETH");
+    //delay(6000);
 
 
     //display weather
+    float temp = analogRead(A0);
+    temp = (((temp/1023)*3.3*100)*1.8) + 32;
+
+    parseData(openWeatherMap,openWeatherMapData,(sizeof(openWeatherMapData)/sizeof(keyStruct)));
+    myVFD.print("Temperature: " + openWeatherMapData[0].output + ((char)223) + "F");
+    myVFD.nextLine();
+    myVFD.simplePrint("Humidity: " + openWeatherMapData[1].output);
+    delay(6000);
+    myVFD.print("Inside: " + (String)temp + ((char)223) + "F");
+    delay(6000);
 
     //display trump tweets
-
-
 }
