@@ -72,8 +72,8 @@ Option<std::string> scrapeJson(Site site) {
 //        data.erase(0, i);
 //        i += 2;
     } else i = 0;
-    Serial.print("i is ");
-    Serial.println(i);
+//    Serial.print("i is ");
+//    Serial.println(i);
     client->stop();
     delete client;
     return data.substr(i);
