@@ -1,6 +1,7 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
+#include <functional>
 //#include <json.hpp>
 
 //#include <Adafruit_MCP9808.h>
@@ -35,25 +36,30 @@ void *memchr(const void *s, int c, size_t n)
 
 VFD *myVFD;
 
-//class Test {};
-//std::string coindeskShit() {
-//    return o["bpi"]["USD"]["rate_float"];
-//}
-
-//std::function<std::string(Test)> test = std::function<std::string(Test)>([](Test o){ return std::string("hello"); } );
-//std::function<std::string(JsonObject)> test = std::function<std::string(JsonObject)>([](JsonObject o){ return o["bpi"]["USD"]["rate_float"].as<std::string>(); } );
-//Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
-Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpPort};
-//auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
-//auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
-//Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
-//Site coinMarketCap {.host = "coinmarketcap-nexuist.rhcloud.com", .path = "/api/eth", .port = httpsPort, .f = [](JsonObject o)->float { return o["price"]["usd"]; } };
-
-void p(const char *cs)
+std::string coindesk()
 {
-    myVFD->print(cs);
+    Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpPort};
+    DynamicJsonBuffer jsonBuffer(1000);
+    return jsonBuffer.parseObject(scrapeJson(coindesk).getOrElse("").c_str())["bpi"]["USD"]["rate_float"].as<const char*>();
 }
-void (*f)(const char*) = p;
+std::string coinMarketCap()
+{
+    Site coinMarketCap = {.host = "coinmarketcap-nexuist.rhcloud.com", .path = "/api/eth", .port = httpsPort};
+    DynamicJsonBuffer jsonBuffer(1000);
+    return jsonBuffer.parseObject(scrapeJson(coinMarketCap).getOrElse("").c_str())["price"]["usd"].as<const char*>();
+}
+std::string openWeatherMapHumidity()
+{
+    Site openWeatherMap = {.host = "api.openweathermap.org", .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29", .port = httpPort};
+    DynamicJsonBuffer jsonBuffer(1000);
+    return jsonBuffer.parseObject(scrapeJson(openWeatherMap).getOrElse("").c_str())["main"]["humidity"].as<const char*>();
+}
+std::string openWeatherMapTemp()
+{
+    Site openWeatherMap = {.host = "api.openweathermap.org", .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29", .port = httpPort};
+    DynamicJsonBuffer jsonBuffer(1000);
+    return jsonBuffer.parseObject(scrapeJson(openWeatherMap).getOrElse("").c_str())["main"]["temp"].as<const char*>();
+}
 
 void setup()
 {
@@ -62,18 +68,26 @@ void setup()
     myVFD->home();
     myVFD->clear();
 }
-
+void p(const char *cs)
+{
+    myVFD->print(cs);
+}
 void loop()
 {
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
-    if(WiFi.status() != WL_CONNECTED) connectToWifi(f);
+    if(WiFi.status() != WL_CONNECTED) connectToWifi(p);
+    myVFD->clear();
     myVFD->home();
-    std::string str = scrapeJson(coindesk).getOrElse("");
-//    myVFD->print(str);
-//    Serial.println(str.c_str());
-    DynamicJsonBuffer jsonBuffer(1000);
-    JsonObject& root = jsonBuffer.parseObject(str.c_str());
-    myVFD->print(root["bpi"]["USD"]["rate_float"].as<const char*>());
-    delay(30000);
+    myVFD->print("btc      ");
+    myVFD->println(coindesk());
+    myVFD->print("eth      ");
+    myVFD->print(coinMarketCap());
+    delay(10000);
+    myVFD->home();
+    myVFD->print("temp     ");
+    myVFD->println(openWeatherMapTemp());
+    myVFD->print("humidity ");
+    myVFD->print(openWeatherMapHumidity());
+    delay(10000);
 }
 // cd5220
