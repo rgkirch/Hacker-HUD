@@ -43,7 +43,7 @@ VFD *myVFD;
 //std::function<std::string(Test)> test = std::function<std::string(Test)>([](Test o){ return std::string("hello"); } );
 //std::function<std::string(JsonObject)> test = std::function<std::string(JsonObject)>([](JsonObject o){ return o["bpi"]["USD"]["rate_float"].as<std::string>(); } );
 //Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
-Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort};
+Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpPort};
 //auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
 //auto f = std::function<const char*(JsonObject)>([](JsonObject o){ return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>()); } );
 //Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpsPort, .f = std::function<std::string(JsonObject)>([](JsonObject o)->std::string { return std::string(o["bpi"]["USD"]["rate_float"].as<const char*>); }) };
@@ -68,9 +68,12 @@ void loop()
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi(f);
     myVFD->home();
-    const std::string &str = scrapeJson(coindesk).getOrElse("");
-    myVFD->print(str);
-    Serial.println(str.c_str());
-    delay(10000);
+    std::string str = scrapeJson(coindesk).getOrElse("");
+//    myVFD->print(str);
+//    Serial.println(str.c_str());
+    DynamicJsonBuffer jsonBuffer(1000);
+    JsonObject& root = jsonBuffer.parseObject(str.c_str());
+    myVFD->print(root["bpi"]["USD"]["rate_float"].as<const char*>());
+    delay(30000);
 }
 // cd5220

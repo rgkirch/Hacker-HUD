@@ -66,14 +66,17 @@ Option<std::string> scrapeJson(Site site) {
     {
         data.append(client->readString().c_str());
     }
-    auto i = data.rfind('\n');
+    auto i = data.find('{');
     if (i != data.npos)
     {
-        data.erase(0, i + 1);
-    }
+//        data.erase(0, i);
+//        i += 2;
+    } else i = 0;
+    Serial.print("i is ");
+    Serial.println(i);
     client->stop();
     delete client;
-    return data;
+    return data.substr(i);
 }
 Option<std::string> scrapeSite(Site site) {
     WiFiClient* client;
