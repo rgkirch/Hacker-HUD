@@ -36,29 +36,58 @@ void *memchr(const void *s, int c, size_t n)
 
 VFD *myVFD;
 
+int updateFrequency = 60000;
 std::string coindesk()
 {
+    static std::string str;
+    static int updated = -60000;
     Site coindesk {.host = "api.coindesk.com", .path = "v1/bpi/currentprice.json", .port = httpPort};
-    DynamicJsonBuffer jsonBuffer(1000);
-    return jsonBuffer.parseObject(scrapeJson(coindesk).getOrElse("").c_str())["bpi"]["USD"]["rate_float"].as<const char*>();
+    if (millis() - updated > updateFrequency)
+    {
+        DynamicJsonBuffer jsonBuffer(1000);
+        str = jsonBuffer.parseObject(scrapeJson(coindesk).getOrElse("").c_str())["bpi"]["USD"]["rate_float"].as<const char*>();
+        updated = millis();
+    }
+    return str;
 }
 std::string coinMarketCap()
 {
+    static std::string str;
+    static int updated = -60000;
     Site coinMarketCap = {.host = "coinmarketcap-nexuist.rhcloud.com", .path = "/api/eth", .port = httpsPort};
-    DynamicJsonBuffer jsonBuffer(1000);
-    return jsonBuffer.parseObject(scrapeJson(coinMarketCap).getOrElse("").c_str())["price"]["usd"].as<const char*>();
+    if (millis() - updated > updateFrequency)
+    {
+        DynamicJsonBuffer jsonBuffer(1000);
+        str = jsonBuffer.parseObject(scrapeJson(coinMarketCap).getOrElse("").c_str())["price"]["usd"].as<const char*>();
+        updated = millis();
+    }
+    return str;
 }
 std::string openWeatherMapHumidity()
 {
+    static std::string str;
+    static int updated = -60000;
     Site openWeatherMap = {.host = "api.openweathermap.org", .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29", .port = httpPort};
-    DynamicJsonBuffer jsonBuffer(1000);
-    return jsonBuffer.parseObject(scrapeJson(openWeatherMap).getOrElse("").c_str())["main"]["humidity"].as<const char*>();
+    if (millis() - updated > updateFrequency)
+    {
+        DynamicJsonBuffer jsonBuffer(1000);
+        str = jsonBuffer.parseObject(scrapeJson(openWeatherMap).getOrElse("").c_str())["main"]["humidity"].as<const char*>();
+        updated = millis();
+    }
+    return str;
 }
 std::string openWeatherMapTemp()
 {
+    static std::string str;
+    static int updated = -60000;
     Site openWeatherMap = {.host = "api.openweathermap.org", .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29", .port = httpPort};
-    DynamicJsonBuffer jsonBuffer(1000);
-    return jsonBuffer.parseObject(scrapeJson(openWeatherMap).getOrElse("").c_str())["main"]["temp"].as<const char*>();
+    if (millis() - updated > updateFrequency)
+    {
+        DynamicJsonBuffer jsonBuffer(1000);
+        str = jsonBuffer.parseObject(scrapeJson(openWeatherMap).getOrElse("").c_str())["main"]["temp"].as<const char*>();
+        updated = millis();
+    }
+    return str;
 }
 
 void setup()
@@ -84,6 +113,7 @@ void loop()
     myVFD->print(coinMarketCap());
     delay(10000);
     myVFD->home();
+    myVFD->clear();
     myVFD->print("temp     ");
     myVFD->println(openWeatherMapTemp());
     myVFD->print("humidity ");
