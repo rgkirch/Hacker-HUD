@@ -1,26 +1,25 @@
-#include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
-#include <ArduinoJson.h>
-//#include <json.hpp>
-
-//#include <Adafruit_MCP9808.h>
-//#include <Wire.h>
-
-#include "site.hpp"
-#include "vfd.hpp"
-#include "wifi.hpp"
-#include "scrapeWeb.hpp"
 #ifdef min
 #undef min
 #endif
 #ifdef max
 #undef max
 #endif
-#include <sstream>
-#include <functional>
+//#include <sstream>
+//#include <functional>
 #include <vector>
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
+#include <SoftwareSerial.h>
+#include <ArduinoJson.h>
+//#include <json.hpp>
+
+//#include <Adafruit_MCP9808.h>
+//#include <Wire.h>
+#include "site.hpp"
+#include "vfd.hpp"
+#include "wifi.hpp"
+#include "scrapeWeb.hpp"
 
 typedef unsigned char uint8_t;
 

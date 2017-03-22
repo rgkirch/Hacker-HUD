@@ -2,7 +2,8 @@
 #define SITE_HPP
 #include <ArduinoJson.h>
 #include <string>
-#include <functional>
+//#include <functional>
+#include <vector>
 #include "site.hpp"
 
 const int httpPort = 80;
