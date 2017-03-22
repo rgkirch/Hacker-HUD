@@ -1,7 +1,6 @@
 #include <SoftwareSerial.h>
 #include <ESP8266WiFi.h>
 #include <ArduinoJson.h>
-#include <functional>
 //#include <json.hpp>
 
 //#include <Adafruit_MCP9808.h>
@@ -11,15 +10,17 @@
 #include "vfd.hpp"
 #include "wifi.hpp"
 #include "scrapeWeb.hpp"
-//#ifdef min
-//#undef min
-//#endif
-//#ifdef max
-//#undef max
-//#endif
-//#include <sstream>
-//#define min(a,b) ((a)<(b)?(a):(b))
-//#define max(a,b) ((a)>(b)?(a):(b))
+#ifdef min
+#undef min
+#endif
+#ifdef max
+#undef max
+#endif
+#include <sstream>
+#include <functional>
+#include <vector>
+#define min(a,b) ((a)<(b)?(a):(b))
+#define max(a,b) ((a)>(b)?(a):(b))
 
 typedef unsigned char uint8_t;
 
@@ -76,11 +77,30 @@ std::string openWeatherMapHumidity()
     }
     return str;
 }
+std::string apply(JsonObject& o, std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end)
+{
+    if (begin->next() == end)
+    {
+        return o[*begin].as<const char*>();
+    } else {
+        return apply(o[*begin], begin->next(), end);
+    }
+}
+std::string get(Site site)
+{
+    DynamicJsonBuffer jsonBuffer(1000);
+    return apply(jsonBuffer.parseObject(scrapeJson(site).getOrElse("").c_str()), site.keys.begin(), site.keys.end());
+}
 std::string openWeatherMapTemp()
 {
     static std::string str;
     static int updated = -60000;
-    Site openWeatherMap = {.host = "api.openweathermap.org", .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29", .port = httpPort};
+    Site openWeatherMap = {
+        .host = "api.openweathermap.org",
+        .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
+        .port = httpPort,
+        .keys = std::initializer_list<std::string> {"main", "temp"}
+    };
     if (millis() - updated > updateFrequency)
     {
         DynamicJsonBuffer jsonBuffer(1000);

@@ -12,6 +12,7 @@ typedef struct {
     const char* host;
     const char* path;
     int port;
+    std::vector<std::string> keys;
 //    typedef <typename T>
 //    float(*f)(JsonObject);
 } Site;
