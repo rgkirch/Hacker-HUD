@@ -50,28 +50,28 @@ std::string get(Site site)
 
 VFD *myVFD;
 Site coindesk {
-            .host = "api.coindesk.com",
-            .path = "v1/bpi/currentprice.json",
-            .port = httpPort,
-            .keys = std::initializer_list<std::string> {"bpi", "USD", "rate_float"}
-    };
+        .host = "api.coindesk.com",
+        .path = "v1/bpi/currentprice.json",
+        .port = httpPort,
+        .keys = {"bpi", "USD", "rate_float"}
+};
 Site coinMarketCap = {
         .host = "coinmarketcap-nexuist.rhcloud.com",
         .path = "/api/eth",
         .port = httpsPort,
-        .keys = std::initializer_list<std::string> {"price", "usd"}
+        .keys = {"price", "usd"}
 };
 Site openWeatherMapHumidity = {
         .host = "api.openweathermap.org",
         .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
         .port = httpPort,
-        .keys = std::initializer_list<std::string> {"main", "humidity"}
+        .keys = {"main", "humidity"}
 };
 Site openWeatherMapTemp = {
         .host = "api.openweathermap.org",
         .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
         .port = httpPort,
-        .keys = std::initializer_list<std::string> {"main", "temp"}
+        .keys = {"main", "temp"}
 };
 int updateFrequency = 60000;
 std::string superGet(Site site)
