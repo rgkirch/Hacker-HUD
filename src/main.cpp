@@ -49,80 +49,43 @@ std::string get(Site site)
 }
 
 VFD *myVFD;
-
-int updateFrequency = 60000;
-std::string coindesk()
-{
-    static std::string str;
-    static int updated = -60000;
-    Site coindesk {
+Site coindesk {
             .host = "api.coindesk.com",
             .path = "v1/bpi/currentprice.json",
             .port = httpPort,
             .keys = std::initializer_list<std::string> {"bpi", "USD", "rate_float"}
     };
-    if (millis() - updated > updateFrequency)
-    {
-        str = get(coindesk);
-        updated = millis();
-    }
-    return str;
-}
-std::string coinMarketCap()
+Site coinMarketCap = {
+        .host = "coinmarketcap-nexuist.rhcloud.com",
+        .path = "/api/eth",
+        .port = httpsPort,
+        .keys = std::initializer_list<std::string> {"price", "usd"}
+};
+Site openWeatherMapHumidity = {
+        .host = "api.openweathermap.org",
+        .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
+        .port = httpPort,
+        .keys = std::initializer_list<std::string> {"main", "humidity"}
+};
+Site openWeatherMapTemp = {
+        .host = "api.openweathermap.org",
+        .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
+        .port = httpPort,
+        .keys = std::initializer_list<std::string> {"main", "temp"}
+};
+int updateFrequency = 60000;
+std::string superGet(Site site)
 {
     static std::string str;
     static int updated = -60000;
-    Site coinMarketCap = {
-            .host = "coinmarketcap-nexuist.rhcloud.com",
-            .path = "/api/eth",
-            .port = httpsPort,
-            .keys = std::initializer_list<std::string> {"price", "usd"}
-    };
-    if (millis() - updated > updateFrequency)
-    {
-        DynamicJsonBuffer jsonBuffer(1000);
-        str = get(coinMarketCap);
-        updated = millis();
-    }
-    return str;
-}
-std::string openWeatherMapHumidity()
-{
-    static std::string str;
-    static int updated = -60000;
-    Site openWeatherMapHumidity = {
-            .host = "api.openweathermap.org",
-            .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-            .port = httpPort,
-            .keys = std::initializer_list<std::string> {"main", "humidity"}
-    };
-    if (millis() - updated > updateFrequency)
-    {
-        DynamicJsonBuffer jsonBuffer(1000);
-        str = get(openWeatherMapHumidity);
-        updated = millis();
-    }
-    return str;
-}
-std::string openWeatherMapTemp()
-{
-    static std::string str;
-    static int updated = -60000;
-    Site openWeatherMapTemp = {
-            .host = "api.openweathermap.org",
-            .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-            .port = httpPort,
-            .keys = std::initializer_list<std::string> {"main", "temp"}
-    };
-    if (millis() - updated > updateFrequency)
-    {
-        DynamicJsonBuffer jsonBuffer(1000);
-        str = get(openWeatherMapTemp);
-        updated = millis();
-    }
-    return str;
-}
 
+    if (millis() - updated > updateFrequency)
+    {
+        str = get(site);
+        updated = millis();
+    }
+    return str;
+}
 void setup()
 {
     Serial.begin(115200);
@@ -141,16 +104,16 @@ void loop()
     myVFD->clear();
     myVFD->home();
     myVFD->print("btc      ");
-    myVFD->println(coindesk());
+    myVFD->println(superGet(coindesk));
     myVFD->print("eth      ");
-    myVFD->print(coinMarketCap());
+    myVFD->print(superGet(coinMarketCap));
     delay(10000);
     myVFD->home();
     myVFD->clear();
     myVFD->print("temp     ");
-    myVFD->println(openWeatherMapTemp());
+    myVFD->println(superGet(openWeatherMapTemp));
     myVFD->print("humidity ");
-    myVFD->print(openWeatherMapHumidity());
+    myVFD->print(superGet(openWeatherMapHumidity));
     delay(10000);
 }
 // cd5220
