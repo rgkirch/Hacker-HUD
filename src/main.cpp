@@ -78,11 +78,11 @@ std::string openWeatherMapHumidity()
 }
 std::string apply(JsonObject& o, std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end)
 {
-    if (begin->next() == end)
+    if (std::next(begin) == end)
     {
-        return o[*begin].as<const char*>();
+        return o[(*begin).c_str()].as<const char*>();
     } else {
-        return apply(o[*begin], begin->next(), end);
+        return apply(o[(*begin).c_str()], std::next(begin), end);
     }
 }
 std::string get(Site site)
