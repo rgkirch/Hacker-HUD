@@ -76,7 +76,7 @@ Option<std::string> scrapeJson(Site site) {
 //    Serial.println(i);
     client->stop();
     delete client;
-    return data.substr(i);
+    return Option<std::string>(data.substr(i));
 }
 Option<std::string> scrapeSite(Site site) {
     WiFiClient* client;
