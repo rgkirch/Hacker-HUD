@@ -1,3 +1,6 @@
+#ifndef OPTION_HPP
+#define OPTION_HPP
+
 template <typename T>
 class Option {
 public:
@@ -9,3 +12,5 @@ private:
     T data;
     bool empty;
 };
+
+#endif
