@@ -8,6 +8,7 @@
 //#include <sstream>
 //#include <functional>
 #include <vector>
+#include <climits>
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
 #include <SoftwareSerial.h>
@@ -37,62 +38,66 @@ void *memchr(const void *s, int c, size_t n)
 VFD *myVFD;
 Site coindesk {
         .updateInterval = 60000,
-        .lastUpdated = (int)0xFFFFFFFF,
+        .lastUpdated = INT_MIN,
         .port = httpPort,
         .host = "api.coindesk.com",
         .path = "v1/bpi/currentprice.json",
-        .lastResult = Option<std::string>(),
+        .lastResult = new Option<std::string>,
         .keys = {"bpi", "USD", "rate_float"}
 };
 Site coinMarketCap = {
         .updateInterval = 60000,
-        .lastUpdated = (int)0xFFFFFFFF,
+        .lastUpdated = INT_MIN,
         .port = httpsPort,
         .host = "coinmarketcap-nexuist.rhcloud.com",
         .path = "/api/eth",
-        .lastResult = Option<std::string>(),
+        .lastResult = new Option<std::string>,
         .keys = {"price", "usd"}
 };
 Site openWeatherMapHumidity = {
         .updateInterval = 60000,
-        .lastUpdated = (int)0xFFFFFFFF,
+        .lastUpdated = INT_MIN,
         .port = httpPort,
         .host = "api.openweathermap.org",
         .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-        .lastResult = Option<std::string>(),
+        .lastResult = new Option<std::string>,
         .keys = {"main", "humidity"}
 };
 Site openWeatherMapTemp = {
         .updateInterval = 60000,
-        .lastUpdated = (int)0xFFFFFFFF,
+        .lastUpdated = INT_MIN,
         .port = httpPort,
         .host = "api.openweathermap.org",
         .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-        .lastResult = Option<std::string>(),
+        .lastResult = new Option<std::string>,
         .keys = {"main", "temp"}
 };
-std::string apply(JsonObject& o, std::vector<std::string>::iterator begin, std::vector<std::string>::iterator end)
+std::string applyKeys(const JsonObject& o, const std::vector<std::string>::iterator begin, const std::vector<std::string>::iterator end)
 {
-    if (std::next(begin) == end)
+    auto it = begin;
+    if (std::next(it) == end)
     {
-        return o[(*begin).c_str()].as<const char*>();
+        return o[(*it).c_str()].as<const char*>();
     } else {
-        return apply(o[(*begin).c_str()], std::next(begin), end);
+        return applyKeys(o[(*it).c_str()], std::next(begin), end);
     }
 }
-Option<std::string> get(Site site)
+Option<std::string>* getSiteData(Site site)
 {
+    Option<std::string> *o = scrapeJson(site);
     DynamicJsonBuffer jsonBuffer(1000);
-    return apply(jsonBuffer.parseObject(scrapeJson(site)), site.keys.begin(), site.keys.end());
+    return o->map([&o, &jsonBuffer, &site](std::string str)->std::string { applyKeys(jsonBuffer.parseObject(o->getOrElse("").c_str()), site.keys.begin(), site.keys.end()); } );
 }
-void update(Site site)
+void updateSite(Site site)
 {
     if (millis() - site.lastUpdated > site.updateInterval)
     {
-        site.lastUpdated = millis();
-        Option<std::string> o = get(site);
-        if (not o.isEmpty()) {
-            site.lastResult = get(site).getOrElse("").c_str();
+        Option<std::string> *o = getSiteData(site);
+        if (not o->isEmpty()) {
+            site.lastResult = o;
+            site.lastUpdated = millis();
+        } else {
+            delete o;
         }
     }
 }
@@ -112,25 +117,25 @@ void loop()
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi(p);
 
-    update(coindesk);
-    update(coinMarketCap);
+    updateSite(coindesk);
+    updateSite(coinMarketCap);
     myVFD->clear();
     myVFD->home();
     myVFD->print("btc      ");
-    myVFD->println(coindesk.lastResult.getOrElse("no data"));
+    myVFD->println(coindesk.lastResult->getOrElse("no data"));
     myVFD->print("eth      ");
-    myVFD->print(coinMarketCap.lastResult.getOrElse("no data"));
+    myVFD->print(coinMarketCap.lastResult->getOrElse("no data"));
 
-    update(openWeatherMapTemp);
-    update(openWeatherMapHumidity);
+    updateSite(openWeatherMapTemp);
+    updateSite(openWeatherMapHumidity);
     delay(10000);
 
     myVFD->home();
     myVFD->clear();
     myVFD->print("temp     ");
-    myVFD->println(openWeatherMapTemp.lastResult.getOrElse("no data"));
+    myVFD->println(openWeatherMapTemp.lastResult->getOrElse("no data"));
     myVFD->print("humidity ");
-    myVFD->print(openWeatherMapHumidity.lastResult.getOrElse("no data"));
+    myVFD->print(openWeatherMapHumidity.lastResult->getOrElse("no data"));
     delay(10000);
 }
 // cd5220

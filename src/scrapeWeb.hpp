@@ -33,21 +33,21 @@ std::string makeGetRequest(const char *host, const char *path)
     return request;
 
 }
-Option<std::string> scrapeJson(Site site) {
+Option<std::string>* scrapeJson(Site site) {
     WiFiClient* client;
     if(site.port == httpsPort)
     {
         client = new WiFiClientSecure;
     } else if (site.port == httpPort){
         client = new WiFiClient;
-    } else return Option<std::string>(); //"site port incorrect"
-    if (client == nullptr) return Option<std::string>(); //"couldn't make client"
+    } else return new Option<std::string>; //"site port incorrect"
+    if (client == NULL or client == nullptr) return new Option<std::string>; //"couldn't make client"
 
     if (not client->connect(site.host, site.port)) {
-        return Option<std::string>(); //"client connect failed"
+        return new Option<std::string>; //"client connect failed"
     }
     if (not client->connected()) {
-        return Option<std::string>(); //"client not connected?!?!"
+        return new Option<std::string>; //"client not connected?!?!"
     }
     client->print(makeGetRequest(site.host, site.path).c_str());
 
@@ -56,7 +56,7 @@ Option<std::string> scrapeJson(Site site) {
         yield();
         if (millis() - timeout > 5000) {
             client->stop();
-            return Option<std::string>(); //"client timed out"
+            return new Option<std::string>; //"client timed out"
         }
     }
 
@@ -76,23 +76,23 @@ Option<std::string> scrapeJson(Site site) {
 //    Serial.println(i);
     client->stop();
     delete client;
-    return Option<std::string>(data.substr(i));
+    return new Option<std::string>(data.substr(i));
 }
-Option<std::string> scrapeSite(Site site) {
+Option<std::string>* scrapeSite(Site site) {
     WiFiClient* client;
     if(site.port == httpsPort)
     {
         client = new WiFiClientSecure;
     } else if (site.port == httpPort){
         client = new WiFiClient;
-    } else return Option<std::string>(); // "site port incorrect"
-    if (client == NULL) return Option<std::string>(); //"couldn't make client"
+    } else return new Option<std::string>; // "site port incorrect"
+    if (client == NULL) return new Option<std::string>; //"couldn't make client"
 
     if (not client->connect(site.host, site.port)) {
-        return Option<std::string>(); //"client connect failed"
+        return new Option<std::string>; //"client connect failed"
     }
     if (not client->connected()) {
-        return Option<std::string>(); //"client not connected?!?!"
+        return new Option<std::string>; //"client not connected?!?!"
     }
     client->print(makeGetRequest(site.host, site.path).c_str());
     unsigned long timeout = millis();
@@ -100,7 +100,7 @@ Option<std::string> scrapeSite(Site site) {
         yield();
         if (millis() - timeout > 5000) {
             client->stop();
-            return Option<std::string>(); //"client timed out"
+            return new Option<std::string>; //"client timed out"
         }
     }
 
@@ -113,7 +113,7 @@ Option<std::string> scrapeSite(Site site) {
 
     client->stop();
     delete client;
-    return Option<std::string>();
+    return new Option<std::string>;
 }
 //std::string makeGetRequest(std::string host, std::string path)
 //{
