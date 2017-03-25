@@ -10,16 +10,16 @@
 const int httpPort = 80;
 const int httpsPort = 443;
 
-typedef struct {
+struct Site {
     int updateInterval;
     int lastUpdated;
     int port;
     const char* host;
     const char* path;
-    Option<std::string> *lastResult;
+    Option<std::string> &lastResult;
     std::vector<std::string> keys;
 //    typedef <typename T>
 //    float(*f)(JsonObject);
-} Site;
+};
 
 #endif

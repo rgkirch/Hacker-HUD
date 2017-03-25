@@ -36,16 +36,16 @@ void *memchr(const void *s, int c, size_t n)
     return 0;
 }
 VFD *myVFD;
-Site coindesk {
-        .updateInterval = 60000,
-        .lastUpdated = INT_MIN,
-        .port = httpPort,
-        .host = "api.coindesk.com",
-        .path = "v1/bpi/currentprice.json",
-        .lastResult = new Option<std::string>,
-        .keys = {"bpi", "USD", "rate_float"}
+struct Site coindesk {
+        60000,
+        INT_MIN,
+        httpPort,
+        "api.coindesk.com",
+        "v1/bpi/currentprice.json",
+        Option<std::string>,
+        {"bpi", "USD", "rate_float"}
 };
-Site coinMarketCap = {
+struct Site coinMarketCap = {
         .updateInterval = 60000,
         .lastUpdated = INT_MIN,
         .port = httpsPort,
@@ -54,7 +54,7 @@ Site coinMarketCap = {
         .lastResult = new Option<std::string>,
         .keys = {"price", "usd"}
 };
-Site openWeatherMapHumidity = {
+struct Site openWeatherMapHumidity = {
         .updateInterval = 60000,
         .lastUpdated = INT_MIN,
         .port = httpPort,
@@ -63,7 +63,7 @@ Site openWeatherMapHumidity = {
         .lastResult = new Option<std::string>,
         .keys = {"main", "humidity"}
 };
-Site openWeatherMapTemp = {
+struct Site openWeatherMapTemp = {
         .updateInterval = 60000,
         .lastUpdated = INT_MIN,
         .port = httpPort,
@@ -82,18 +82,22 @@ std::string applyKeys(const JsonObject& o, const std::vector<std::string>::itera
         return applyKeys(o[(*it).c_str()], std::next(begin), end);
     }
 }
-Option<std::string>* getSiteData(Site site)
+Option<std::string> &getSiteData(struct Site site)
 {
-    Option<std::string> *o = scrapeJson(site);
+    Option<std::string> o = scrapeJson(site);
     DynamicJsonBuffer jsonBuffer(1000);
-    return o->map([&o, &jsonBuffer, &site](std::string str)->std::string { applyKeys(jsonBuffer.parseObject(o->getOrElse("").c_str()), site.keys.begin(), site.keys.end()); } );
+    return o.map(
+        [&o, &jsonBuffer, &site](std::string str)->std::string {
+            applyKeys(jsonBuffer.parseObject(o.getOrElse("").c_str()), site.keys.begin(), site.keys.end());
+        }
+    );
 }
-void updateSite(Site site)
+void updateSite(struct Site site)
 {
     if (millis() - site.lastUpdated > site.updateInterval)
     {
-        Option<std::string> *o = getSiteData(site);
-        if (not o->isEmpty()) {
+        Option<std::string> o = getSiteData(site);
+        if (not o.isEmpty()) {
             site.lastResult = o;
             site.lastUpdated = millis();
         } else {
