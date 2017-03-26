@@ -77,8 +77,7 @@ Option<std::string> scrapeJson(struct Site site) {
 //    Serial.println(i);
     client->stop();
     delete client;
-    emptyOption = data.substr(i);
-    return emptyOption;
+    return data.substr(i);
 }
 
 #endif
