@@ -4,7 +4,7 @@
 template <typename T>
 class Option {
 public:
-    Option<T> &map(const std::function<T(T)> &f)
+    Option<T> &map(std::function<T(T)> &f)
     {
         if (not this->isEmpty())
         {
