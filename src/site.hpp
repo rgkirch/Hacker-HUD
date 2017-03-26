@@ -12,7 +12,7 @@ const int httpsPort = 443;
 struct Site {
     int updateInterval;
     int lastUpdated;
-    int port;
+    const int port;
     const char* host;
     const char* path;
     Option<std::string> lastResult;

@@ -81,7 +81,7 @@ std::string applyKeys(const JsonObject& o, const std::vector<std::string>::itera
         return applyKeys(o[(*it).c_str()], std::next(begin), end);
     }
 }
-Option<std::string> &getSiteData(struct Site site)
+Option<std::string> getSiteData(struct Site site)
 {
     Option<std::string> o = scrapeJson(site);
     DynamicJsonBuffer jsonBuffer(1000);
