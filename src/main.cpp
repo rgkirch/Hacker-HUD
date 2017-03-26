@@ -109,14 +109,14 @@ void setup()
     myVFD->home();
     myVFD->clear();
 }
-void p(const char *cs)
-{
-    myVFD->print(cs);
-}
+//void p(const char *cs)
+//{
+//    myVFD->print(cs);
+//}
 void loop()
 {
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
-    if(WiFi.status() != WL_CONNECTED) connectToWifi(p);
+    if(WiFi.status() != WL_CONNECTED) connectToWifi([&myVFD](const char *cs)->void { if (myVFD != nullptr and myVFD != NULL) myVFD->print(cs); } );
 
     updateSite(coindesk);
     updateSite(coinMarketCap);
