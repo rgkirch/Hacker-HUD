@@ -23,8 +23,6 @@
 #include "scrapeWeb.hpp"
 #include "option.hpp"
 
-typedef unsigned char uint8_t;
-
 void *memchr(const void *s, int c, size_t n)
 {
     unsigned char *p = (unsigned char*)s;
