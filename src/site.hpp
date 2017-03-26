@@ -16,7 +16,7 @@ struct Site {
     int port;
     const char* host;
     const char* path;
-    Option<std::string> &lastResult;
+    Option<std::string> lastResult;
     std::vector<std::string> keys;
 //    typedef <typename T>
 //    float(*f)(JsonObject);
