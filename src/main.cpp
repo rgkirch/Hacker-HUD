@@ -37,7 +37,7 @@ void *memchr(const void *s, int c, size_t n)
 }
 VFD *myVFD;
 Option<std::string> emptyStringOption;
-Site coindesk {
+struct Site coindesk {
         60000,
         INT_MIN,
         httpPort,
