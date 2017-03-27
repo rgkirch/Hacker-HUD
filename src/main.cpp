@@ -85,12 +85,13 @@ Option<std::string> getSiteData(struct Site site)
 {
     Option<std::string> o = scrapeJson(site);
     DynamicJsonBuffer jsonBuffer(1000);
-    std::function<std::string(std::string)> f([&o, &jsonBuffer, &site](std::string str)->std::string {
-                return applyKeys(jsonBuffer.parseObject(str.c_str()), site.keys.begin(), site.keys.end());
-            } );
-    return o.map( f );
+        std::function<std::string(std::string)> f([&o, &jsonBuffer, &site](std::string str)->std::string {
+            return applyKeys(jsonBuffer.parseObject(str.c_str()), site.keys.begin(), site.keys.end());
+        } );
+        o.map( f );
+    return o;
 }
-void updateSite(struct Site site)
+void updateSite(struct Site &site)
 {
     if (millis() - site.lastUpdated > site.updateInterval)
     {
