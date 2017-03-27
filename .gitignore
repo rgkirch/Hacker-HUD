@@ -1,0 +1,13 @@
+.idea/
+.pioenvs
+.piolibdeps
+.clang_complete
+.gcc-flags.json
+cmake-build-debug
+/lib/Arduino/
+/lib/Adafruit_MCP9808_Library-master/
+/lib/ArduinoJson/
+CMakeListsPrivate.txt
+data/
+lib/Time-master.zip
+
