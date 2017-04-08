@@ -155,10 +155,10 @@ void setup()
 {
     Serial.begin(115200);
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
-    myVFD->home();
-    myVFD->clear();
     ntpSetup();
     initializeTemp(tempsensor);
+    myVFD->clear();
+    myVFD->home();
 }
 //void p(const char *cs)
 //{
@@ -171,6 +171,7 @@ void loop()
 
     updateSite(coindesk);
     updateSite(coinMarketCap);
+
     delay(10000);
 
     myVFD->clear();
@@ -182,18 +183,20 @@ void loop()
 
     updateSite(openWeatherMapTemp);
     updateSite(openWeatherMapHumidity);
+
     delay(10000);
 
-    myVFD->home();
     myVFD->clear();
+    myVFD->home();
     myVFD->print("temp     "); //(char)223)
     myVFD->println(openWeatherMapTemp.lastResult.getOrElse("no data"));
     myVFD->print("humidity ");
     myVFD->print(openWeatherMapHumidity.lastResult.getOrElse("no data"));
+
     delay(10000);
 
-    myVFD->home();
     myVFD->clear();
+    myVFD->home();
     myVFD->print("sensor temp "); //(char)223)
     myVFD->println(readTemp(tempsensor));
     myVFD->print("time "); //(char)223)

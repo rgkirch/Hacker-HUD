@@ -12,30 +12,6 @@ VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) :
 //    softwareSerial->write('\x0C'); //clear display
 }
 
-VFD::~VFD() {
-    delete softwareSerial;
-}
-
-void VFD::print(std::string str)
-{
-    for (char c:str)
-    {
-        this->write(c);
-    }
-}
-
-void VFD::println(std::string str)
-{
-    this->print(str);
-    //fnc for moving to next line
-    this->write('\x1B');
-    this->write('\x6C');
-    this->write('\x01');
-    this->write('\x02');
-
-//fnc for just clearing the display
-}
-
 VFD *VFD::Builder::build(){
     if(rx < 0) return nullptr;
     if(tx < 0) return nullptr;
