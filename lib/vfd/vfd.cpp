@@ -1,6 +1,6 @@
 #include "vfd.hpp"
 
-VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight), cursorIndex(0)
+VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight)
 {
     softwareSerial = new SoftwareSerial(receivePin, transmitPin);
     softwareSerial->begin(9600);

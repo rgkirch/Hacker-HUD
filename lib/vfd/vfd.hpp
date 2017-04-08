@@ -15,7 +15,6 @@ private:
     SoftwareSerial* softwareSerial;
     const int width;
     const int height;
-    int cursorIndex;
 public:
     VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
     ~VFD() { delete softwareSerial; }
@@ -39,6 +38,7 @@ public:
     void lineFeed()               { this->print("\x0A"); };
     void carriageReturn()         { this->print("\x0D"); };
     void home()                   { this->print("\x0B"); };
+    void setUpperLine(std::string str) { this->print("\x1B\x51\x41"); this->print(str); this->print("\x0D"); };
 //    void printJustified(std::string str) {};
 };
 

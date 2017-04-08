@@ -17,3 +17,6 @@ Useful commands:
     *myVFD << "\x1B\x6C" << "\x08\x02"; // jump cursor to position x y
 
 baud rate 9600 vs 19200
+
+pio run -t upload --upload-port com9
+pio device monitor -b 115200

@@ -171,36 +171,40 @@ void loop()
 
     updateSite(coindesk);
     updateSite(coinMarketCap);
-
-    delay(10000);
-
-    myVFD->clear();
-    myVFD->home();
-    myVFD->print("btc      ");
-    myVFD->println(coindesk.lastResult.getOrElse("no data"));
-    myVFD->print("eth      ");
-    myVFD->print(coinMarketCap.lastResult.getOrElse("no data"));
-
     updateSite(openWeatherMapTemp);
     updateSite(openWeatherMapHumidity);
 
-    delay(10000);
+//    myVFD->clear();
+//    myVFD->home();
+//    myVFD->print("btc      ");
+//    myVFD->println(coindesk.lastResult.getOrElse("no data"));
+//    myVFD->print("eth      ");
+//    myVFD->print(coinMarketCap.lastResult.getOrElse("no data"));
 
-    myVFD->clear();
-    myVFD->home();
-    myVFD->print("temp     "); //(char)223)
-    myVFD->println(openWeatherMapTemp.lastResult.getOrElse("no data"));
-    myVFD->print("humidity ");
-    myVFD->print(openWeatherMapHumidity.lastResult.getOrElse("no data"));
 
-    delay(10000);
+//    delay(10000);
 
-    myVFD->clear();
-    myVFD->home();
-    myVFD->print("sensor temp "); //(char)223)
-    myVFD->println(readTemp(tempsensor));
-    myVFD->print("time "); //(char)223)
-    myVFD->println((NTP.getTimeStr()));
+//    myVFD->clear();
+//    myVFD->home();
+//    myVFD->print("temp     "); //(char)223)
+//    myVFD->println(openWeatherMapTemp.lastResult.getOrElse("no data"));
+//    myVFD->print("humidity ");
+//    myVFD->print(openWeatherMapHumidity.lastResult.getOrElse("no data"));
+
+//    delay(10000);
+
+//    myVFD->clear();
+//    myVFD->home();
+//    myVFD->print("sensor temp "); //(char)223)
+//    myVFD->println(readTemp(tempsensor));
+//    myVFD->print("time "); //(char)223)
+    std::string time(NTP.getTimeStr().c_str());
+    time = time.substr(0, 20);
+    for (int i = 0; i < 20 - time.length(); ++i) {
+        time += " ";
+    }
+    myVFD->setUpperLine(time);
+    delay(1000);
 }
 // cd5220
 // JsonObject.success()
