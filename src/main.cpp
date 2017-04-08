@@ -13,6 +13,8 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h>
+#include <Adafruit_MCP9808.h>
+#include <NtpClientLib.h>
 //#include <json.hpp>
 
 //#include <Adafruit_MCP9808.h>
@@ -33,7 +35,54 @@ void *memchr(const void *s, int c, size_t n)
             return p;
     return 0;
 }
+//setup ntp time -----
+void ntpSetup() {
+    NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
+        if (error) {
+            Serial.print("Time Sync error: ");
+            if (error == noResponse)
+                Serial.println("NTP server not reachable");
+            else if (error == invalidAddress)
+                Serial.println("Invalid NTP server address");
+        } else {
+            Serial.print("Got NTP time: ");
+            Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
+        }
+    });
+
+    NTP.begin("pool.ntp.org", -5, true);
+    NTP.setInterval(1800);
+}
+//Initialize Temp Sensor Fnc. -----
+void initializeTemp(Adafruit_MCP9808 &tempsensor){
+    // Make sure the sensor is found, you can also pass in a different i2c
+    // address with tempsensor.begin(0x19) for example
+    if (!tempsensor.begin()) {
+        Serial.println("Couldn't find MCP9808!");
+    }
+    pinMode(A0, INPUT);
+}
+//Read Temp Fnc. -----
+float readTemp(Adafruit_MCP9808 &tempsensor) {
+    tempsensor.shutdown_wake(0);   // Don't remove this line! required before reading temp
+
+    // Read and convert to *F, then print
+    float c = tempsensor.readTempC();
+    float f = c * 9.0 / 5.0 + 32;
+    Serial.print("C: ");
+    Serial.print(c);
+    Serial.print(" F: ");
+    Serial.print(f);
+    delay(250);
+
+//    Serial.println("Shutdown MCP9808.... ");
+    tempsensor.shutdown_wake(1); // shutdown MSP9808 - power consumption ~0.1 mikro Ampere
+    return f;
+//    float temp = analogRead(A0);
+//    temp = (((temp/1023)*3.3*100)*1.8) + 32;
+}
 VFD *myVFD;
+Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
 Option<std::string> emptyStringOption;
 struct Site coindesk {
         60000,
@@ -108,6 +157,8 @@ void setup()
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
     myVFD->home();
     myVFD->clear();
+    ntpSetup();
+    initializeTemp(tempsensor);
 }
 //void p(const char *cs)
 //{
@@ -120,6 +171,8 @@ void loop()
 
     updateSite(coindesk);
     updateSite(coinMarketCap);
+    delay(10000);
+
     myVFD->clear();
     myVFD->home();
     myVFD->print("btc      ");
@@ -133,10 +186,18 @@ void loop()
 
     myVFD->home();
     myVFD->clear();
-    myVFD->print("temp     ");
+    myVFD->print("temp     "); //(char)223)
     myVFD->println(openWeatherMapTemp.lastResult.getOrElse("no data"));
     myVFD->print("humidity ");
     myVFD->print(openWeatherMapHumidity.lastResult.getOrElse("no data"));
     delay(10000);
+
+    myVFD->home();
+    myVFD->clear();
+    myVFD->print("sensor temp "); //(char)223)
+    myVFD->println(readTemp(tempsensor));
+    myVFD->print("time "); //(char)223)
+    myVFD->println((NTP.getTimeStr()));
 }
 // cd5220
+// JsonObject.success()
