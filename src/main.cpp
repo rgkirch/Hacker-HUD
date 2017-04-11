@@ -25,6 +25,16 @@
 #include "scrapeWeb.hpp"
 #include "option.hpp"
 
+extern "C" {
+#include "user_interface.h"
+}
+
+std::string ntpTime;
+os_timer_t myTimer;
+VFD *myVFD;
+Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
+Option<std::string> emptyStringOption;
+bool tickOccured;
 void *memchr(const void *s, int c, size_t n)
 {
     unsigned char *p = (unsigned char*)s;
@@ -81,9 +91,6 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 //    float temp = analogRead(A0);
 //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
-VFD *myVFD;
-Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
-Option<std::string> emptyStringOption;
 struct Site coindesk {
         60000,
         INT_MIN,
@@ -151,6 +158,13 @@ void updateSite(struct Site &site)
         }
     }
 }
+void timerCallback(void *pArg) {
+    char buffer[20];
+    strncpy(buffer, ntpTime.c_str(), min(20, ntpTime.length()));
+    memset(&buffer[ntpTime.length()], 0, max(0, 20 - ntpTime.length()));
+    myVFD->setUpperLine(buffer);
+    tickOccured = true;
+}
 void setup()
 {
     Serial.begin(115200);
@@ -159,6 +173,10 @@ void setup()
     initializeTemp(tempsensor);
     myVFD->clear();
     myVFD->home();
+
+    os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
+    os_timer_arm(&myTimer, 1000, true);
+    tickOccured = false;
 }
 //void p(const char *cs)
 //{
@@ -169,10 +187,10 @@ void loop()
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi([&myVFD](const char *cs)->void { if (myVFD != nullptr and myVFD != NULL) myVFD->print(cs); } );
 
-    updateSite(coindesk);
-    updateSite(coinMarketCap);
-    updateSite(openWeatherMapTemp);
-    updateSite(openWeatherMapHumidity);
+//    updateSite(coindesk);
+//    updateSite(coinMarketCap);
+//    updateSite(openWeatherMapTemp);
+//    updateSite(openWeatherMapHumidity);
 
 //    myVFD->clear();
 //    myVFD->home();
@@ -198,13 +216,16 @@ void loop()
 //    myVFD->print("sensor temp "); //(char)223)
 //    myVFD->println(readTemp(tempsensor));
 //    myVFD->print("time "); //(char)223)
-    std::string time(NTP.getTimeStr().c_str());
-    time = time.substr(0, 20);
-    for (int i = 0; i < 20 - time.length(); ++i) {
-        time += " ";
-    }
-    myVFD->setUpperLine(time);
+
+    ntpTime = NTP.getTimeStr().c_str();
     delay(1000);
+
+    if (tickOccured == true)
+    {
+        Serial.println("Tick Occurred");
+        tickOccured = false;
+    }
+    yield();
 }
 // cd5220
 // JsonObject.success()
