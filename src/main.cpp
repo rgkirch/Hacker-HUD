@@ -48,6 +48,7 @@ void *memchr(const void *s, int c, size_t n)
 //setup ntp time -----
 void ntpSetup() {
     NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
+        Serial.println("print from ntp sync callback lambda");
         if (error) {
             Serial.print("Time Sync error: ");
             if (error == noResponse)
@@ -185,7 +186,7 @@ void setup()
 void loop()
 {
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
-    if(WiFi.status() != WL_CONNECTED) connectToWifi([&myVFD](const char *cs)->void { if (myVFD != nullptr and myVFD != NULL) myVFD->print(cs); } );
+    if(WiFi.status() != WL_CONNECTED) connectToWifi();
 
 //    updateSite(coindesk);
 //    updateSite(coinMarketCap);
