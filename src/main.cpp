@@ -38,7 +38,6 @@ os_timer_t myTimer;
 VFD *myVFD;
 Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
 Option<std::string> emptyStringOption;
-bool tickOccured;
 void *memchr(const void *s, int c, size_t n)
 {
     unsigned char *p = (unsigned char*)s;
@@ -173,7 +172,6 @@ void timerCallback(void *pArg) {
     myVFD->setUpperLine(buffer);
     snprintf(unixBuffer, 20, "%d", unixTime);
     myVFD->setLowerLine(unixBuffer);
-    tickOccured = true;
 }
 void setup()
 {
@@ -186,7 +184,6 @@ void setup()
 
     os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
     os_timer_arm(&myTimer, 1000, true);
-    tickOccured = false;
 }
 //void p(const char *cs)
 //{
@@ -233,11 +230,6 @@ void loop()
 //    unixTime = NTP.getTime();
     delay(10000);
 
-    if (tickOccured == true)
-    {
-        Serial.println("Tick Occurred");
-        tickOccured = false;
-    }
     yield();
 }
 // cd5220
