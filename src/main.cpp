@@ -150,7 +150,9 @@ Option<std::string> getSiteData(struct Site site)
     Option<std::string> o = scrapeJson(site);
     DynamicJsonBuffer jsonBuffer(2000);
     std::function<Option<std::string>(std::string)> f([&o, &jsonBuffer, &site](std::string str)->Option<std::string> {
-        return applyKeys(jsonBuffer.parseObject(str.c_str()), site.keys.begin(), site.keys.end());
+        JsonObject &o = jsonBuffer.parseObject(str.c_str());
+        if (not o.success()) return Option<std::string>();
+        return applyKeys(o, site.keys.begin(), site.keys.end());
     } );
     o.map( f );
     return o;
@@ -215,26 +217,12 @@ void loop()
     updateSite(openWeatherMapHumidity);
     myVFD->setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
     delay(4000);
-//    delay(10000);
-
-//    myVFD->clear();
-//    myVFD->home();
-//    myVFD->print("temp     "); //(char)223)
-//    myVFD->println(openWeatherMapTemp.lastResult.getOrElse("no data"));
-//    myVFD->print("humidity ");
-//    myVFD->print(openWeatherMapHumidity.lastResult.getOrElse("no data"));
-
-//    delay(10000);
 
 //    myVFD->clear();
 //    myVFD->home();
 //    myVFD->print("sensor temp "); //(char)223)
 //    myVFD->println(readTemp(tempsensor));
 //    myVFD->print("time "); //(char)223)
-
-//    ntpTime = NTP.getTimeStr().c_str();
-//    unixTime = NTP.getTime();
-//    delay(10000);
 
     yield();
 }
