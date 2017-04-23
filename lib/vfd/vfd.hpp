@@ -24,6 +24,7 @@ public:
     template <typename T> void println(T p) { softwareSerial->println(p); }
     void print(std::string str)   { for (char c:str) this->write(c); };
     void println(std::string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
+//    void printn(std::string str, int n) { for (int i=0; i < n; i++) { this->print(str[i]); } };
     void overwriteMode()          { this->print("\x1B\x11"); };
     void virticalScrollMode()     { this->print("\x1B\x12"); };
     void horizontalScrollMode()   { this->print("\x1B\x13"); };
@@ -38,8 +39,18 @@ public:
     void lineFeed()               { this->print("\x0A"); };
     void carriageReturn()         { this->print("\x0D"); };
     void home()                   { this->print("\x0B"); };
-    void setUpperLine(std::string str) { this->print("\x1B\x51\x41"); this->print(str); this->print("\x0D"); };
-    void setLowerLine(std::string str) { this->print("\x1B\x51\x42"); this->print(str); this->print("\x0D"); };
+    void setUpperLine(std::string str) {
+        this->print("\x1B\x51\x41");
+        str.resize(20, ' ');
+        this->print(str);
+        this->print("\x0D");
+    };
+    void setLowerLine(std::string str) {
+        this->print("\x1B\x51\x42");
+        str.resize(20, ' ');
+        this->print(str);
+        this->print("\x0D");
+    };
 //    void printJustified(std::string str) {};
 };
 

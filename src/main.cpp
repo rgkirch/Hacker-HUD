@@ -170,8 +170,8 @@ void timerCallback(void *pArg) {
     memset(&buffer[len], ' ', max(0, 20 - len));
 //    snprintf(buffer, 20, "%d:%d:%d", hourFormat12(unixTime), minute(unixTime), second(unixTime));
     myVFD->setUpperLine(buffer);
-    snprintf(unixBuffer, 20, "%d", unixTime);
-    myVFD->setLowerLine(unixBuffer);
+//    snprintf(unixBuffer, 20, "%d", unixTime);
+//    myVFD->setLowerLine(unixBuffer);
 }
 void setup()
 {
@@ -196,13 +196,18 @@ void loop()
     unixTime = NTP.getTime();
     unixTimeUpdated = millis();
 
-//    updateSite(coindesk);
 //    updateSite(coinMarketCap);
 //    updateSite(openWeatherMapTemp);
 //    updateSite(openWeatherMapHumidity);
 
 //    myVFD->clear();
 //    myVFD->home();
+
+    updateSite(coindesk);
+//    myVFD->setLowerLine(std::string("eth -> ") + coindesk.lastResult.getOrElse("no data"));
+    myVFD->setLowerLine(coindesk.lastResult.getOrElse("no data"));
+//    delay(4000);
+
 //    myVFD->print("btc      ");
 //    myVFD->println(coindesk.lastResult.getOrElse("no data"));
 //    myVFD->print("eth      ");
