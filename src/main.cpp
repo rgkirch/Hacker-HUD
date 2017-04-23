@@ -133,10 +133,14 @@ struct Site openWeatherMapTemp = {
 };
 Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string>::iterator begin, const std::vector<std::string>::iterator end)
 {
+    Option<std::string> emptyOption;
     auto it = begin;
     if (std::next(it) == end)
     {
-        return std::string(o[(*it).c_str()].as<const char*>());
+        const char *r = o[(*it).c_str()].as<const char*>();
+        if (r == nullptr) {
+            return emptyOption;
+        } else return std::string(r);
     } else {
         return applyKeys(o[(*it).c_str()], std::next(begin), end);
     }
@@ -200,9 +204,9 @@ void loop()
     myVFD->setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
     delay(4000);
 
-//    updateSite(coinMarketCap);
-//    myVFD->setLowerLine("btc", coinMarketCap.lastResult.getOrElse("no data"));
-//    delay(4000);
+    updateSite(coinMarketCap);
+    myVFD->setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
+    delay(4000);
 
     updateSite(openWeatherMapTemp);
     myVFD->setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
