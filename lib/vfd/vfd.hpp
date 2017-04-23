@@ -2,10 +2,13 @@
 #define VFD_HPP
 
 #include <SoftwareSerial.h>
+//#include <HardwareSerial.h>
 //#include <EEPROM.h>
 //#include <WString.h>
 #include <string>
 //#include <memory>
+
+//extern HardwareSerial Serial;
 
 class VFD
 {
@@ -52,12 +55,22 @@ public:
         this->print("\x0D");
     };
     void setLowerLine(std::string left, std::string right) {
+//        Serial.print("left length ");
+//        Serial.println(left.length());
+//        Serial.print("right length ");
+//        Serial.println(right.length());
         this->print("\x1B\x51\x42");
         int padding = width - left.length() - right.length();
+//        Serial.print("padding ");
+//        Serial.println(padding);
         if (padding > 0) {
-            left.resize(padding, ' ');
+            left.resize(left.length() + padding, ' ');
+//            Serial.print("resize left to ");
+//            Serial.println(left.c_str());
         } else {
             right.resize(right.length() + padding);
+//            Serial.print("resize right to ");
+//            Serial.println(right.c_str());
         }
         this->print(left + right);
         this->print("\x0D");
