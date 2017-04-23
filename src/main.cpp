@@ -204,8 +204,8 @@ void loop()
 //    myVFD->home();
 
     updateSite(coindesk);
-//    myVFD->setLowerLine(std::string("eth -> ") + coindesk.lastResult.getOrElse("no data"));
-    myVFD->setLowerLine(coindesk.lastResult.getOrElse("no data"));
+    myVFD->setLowerLine("eth", coindesk.lastResult.getOrElse("no data"));
+//    myVFD->setLowerLine(coindesk.lastResult.getOrElse("no data"));
 //    delay(4000);
 
 //    myVFD->print("btc      ");

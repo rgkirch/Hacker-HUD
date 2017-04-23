@@ -51,6 +51,17 @@ public:
         this->print(str);
         this->print("\x0D");
     };
+    void setLowerLine(std::string left, std::string right) {
+        this->print("\x1B\x51\x42");
+        int padding = width - left.length() - right.length();
+        if (padding > 0) {
+            left.resize(padding, ' ');
+        } else {
+            right.resize(right.length() + padding);
+        }
+        this->print(left + right);
+        this->print("\x0D");
+    };
 //    void printJustified(std::string str) {};
 };
 
