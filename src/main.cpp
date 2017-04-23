@@ -196,24 +196,21 @@ void loop()
     unixTime = NTP.getTime();
     unixTimeUpdated = millis();
 
-//    updateSite(coinMarketCap);
-//    updateSite(openWeatherMapTemp);
-//    updateSite(openWeatherMapHumidity);
-
-//    myVFD->clear();
-//    myVFD->home();
-
     updateSite(coindesk);
     myVFD->setLowerLine("eth", coindesk.lastResult.getOrElse("no data"));
-//    myVFD->setLowerLine(coindesk.lastResult.getOrElse("no data"));
-//    delay(4000);
+    delay(4000);
 
-//    myVFD->print("btc      ");
-//    myVFD->println(coindesk.lastResult.getOrElse("no data"));
-//    myVFD->print("eth      ");
-//    myVFD->print(coinMarketCap.lastResult.getOrElse("no data"));
+    updateSite(coinMarketCap);
+    myVFD->setLowerLine("btc", coinMarketCap.lastResult.getOrElse("no data"));
+    delay(4000);
 
+    updateSite(openWeatherMapTemp);
+    myVFD->setLowerLine("temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
+    delay(4000);
 
+    updateSite(openWeatherMapHumidity);
+    myVFD->setLowerLine("humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
+    delay(4000);
 //    delay(10000);
 
 //    myVFD->clear();
@@ -233,7 +230,7 @@ void loop()
 
 //    ntpTime = NTP.getTimeStr().c_str();
 //    unixTime = NTP.getTime();
-    delay(10000);
+//    delay(10000);
 
     yield();
 }
