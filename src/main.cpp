@@ -30,8 +30,10 @@ extern "C" {
 #include "user_interface.h"
 }
 
-std::string ntpTime;
+//std::string ntpTime;
 time_t unixTime;
+time_t unixTimeUpdated;
+
 os_timer_t myTimer;
 VFD *myVFD;
 Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
@@ -49,7 +51,7 @@ void *memchr(const void *s, int c, size_t n)
 }
 //setup ntp time -----
 void ntpSetup() {
-    NTP.onNTPSyncEvent([](NTPSyncEvent_t error) {
+    NTP.onNTPSyncEvent([&](NTPSyncEvent_t error) {
         Serial.println("print from ntp sync callback lambda");
         if (error) {
             Serial.print("Time Sync error: ");
@@ -162,11 +164,12 @@ void updateSite(struct Site &site)
     }
 }
 void timerCallback(void *pArg) {
-    char buffer[20];
-    char unixBuffer[20];
-//    strncpy(buffer, ntpTime.c_str(), min(20, ntpTime.length()));
-//    memset(&buffer[ntpTime.length()], 0, max(0, 20 - ntpTime.length()));
-    snprintf(buffer, 20, "%d:%d:%d", hourFormat12(unixTime), minute(unixTime), second(unixTime));
+    char buffer[20] = {0};
+    char unixBuffer[20] = {0};
+    strncpy(buffer, NTP.getTimeStr(unixTime + (millis() - unixTimeUpdated) / 1000).c_str(), 20);
+    int len = strlen(buffer);
+    memset(&buffer[len], ' ', max(0, 20 - len));
+//    snprintf(buffer, 20, "%d:%d:%d", hourFormat12(unixTime), minute(unixTime), second(unixTime));
     myVFD->setUpperLine(buffer);
     snprintf(unixBuffer, 20, "%d", unixTime);
     myVFD->setLowerLine(unixBuffer);
@@ -193,6 +196,8 @@ void loop()
 {
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
+    unixTime = NTP.getTime();
+    unixTimeUpdated = millis();
 
 //    updateSite(coindesk);
 //    updateSite(coinMarketCap);
@@ -224,9 +229,9 @@ void loop()
 //    myVFD->println(readTemp(tempsensor));
 //    myVFD->print("time "); //(char)223)
 
-    ntpTime = NTP.getTimeStr().c_str();
-    unixTime = NTP.getTime();
-    delay(1000);
+//    ntpTime = NTP.getTimeStr().c_str();
+//    unixTime = NTP.getTime();
+    delay(10000);
 
     if (tickOccured == true)
     {
