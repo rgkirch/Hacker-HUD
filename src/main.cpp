@@ -164,8 +164,9 @@ void updateSite(struct Site &site)
 void timerCallback(void *pArg) {
     char buffer[20];
     char unixBuffer[20];
-    strncpy(buffer, ntpTime.c_str(), min(20, ntpTime.length()));
-    memset(&buffer[ntpTime.length()], 0, max(0, 20 - ntpTime.length()));
+//    strncpy(buffer, ntpTime.c_str(), min(20, ntpTime.length()));
+//    memset(&buffer[ntpTime.length()], 0, max(0, 20 - ntpTime.length()));
+    snprintf(buffer, 20, "%d:%d:%d", hourFormat12(unixTime), minute(unixTime), second(unixTime));
     myVFD->setUpperLine(buffer);
     snprintf(unixBuffer, 20, "%d", unixTime);
     myVFD->setLowerLine(unixBuffer);
