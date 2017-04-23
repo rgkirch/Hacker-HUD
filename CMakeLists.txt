@@ -4,6 +4,18 @@ project(Hacker-HUD)
 include(CMakeListsPrivate.txt)
 
 add_custom_target(
+        monitor
+        COMMAND ${PLATFORMIO_CMD} device monitor -b 115200 -p com9
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+add_custom_target(
+        list
+        COMMAND ${PLATFORMIO_CMD} device list
+        WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
+)
+
+add_custom_target(
     PLATFORMIO_BUILD ALL
     COMMAND ${PLATFORMIO_CMD} -f -c clion run
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
