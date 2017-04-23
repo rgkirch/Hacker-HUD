@@ -13,6 +13,7 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #include <SoftwareSerial.h>
 #include <ArduinoJson.h>
+#include <Arduino.h>
 #include <Adafruit_MCP9808.h>
 #include <NtpClientLib.h>
 //#include <json.hpp>
