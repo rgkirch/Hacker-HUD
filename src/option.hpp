@@ -4,15 +4,6 @@
 template <typename T>
 class Option {
 public:
-    // todo - deprecate this?
-    Option<T> &map(std::function<T(T)> &f)
-    {
-        if (not this->isEmpty())
-        {
-            this->data = f(this->data);
-        }
-        return *this;
-    }
     Option<T> &map(std::function<Option<T>(T)> &f)
     {
         if (not this->isEmpty())
