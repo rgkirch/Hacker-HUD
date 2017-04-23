@@ -39,6 +39,7 @@ public:
     void carriageReturn()         { this->print("\x0D"); };
     void home()                   { this->print("\x0B"); };
     void setUpperLine(std::string str) { this->print("\x1B\x51\x41"); this->print(str); this->print("\x0D"); };
+    void setLowerLine(std::string str) { this->print("\x1B\x51\x42"); this->print(str); this->print("\x0D"); };
 //    void printJustified(std::string str) {};
 };
 

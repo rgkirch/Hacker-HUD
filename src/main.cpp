@@ -31,6 +31,7 @@ extern "C" {
 }
 
 std::string ntpTime;
+time_t unixTime;
 os_timer_t myTimer;
 VFD *myVFD;
 Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
@@ -162,9 +163,12 @@ void updateSite(struct Site &site)
 }
 void timerCallback(void *pArg) {
     char buffer[20];
+    char unixBuffer[20];
     strncpy(buffer, ntpTime.c_str(), min(20, ntpTime.length()));
     memset(&buffer[ntpTime.length()], 0, max(0, 20 - ntpTime.length()));
     myVFD->setUpperLine(buffer);
+    snprintf(unixBuffer, 20, "%d", unixTime);
+    myVFD->setLowerLine(unixBuffer);
     tickOccured = true;
 }
 void setup()
@@ -220,6 +224,7 @@ void loop()
 //    myVFD->print("time "); //(char)223)
 
     ntpTime = NTP.getTimeStr().c_str();
+    unixTime = NTP.getTime();
     delay(1000);
 
     if (tickOccured == true)
