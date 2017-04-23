@@ -6,7 +6,6 @@
 
 void connectToWifi(){
     Serial.println(ssid);
-    print(ssid);
 
     WiFi.begin(ssid, password);
 
@@ -14,11 +13,9 @@ void connectToWifi(){
     {
         delay(500);
         Serial.print(".");
-        print(".");
     }
 
     Serial.println("WiFi connected");
-//    print("WiFi Connected");
     Serial.println("IP address: ");
     Serial.println(WiFi.localIP());
 }
