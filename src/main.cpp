@@ -131,12 +131,12 @@ struct Site openWeatherMapTemp = {
         emptyStringOption,
         .keys = {"main", "temp"}
 };
-std::string applyKeys(const JsonObject& o, const std::vector<std::string>::iterator begin, const std::vector<std::string>::iterator end)
+Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string>::iterator begin, const std::vector<std::string>::iterator end)
 {
     auto it = begin;
     if (std::next(it) == end)
     {
-        return o[(*it).c_str()].as<const char*>();
+        return std::string(o[(*it).c_str()].as<const char*>());
     } else {
         return applyKeys(o[(*it).c_str()], std::next(begin), end);
     }
@@ -144,8 +144,8 @@ std::string applyKeys(const JsonObject& o, const std::vector<std::string>::itera
 Option<std::string> getSiteData(struct Site site)
 {
     Option<std::string> o = scrapeJson(site);
-    DynamicJsonBuffer jsonBuffer(1000);
-    std::function<std::string(std::string)> f([&o, &jsonBuffer, &site](std::string str)->std::string {
+    DynamicJsonBuffer jsonBuffer(2000);
+    std::function<Option<std::string>(std::string)> f([&o, &jsonBuffer, &site](std::string str)->Option<std::string> {
         return applyKeys(jsonBuffer.parseObject(str.c_str()), site.keys.begin(), site.keys.end());
     } );
     o.map( f );
@@ -197,7 +197,7 @@ void loop()
     unixTimeUpdated = millis();
 
     updateSite(coindesk);
-    myVFD->setLowerLine("eth", coindesk.lastResult.getOrElse("no data"));
+    myVFD->setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
     delay(4000);
 
 //    updateSite(coinMarketCap);
@@ -205,11 +205,11 @@ void loop()
 //    delay(4000);
 
     updateSite(openWeatherMapTemp);
-    myVFD->setLowerLine("temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
+    myVFD->setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
     delay(4000);
 
     updateSite(openWeatherMapHumidity);
-    myVFD->setLowerLine("humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
+    myVFD->setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
     delay(4000);
 //    delay(10000);
 

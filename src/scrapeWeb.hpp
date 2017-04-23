@@ -61,13 +61,13 @@ Option<std::string> scrapeJson(struct Site site) {
         }
     }
 
-    // Read all the lines of the reply from server and print them to Serial
     std::string data;
     while(client->connected())
     {
         data.append(client->readString().c_str());
     }
     auto i = data.find('{');
+    // todo - this code is neutered
     if (i != data.npos)
     {
 //        data.erase(0, i);
