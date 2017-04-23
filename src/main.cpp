@@ -145,10 +145,10 @@ Option<std::string> getSiteData(struct Site site)
 {
     Option<std::string> o = scrapeJson(site);
     DynamicJsonBuffer jsonBuffer(1000);
-        std::function<std::string(std::string)> f([&o, &jsonBuffer, &site](std::string str)->std::string {
-            return applyKeys(jsonBuffer.parseObject(str.c_str()), site.keys.begin(), site.keys.end());
-        } );
-        o.map( f );
+    std::function<std::string(std::string)> f([&o, &jsonBuffer, &site](std::string str)->std::string {
+        return applyKeys(jsonBuffer.parseObject(str.c_str()), site.keys.begin(), site.keys.end());
+    } );
+    o.map( f );
     return o;
 }
 void updateSite(struct Site &site)
@@ -200,9 +200,9 @@ void loop()
     myVFD->setLowerLine("eth", coindesk.lastResult.getOrElse("no data"));
     delay(4000);
 
-    updateSite(coinMarketCap);
-    myVFD->setLowerLine("btc", coinMarketCap.lastResult.getOrElse("no data"));
-    delay(4000);
+//    updateSite(coinMarketCap);
+//    myVFD->setLowerLine("btc", coinMarketCap.lastResult.getOrElse("no data"));
+//    delay(4000);
 
     updateSite(openWeatherMapTemp);
     myVFD->setLowerLine("temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
