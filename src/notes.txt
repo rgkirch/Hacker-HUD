@@ -15,6 +15,7 @@ Useful commands:
     print time and the backspace over seconds char
     print stuff and fill in with spaces - avoid using clear
     *myVFD << "\x1B\x6C" << "\x08\x02"; // jump cursor to position x y
+    myVFD->write("\x1B\x66A"); // set usa international font set "AGIJUFSNWDELRJRL"
 
 baud rate 9600 vs 19200
 
