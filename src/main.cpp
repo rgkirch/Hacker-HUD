@@ -104,6 +104,15 @@ struct Site coindesk {
         emptyStringOption,
         {"bpi", "USD", "rate_float"}
 };
+struct Site weatherUnderground = {
+        .updateInterval = 60000,
+        .lastUpdated = INT_MIN,
+        .port = httpPort,
+        .host = "http://api.wunderground.com",
+        .path = "/api/d8d4093b718cecaa/forecast/q/CA/San_Francisco.json",
+        emptyStringOption,
+        .keys = {"forecast", "txt_forecast", "forecastday", "0", "ftctext"}
+};
 struct Site coinMarketCap = {
         .updateInterval = 60000,
         .lastUpdated = INT_MIN,
@@ -148,7 +157,7 @@ Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string
 Option<std::string> getSiteData(struct Site site)
 {
     Option<std::string> o = scrapeJson(site);
-    DynamicJsonBuffer jsonBuffer(2000);
+    DynamicJsonBuffer jsonBuffer(20000);
     std::function<Option<std::string>(std::string)> f([&o, &jsonBuffer, &site](std::string str)->Option<std::string> {
         JsonObject &o = jsonBuffer.parseObject(str.c_str());
         if (not o.success()) return Option<std::string>();
@@ -179,52 +188,71 @@ void timerCallback(void *pArg) {
 //    snprintf(unixBuffer, 20, "%d", unixTime);
 //    myVFD->setLowerLine(unixBuffer);
 }
+char first = '\x21';
+char last = first + 30;
 void setup()
 {
     Serial.begin(115200);
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
     ntpSetup();
-    initializeTemp(tempsensor);
+//    initializeTemp(tempsensor);
+    myVFD->write("\x1B\x66A");
     myVFD->clear();
     myVFD->home();
 
     os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
-    os_timer_arm(&myTimer, 1000, true);
+//    os_timer_arm(&myTimer, 1000, true);
+    myVFD->write("\x1B\x25\x01");
+    myVFD->write("\x1B\x26\x01");
+    myVFD->write(first);
+    myVFD->write(last);
+    for (char a = first; a <= last; a++) {
+        myVFD->write('\x05');
+//        myVFD->write("\x63\x33\x15\x06\x03");
+        for (int i = 0; i < 5; i++) {
+            myVFD->write('\x00' + ('\x21' - a));
+        }
+    }
 }
-//void p(const char *cs)
+//void loop()
 //{
-//    myVFD->print(cs);
+////    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
+//    if(WiFi.status() != WL_CONNECTED) connectToWifi();
+//    unixTime = NTP.getTime();
+//    unixTimeUpdated = millis();
+//
+//    updateSite(coindesk);
+//    myVFD->setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
+//    delay(4000);
+//
+//    updateSite(coinMarketCap);
+//    myVFD->setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
+//    delay(4000);
+//
+//    updateSite(openWeatherMapTemp);
+//    myVFD->setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
+//    delay(4000);
+//
+//    updateSite(openWeatherMapHumidity);
+//    myVFD->setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
+//    delay(4000);
+//
+////    myVFD->clear();
+////    myVFD->home();
+////    myVFD->print("sensor temp "); //(char)223)
+////    myVFD->println(readTemp(tempsensor));
+////    myVFD->print("time "); //(char)223)
+//
+//    yield();
 //}
-void loop()
-{
-//    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
-    if(WiFi.status() != WL_CONNECTED) connectToWifi();
-    unixTime = NTP.getTime();
-    unixTimeUpdated = millis();
+void loop() {
+    myVFD->home();
+    for (char a = first; a < last; a++) {
+        myVFD->write(a);
+        delay(200);
+    }
+    delay(10000);
 
-    updateSite(coindesk);
-    myVFD->setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
-    delay(4000);
-
-    updateSite(coinMarketCap);
-    myVFD->setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
-    delay(4000);
-
-    updateSite(openWeatherMapTemp);
-    myVFD->setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
-    delay(4000);
-
-    updateSite(openWeatherMapHumidity);
-    myVFD->setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
-    delay(4000);
-
-//    myVFD->clear();
-//    myVFD->home();
-//    myVFD->print("sensor temp "); //(char)223)
-//    myVFD->println(readTemp(tempsensor));
-//    myVFD->print("time "); //(char)223)
-
-    yield();
 }
 // cd5220
 // JsonObject.success()
