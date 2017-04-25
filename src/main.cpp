@@ -188,8 +188,91 @@ void timerCallback(void *pArg) {
 //    snprintf(unixBuffer, 20, "%d", unixTime);
 //    myVFD->setLowerLine(unixBuffer);
 }
+char toByte(int number) {
+    return (number / 1000000 % 2 << 6) + (number / 100000 % 2 << 5) + (number / 10000 % 2 << 4) + (number / 1000 % 2 << 3) + (number / 100 % 2 << 2) + (number / 10 % 2 << 1) + (number % 2);
+}
 char first = '\x21';
 char last = first + 30;
+class Char {
+public:
+    Char(const char *c) {
+        for (int i = 0; i < 5; ++i) {
+            x[i] = c[i];
+        }
+    };
+    Char(Char& c) {
+        *this = c;
+    };
+    Char& operator=(const Char &c) {
+        if (this != &c) {
+            for (int i = 0; i < 5; ++i) {
+                x[i] = c.x[i];
+            }
+        }
+        return *this;
+    };
+    operator std::string() {
+        return std::string(x);
+    };
+    Char& operator&=(const Char &c) {
+        for (int i = 0; i < 5; ++i) {
+            x[i] &= c.x[i];
+        }
+        return *this;
+    };
+    const Char& operator&(const Char &c) {
+        return Char(*this) &= c;
+    };
+    Char& operator|=(const Char &c) {
+        for (int i = 0; i < 5; ++i) {
+            x[i] |= c.x[i];
+        }
+        return *this;
+    };
+    Char& operator-=(const Char &c) {
+        return (Char(*this) &= c) ^= *this;
+    };
+    Char& operator^=(const Char &c) {
+        for (int i = 0; i < 5; ++i) {
+            x[i] ^= c.x[i];
+        }
+        return *this;
+    };
+    const Char& operator^(const Char &c) {
+        return Char(*this) ^= c;
+    };
+    const Char& operator|(const Char &c) {
+        return Char(*this) |= c;
+    };
+    bool operator==(const Char &c) {
+        if (this == &c) return true;
+        for (int i = 0; i < 5; ++i) {
+            if (x[i] != c.x[i]) return false;
+        }
+        return true;
+    };
+    bool operator!=(const Char &c) {
+        return !(*this == c);
+    };
+    Char& operator~() {
+        for (int i = 0; i < 5; ++i) {
+            x[i] = ~x[i];
+        }
+        return *this;
+    };
+    char x[5] {0};
+};
+// grid 15 rows and 19*7+5 or 138
+//class Grid {
+//    Grid(Grid& g) {
+//        *this = g;
+//    };
+//    operator=(Grid& g) {
+//
+//    };
+//
+//};
+
 void setup()
 {
     Serial.begin(115200);
@@ -246,6 +329,7 @@ void setup()
 //    yield();
 //}
 void loop() {
+    Serial.println(toByte(1000001));
     myVFD->home();
     for (char a = first; a < last; a++) {
         myVFD->write(a);
