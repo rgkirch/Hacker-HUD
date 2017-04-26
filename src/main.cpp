@@ -191,8 +191,6 @@ void timerCallback(void *pArg) {
 char toByte(int number) {
     return (number / 1000000 % 2 << 6) + (number / 100000 % 2 << 5) + (number / 10000 % 2 << 4) + (number / 1000 % 2 << 3) + (number / 100 % 2 << 2) + (number / 10 % 2 << 1) + (number % 2);
 }
-char first = '\x21';
-char last = first + 30;
 class Char {
 public:
     Char(const char *c) {
@@ -263,39 +261,83 @@ public:
     char x[5] {0};
 };
 // grid 15 rows and 19*7+5 or 138
-//class Grid {
-//    Grid(Grid& g) {
-//        *this = g;
-//    };
-//    operator=(Grid& g) {
-//
-//    };
-//
-//};
+void map(const char *cs, std::function<void(char)> f) {
+    for (int i = 0; i < strlen(cs); i++) {
+        f(cs[i]);
+    }
+}
 
+class Grid {
+public:
+    const int width = 138;
+    const int height = 15;
+//    void setOn(int x, int y) {
+//        data[(y * width + x) / 8] |= (1 << (8 - ((y * width + x) % 8)));
+//    };
+//    void setOff(int x, int y) {
+//        data[(y * width + x) / 8] &= ~(1 << (8 - ((y * width + x) % 8)));
+//    };
+    std::string toString() {
+        std::string str;
+        for (int y = 0; y < 14; y++) {
+            for (int x = 0; x < 20 * 5; x++) {
+                if (data[x * 2 + y / 8] & 1 << (7 - (y % 8)) != 0) {
+                    str += '1';
+                } else {
+                    str += '0';
+                }
+            }
+            str += '\n';
+        }
+    };
+    void setOn(int x, int y) {
+        data[x / 8 + y / 2] |= (1 << (7 - ((y + 1) % 8)));
+    };
+    void setOff(int x, int y) {
+        data[x / 8 + y / 2] &= ~(1 << (7 - ((y + 1) % 8)));
+    };
+    void dump(std::function<void(char)> print) {
+        map("\x1B\x25\x01", print);
+        map("\x1B\x26\x01", print);
+        char first = '\x21';
+        char last = first + 39;
+        print(first);
+        print(last);
+        for (int x = 0; x < 40; x += 2) {
+            print(data[x]);
+        }
+        for (int x = 1; x < 40; x += 2) {
+            print(data[x]);
+        }
+    };
+    char data[2 * 5 * 20] {'\xFF'};
+};
+Grid grid;
 void setup()
 {
     Serial.begin(115200);
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
     ntpSetup();
 //    initializeTemp(tempsensor);
-    myVFD->write("\x1B\x66A");
     myVFD->clear();
     myVFD->home();
 
     os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
-//    os_timer_arm(&myTimer, 1000, true);
-    myVFD->write("\x1B\x25\x01");
-    myVFD->write("\x1B\x26\x01");
-    myVFD->write(first);
-    myVFD->write(last);
-    for (char a = first; a <= last; a++) {
-        myVFD->write('\x05');
-//        myVFD->write("\x63\x33\x15\x06\x03");
-        for (int i = 0; i < 5; i++) {
-            myVFD->write('\x00' + ('\x21' - a));
+    for (int x = 0; x < 20 * 5; x++) {
+        for (int y = 14; y > x % 14; y--) {
+            grid.setOn(x, y);
         }
     }
+    memset(grid.data, '\xFF', 2 * 5 * 20);
+    grid.dump([](char x){myVFD->print(x);});
+//    os_timer_arm(&myTimer, 1000, true);
+//    for (char a = first; a <= last; a++) {
+//        myVFD->write('\x05');
+////        myVFD->write("\x63\x33\x15\x06\x03");
+//        for (int i = 0; i < 5; i++) {
+//            myVFD->write('\x00' + ('\x21' - a));
+//        }
+//    }
 }
 //void loop()
 //{
@@ -329,13 +371,16 @@ void setup()
 //    yield();
 //}
 void loop() {
-    Serial.println(toByte(1000001));
     myVFD->home();
-    for (char a = first; a < last; a++) {
-        myVFD->write(a);
-        delay(200);
+    for (char c = '\x21'; c < '\x21' + 40; c++) {
+        myVFD->print(c);
     }
-    delay(10000);
+    Serial.println(grid.toString().c_str());
+//    for (char a = first; a < last; a++) {
+//        myVFD->write(a);
+//        delay(200);
+//    }
+    delay(1000);
 
 }
 // cd5220
