@@ -310,9 +310,12 @@ public:
             print(data[x]);
         }
     };
-    char data[2 * 5 * 20] {'\xFF'};
+    char data[2 * 5 * 20] {0};
 };
 Grid grid;
+char first = '\x21';
+char last = first + 39;
+char counter = 0;
 void setup()
 {
     Serial.begin(115200);
@@ -328,16 +331,20 @@ void setup()
             grid.setOn(x, y);
         }
     }
-    memset(grid.data, '\xFF', 2 * 5 * 20);
-    grid.dump([](char x){myVFD->print(x);});
+//    memset(grid.data, '\x88', 2 * 5 * 20);
+//    grid.dump([](char x){myVFD->print(x);});
 //    os_timer_arm(&myTimer, 1000, true);
-//    for (char a = first; a <= last; a++) {
-//        myVFD->write('\x05');
-////        myVFD->write("\x63\x33\x15\x06\x03");
-//        for (int i = 0; i < 5; i++) {
-//            myVFD->write('\x00' + ('\x21' - a));
-//        }
-//    }
+    myVFD->print("\x1B\x25\x01");
+    myVFD->print("\x1B\x26\x01");
+    myVFD->print(first);
+    myVFD->print(last);
+    for (char a = first; a <= last; a++) {
+        myVFD->write('\x05');
+//        myVFD->write("\x63\x33\x15\x06\x03");
+        for (int i = 0; i < 5; i++) {
+            myVFD->write(counter++);
+        }
+    }
 }
 //void loop()
 //{
@@ -375,7 +382,7 @@ void loop() {
     for (char c = '\x21'; c < '\x21' + 40; c++) {
         myVFD->print(c);
     }
-    Serial.println(grid.toString().c_str());
+//    Serial.println(grid.toString().c_str());
 //    for (char a = first; a < last; a++) {
 //        myVFD->write(a);
 //        delay(200);
