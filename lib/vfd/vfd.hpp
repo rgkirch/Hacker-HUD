@@ -10,24 +10,52 @@
 
 //extern HardwareSerial Serial;
 
-class VFD
+class HardwareCharacterDisplay
 {
 public:
-    class Builder;
-private:
-    SoftwareSerial* softwareSerial;
-    const int width;
-    const int height;
-public:
-    VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
-    ~VFD() { delete softwareSerial; }
-    template <typename T> VFD& operator<<(T t) { this->print(t); return *this; }
+//    virtual
+    HardwareCharacterDisplay(int receivePin, int transmitPin, int displayWidth, int displayHeight);
+    ~HardwareCharacterDisplay() { delete softwareSerial; }
     template <typename T> void write(T p)   { softwareSerial->write(p); }
     template <typename T> void print(T p)   { softwareSerial->print(p); }
     template <typename T> void println(T p) { softwareSerial->println(p); }
-    void print(std::string str)   { for (char c:str) this->write(c); };
-    void println(std::string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
-//    void printn(std::string str, int n) { for (int i=0; i < n; i++) { this->print(str[i]); } };
+    template <typename T> HardwareCharacterDisplay& operator<<(T t) { this->print(t); return *this; }
+    void print(std::string str)     { this->print(str.c_str()); };
+    void println(std::string str)   { this->println(str.c_str()); }; // why is this virtual
+    virtual void clear() { this->home(); for (int i = 0; i < width * height; ++i) this->print(" "); } // please override this
+    virtual void home() =0;
+    virtual void setLowerLine(std::string str) =0;
+    virtual void setUpperLine(std::string str) =0;
+    void setUpperLine(std::string left, std::string right) {
+        int padding = width - left.length() - right.length();
+        if (padding > 0) {
+            left.resize(left.length() + padding, ' ');
+        } else {
+            right.resize(right.length() + padding);
+        }
+        this->setUpperLine(left + right);
+    };
+    void setLowerLine(std::string left, std::string right) {
+        int padding = width - left.length() - right.length();
+        if (padding > 0) {
+            left.resize(left.length() + padding, ' ');
+        } else {
+            right.resize(right.length() + padding);
+        }
+        this->setLowerLine(left + right);
+    };
+protected:
+    SoftwareSerial* softwareSerial;
+    const int width;
+    const int height;
+};
+
+class VFD : public HardwareCharacterDisplay
+{
+public:
+    class Builder;
+    VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight);
+//    void println(std::string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
     void overwriteMode()          { this->print("\x1B\x11"); };
     void virticalScrollMode()     { this->print("\x1B\x12"); };
     void horizontalScrollMode()   { this->print("\x1B\x13"); };
@@ -52,27 +80,6 @@ public:
         this->print("\x1B\x51\x42");
         str.resize(20, ' ');
         this->print(str);
-        this->print("\x0D");
-    };
-    void setLowerLine(std::string left, std::string right) {
-//        Serial.print("left length ");
-//        Serial.println(left.length());
-//        Serial.print("right length ");
-//        Serial.println(right.length());
-        this->print("\x1B\x51\x42");
-        int padding = width - left.length() - right.length();
-//        Serial.print("padding ");
-//        Serial.println(padding);
-        if (padding > 0) {
-            left.resize(left.length() + padding, ' ');
-//            Serial.print("resize left to ");
-//            Serial.println(left.c_str());
-        } else {
-            right.resize(right.length() + padding);
-//            Serial.print("resize right to ");
-//            Serial.println(right.c_str());
-        }
-        this->print(left + right);
         this->print("\x0D");
     };
 //    void printJustified(std::string str) {};

@@ -1,9 +1,12 @@
 #include "vfd.hpp"
 
-VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight)
-{
+HardwareCharacterDisplay::HardwareCharacterDisplay(int receivePin, int transmitPin, int displayWidth, int displayHeight) : width(displayWidth), height(displayHeight) {
     softwareSerial = new SoftwareSerial(receivePin, transmitPin);
     softwareSerial->begin(9600);
+}
+
+VFD::VFD(int receivePin, int transmitPin, int displayWidth, int displayHeight) : HardwareCharacterDisplay(receivePin, transmitPin, displayWidth, displayHeight)
+{
     this->print("\x1B\x40\x0C"); // initialize and clear display
     //together these Initialize the display
 //    softwareSerial->write('\x1B');
