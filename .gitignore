@@ -10,3 +10,8 @@ cmake-build-debug
 data/
 lib/Time-master.zip
 
+/cmake-build-default/
+/cmake-build-minsizerel/
+/cmake-build-relwithdebinfo/
+/cmake-build-release/
+/lib/esp8266/

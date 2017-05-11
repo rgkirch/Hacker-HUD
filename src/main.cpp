@@ -339,10 +339,10 @@ void setup()
     myVFD->print(first);
     myVFD->print(last);
     for (char a = first; a <= last; a++) {
-        myVFD->write('\x05');
-//        myVFD->write("\x63\x33\x15\x06\x03");
+        myVFD->print('\x05');
+//        myVFD->print("\x63\x33\x15\x06\x03");
         for (int i = 0; i < 5; i++) {
-            myVFD->write(counter++);
+            myVFD->print(counter++);
         }
     }
 }
@@ -384,7 +384,7 @@ void loop() {
     }
 //    Serial.println(grid.toString().c_str());
 //    for (char a = first; a < last; a++) {
-//        myVFD->write(a);
+//        myVFD->print(a);
 //        delay(200);
 //    }
     delay(1000);

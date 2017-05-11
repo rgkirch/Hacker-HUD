@@ -10,44 +10,50 @@
 
 //extern HardwareSerial Serial;
 
-class HardwareCharacterDisplay
-{
+class MySoftwareSerial : public SoftwareSerial {
 public:
-//    virtual
-    HardwareCharacterDisplay(int receivePin, int transmitPin, int displayWidth, int displayHeight);
-    ~HardwareCharacterDisplay() { delete softwareSerial; }
-    template <typename T> void write(T p)   { softwareSerial->write(p); }
-    template <typename T> void print(T p)   { softwareSerial->print(p); }
-    template <typename T> void println(T p) { softwareSerial->println(p); }
-    template <typename T> HardwareCharacterDisplay& operator<<(T t) { this->print(t); return *this; }
-    void print(std::string str)     { this->print(str.c_str()); };
-    void println(std::string str)   { this->println(str.c_str()); }; // why is this virtual
-    virtual void clear() { this->home(); for (int i = 0; i < width * height; ++i) this->print(" "); } // please override this
+    MySoftwareSerial(int receivePin, int transmitPin) : SoftwareSerial(receivePin, transmitPin) {};
+    size_t print(std::string str)     { return write(str.c_str()); };
+    size_t println(std::string str)   { size_t n = write(str.c_str()); n += write("\r\n"); return n; };
+    template <typename T> MySoftwareSerial& operator<<(T t) { this->print(t); return *this; }
+};
+
+class CharacterDisplay {
+public:
+//    virtual void clear() { this->home(); for (int i = 0; i < width * height; ++i) this->softwareSerial->print(" "); } // please override this
+    virtual void clear() =0;
     virtual void home() =0;
     virtual void setLowerLine(std::string str) =0;
     virtual void setUpperLine(std::string str) =0;
     void setUpperLine(std::string left, std::string right) {
-        int padding = width - left.length() - right.length();
-        if (padding > 0) {
-            left.resize(left.length() + padding, ' ');
-        } else {
-            right.resize(right.length() + padding);
-        }
-        this->setUpperLine(left + right);
+        this->setUpperLine(blockFormat(left, right));
     };
     void setLowerLine(std::string left, std::string right) {
+        this->setLowerLine(blockFormat(left, right));
+    };
+protected:
+    const int width;
+    const int height;
+private:
+    std::string blockFormat(std::string left, std::string right) {
         int padding = width - left.length() - right.length();
         if (padding > 0) {
             left.resize(left.length() + padding, ' ');
         } else {
             right.resize(right.length() + padding);
         }
-        this->setLowerLine(left + right);
-    };
+        return left + right;
+    }
+};
+
+class HardwareCharacterDisplay : public CharacterDisplay
+{
+public:
+    HardwareCharacterDisplay(int receivePin, int transmitPin, int displayWidth, int displayHeight);
+    template <typename T> size_t print(T t) { return softwareSerial->print(t); }
+    template <typename T> size_t println(T t) { return softwareSerial->println(t); }
 protected:
-    SoftwareSerial* softwareSerial;
-    const int width;
-    const int height;
+    MySoftwareSerial *softwareSerial;
 };
 
 class VFD : public HardwareCharacterDisplay
