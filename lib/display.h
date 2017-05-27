@@ -38,28 +38,14 @@ protected:
     const int width;
     const int height;
 private:
-    std::string blockFormat(std::string left, std::string right) {
-        int padding = width - left.length() - right.length();
-        if (padding > 0) {
-            left.resize(left.length() + padding, ' ');
-        } else {
-            right.resize(right.length() + padding);
-        }
-        return left + right;
-    }
+    std::string blockFormat(std::string left, std::string right);
 };
 
 class HardwareDisplay : public CharacterDisplay {
 public:
     HardwareDisplay(int width, int height, Print* s) : CharacterDisplay(width, height), serial(s) {};
-    void setUpperLine(std::string str) {
-        serial->print("\x0b\x01");
-        serial->print(str);
-    };
-    void setLowerLine(std::string str) {
-        serial->print("\x0b\x02");
-        serial->print(str);
-    };
+    void setUpperLine(std::string str);
+    void setLowerLine(std::string str);
     using CharacterDisplay::setUpperLine; // couldn't find setUpperLine(std::string, std::string) without this...
     using CharacterDisplay::setLowerLine;
 
