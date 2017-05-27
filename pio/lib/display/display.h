@@ -8,7 +8,7 @@ public:
 //    virtual ~Print() =0; // google test says that it must have a virtual destructor
     Print(int port) : port(port) {};
     virtual size_t print(std::string) =0;
-    virtual int getPort() {
+    int getPort() {
         return port;
     };
 protected:
