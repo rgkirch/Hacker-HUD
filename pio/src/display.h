@@ -3,7 +3,6 @@
 
 #include <string>
 #include <SoftwareSerial.h>
-//#include "../../../../../../.platformio/packages/framework-arduinoespressif8266/libraries/SoftwareSerial/SoftwareSerial.h"
 
 class MySerial : public SoftwareSerial {
 public:

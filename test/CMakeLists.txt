@@ -1,10 +1,8 @@
 cmake_minimum_required(VERSION 3.6)
 
-set(CMAKE_CXX_STANDARD 11)
-
-
 add_subdirectory(googletest)
-#add_subdirectory(lib/display)
-add_executable(gtesttest lib/display/displayTest.cpp)
-include_directories(../pio/lib/display)
-target_link_libraries(gtesttest display gtest gtest_main gmock)
+
+set(WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+add_executable(hhTest displayTest.cpp)
+#include_directories(.)
+target_link_libraries(hhTest gtest gtest_main gmock)

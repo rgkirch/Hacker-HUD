@@ -1,6 +1,6 @@
 #include <Arduino.h>
 #include <display.h>
-//#include <SoftwareSerial.h>
+#include <SoftwareSerial.h>
 
 VFD *vfd;
 void setup() {

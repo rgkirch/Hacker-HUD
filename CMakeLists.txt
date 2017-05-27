@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.6)
 project(gtestproj)
 
 set(CMAKE_CXX_STANDARD 11)
-add_subdirectory(test)
+
+#include_directories(src)
 add_subdirectory(pio)
-add_subdirectory(pio/src)
-add_subdirectory(pio/lib)
+add_subdirectory(test)

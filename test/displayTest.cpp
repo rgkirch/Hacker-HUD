@@ -2,9 +2,8 @@
 #include <gmock/gmock.h>
 #include <string>
 //#include <SoftwareSerial.h>
-#include "display.h"
-#include "../../../../../../.platformio/packages/framework-arduinoespressif8266/cores/esp8266/Print.h"
-#include "../../../../../../.platformio/packages/framework-arduinoespressif8266/libraries/SoftwareSerial/SoftwareSerial.h"
+//#include "display.h"
+#include "../pio/src/display.h"
 
 using ::testing::Return;
 using ::testing::Matcher;
@@ -20,7 +19,7 @@ public:
 };
 
 TEST(vfd, new) {
-    MySerial *serial = new MockSerial(5, 6);
+    MockSerial *serial = new MockSerial(5, 6);
     VFD *vfd = new VFD(20, 2, serial);
     ON_CALL(*vfd, write(A<char>())).WillByDefault(Return(1));
     EXPECT_CALL(*serial, print("\x1B\x51\x41"));
