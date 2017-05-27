@@ -1,0 +1,6 @@
+cmake_minimum_required(VERSION 3.2)
+
+include_directories(../../../pio/lib/vfd)
+add_executable(hhTest vfdTest.cpp)
+target_link_libraries(hhTest gtest gtest_main gmock vfd)
+
