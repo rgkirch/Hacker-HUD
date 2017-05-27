@@ -3,5 +3,5 @@ project(gtestproj)
 
 set(CMAKE_CXX_STANDARD 11)
 add_subdirectory(test)
-add_subdirectory(src)
+add_subdirectory(pio/src)
 add_subdirectory(pio/lib)
