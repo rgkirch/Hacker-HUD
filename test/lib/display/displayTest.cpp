@@ -27,6 +27,18 @@ std::string getTemp() {
     return "45C";
 }
 
+TEST(serial, getport) {
+    int x = 12;
+    Print *print = new MySerial(x);
+    ASSERT_EQ(x, print->getPort());
+}
+
+TEST(serial, print) {
+    int x = 12;
+    Print *print = new MySerial(x);
+    ASSERT_EQ(x, print->getPort());
+}
+
 TEST(sanity, one) {
     int x = 1;
     ASSERT_EQ(x, x);
