@@ -11,3 +11,4 @@ CMakeListsPrivate.txt
 data/
 lib/Time-master.zip
 
+/pio/.idea/
