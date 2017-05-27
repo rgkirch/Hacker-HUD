@@ -1,20 +1,3 @@
-.idea/
-.pioenvs
-.piolibdeps
-.clang_complete
-.gcc-flags.json
-cmake-build-debug
-/lib/Arduino/
-/lib/Adafruit_MCP9808_Library-master/
-/lib/ArduinoJson/
-data/
-lib/Time-master.zip
 
-/cmake-build-default/
-/cmake-build-minsizerel/
-/cmake-build-relwithdebinfo/
-/cmake-build-release/
-/lib/esp8266/
-.pioenvs
-.piolibdeps
-CMakeListsPrivate.txt
+/pio/.idea/
+/pio/cmake-build-debug/
