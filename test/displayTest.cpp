@@ -3,30 +3,74 @@
 #include <string>
 //#include <SoftwareSerial.h>
 //#include "display.h"
-#include "../pio/src/display.h"
 
 using ::testing::Return;
 using ::testing::Matcher;
 using ::testing::A;
+using ::testing::AtLeast;
 
-class MockSerial : public MySerial {
+//class MockSerial : public MySerial {
+//public:
+//    MockSerial(int rx, int tx);
+//    MOCK_METHOD1(write, size_t(uint8_t));
+//    MOCK_METHOD0(read, int());
+//    MOCK_METHOD0(available, int());
+//    MOCK_METHOD0(flush, void());
+//};
+
+class SoftwareSerial
+{
 public:
-    MockSerial(int rx, int tx);
-    MOCK_METHOD1(write, size_t(uint8_t));
+    // public methods
+    SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) {};
+//    ~SoftwareSerial();
+    void begin(long speed) {};
+    bool listen() {};
+    void end() {};
+    bool isListening() {};
+    bool stopListening() {};
+    bool overflow() {};
+    int peek() {};
+
+    virtual size_t write(uint8_t byte) {};
+    virtual int read() {};
+    virtual int available() {};
+    virtual void flush() {};
+    operator bool() { return true; }
+};
+
+class MockSoftwareSerial : public SoftwareSerial {
+public:
+    MockSoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) : SoftwareSerial(receivePin, transmitPin, inverse_logic) {};
+//    ~MockSoftwareSerial() {};
+    MOCK_METHOD1(write, size_t(uint8_t byte));
     MOCK_METHOD0(read, int());
     MOCK_METHOD0(available, int());
     MOCK_METHOD0(flush, void());
+
 };
 
-TEST(vfd, new) {
-    MockSerial *serial = new MockSerial(5, 6);
-    VFD *vfd = new VFD(20, 2, serial);
-    ON_CALL(*vfd, write(A<char>())).WillByDefault(Return(1));
-    EXPECT_CALL(*serial, print("\x1B\x51\x41"));
-    EXPECT_CALL(*serial, print("hello               "));
-    EXPECT_CALL(*serial, print("\x0D"));
-    vfd->setUpperLine("hello");
+TEST(mockSoftwareSerial, read) {
+    uint8_t rx = 5;
+    uint8_t tx = 6;
+    MockSoftwareSerial serial(rx, tx);
+    EXPECT_CALL(serial, read())
+            .Times(AtLeast(1))
+            .WillOnce(Return(1));
+    ON_CALL(serial, read())
+            .WillByDefault(Return(1));
+    serial.read();
 }
+
+//TEST(vfd, new) {
+//    MockSerial *serial = new MockSerial(5, 6);
+//    VFD *vfd = new VFD(20, 2, serial);
+//    ON_CALL(*vfd, write(A<char>())).WillByDefault(Return(1));
+//    EXPECT_CALL(*serial, print("\x1B\x51\x41"));
+//    EXPECT_CALL(*serial, print("hello               "));
+//    EXPECT_CALL(*serial, print("\x0D"));
+//    vfd->setUpperLine("hello");
+//}
 
 TEST(sanity, one) {
     int x = 1;
