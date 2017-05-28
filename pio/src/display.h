@@ -4,14 +4,33 @@
 #include <string>
 #include <SoftwareSerial.h>
 
-class MySerial : public SoftwareSerial {
+class MySerial {
 public:
-    MySerial(int rx, int tx) : SoftwareSerial(rx, tx) {};
-    void print(std::string str) {
-        print(str.c_str());
+    MySerial(int rx, int tx) {
+        serial = new SoftwareSerial((unsigned char)rx, (unsigned char)tx);
     };
-    using SoftwareSerial::print;
+    virtual ~MySerial() {};
+    virtual void print(char c) {
+        serial->print(c);
+    };
+//    virtual void print(char *cs) {
+//        serial->print(cs);
+//    };
+    virtual void print(std::string str) {
+        serial->print(str.c_str());
+    };
+private:
+    SoftwareSerial *serial;
 };
+
+//class MySerial : public SoftwareSerial {
+//public:
+//    MySerial(int rx, int tx) : SoftwareSerial(rx, tx) {};
+//    void print(std::string str) {
+//        SoftwareSerial::print(str.c_str());
+//    };
+//    using SoftwareSerial::print;
+//};
 
 class CharacterDisplay {
 public:

@@ -2,7 +2,7 @@
 #include <gmock/gmock.h>
 #include <string>
 //#include <SoftwareSerial.h>
-//#include "display.h"
+#include "display.h"
 
 using ::testing::Return;
 using ::testing::Matcher;
@@ -18,48 +18,53 @@ using ::testing::AtLeast;
 //    MOCK_METHOD0(flush, void());
 //};
 
-class SoftwareSerial
-{
+//class SoftwareSerial
+//{
+//public:
+//    // public methods
+//    SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) {};
+//    void begin(long speed) {};
+//    bool listen() {};
+//    void end() {};
+//    bool isListening() {};
+//    bool stopListening() {};
+//    bool overflow() {};
+//    int peek() {};
+//    virtual size_t write(uint8_t byte) {};
+//    virtual int read() {};
+//    virtual int available() {};
+//    virtual void flush() {};
+//    operator bool() { return true; }
+//};
+
+//class MockSoftwareSerial : public SoftwareSerial {
+//public:
+//    MockSoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) : SoftwareSerial(receivePin, transmitPin, inverse_logic) {};
+////    ~MockSoftwareSerial() {};
+//    MOCK_METHOD1(write, size_t(uint8_t byte));
+//    MOCK_METHOD0(read, int());
+//    MOCK_METHOD0(available, int());
+//    MOCK_METHOD0(flush, void());
+//};
+
+class MockMySerial : public MySerial {
 public:
-    // public methods
-    SoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) {};
-//    ~SoftwareSerial();
-    void begin(long speed) {};
-    bool listen() {};
-    void end() {};
-    bool isListening() {};
-    bool stopListening() {};
-    bool overflow() {};
-    int peek() {};
-
-    virtual size_t write(uint8_t byte) {};
-    virtual int read() {};
-    virtual int available() {};
-    virtual void flush() {};
-    operator bool() { return true; }
-};
-
-class MockSoftwareSerial : public SoftwareSerial {
-public:
-    MockSoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) : SoftwareSerial(receivePin, transmitPin, inverse_logic) {};
-//    ~MockSoftwareSerial() {};
-    MOCK_METHOD1(write, size_t(uint8_t byte));
-    MOCK_METHOD0(read, int());
-    MOCK_METHOD0(available, int());
-    MOCK_METHOD0(flush, void());
-
+    MockMySerial(int rx, int tx) : MySerial(rx, tx) {};
+    MOCK_METHOD1(print, void(char c));
+//    MOCK_METHOD1(print, void(char *cs));
+    MOCK_METHOD1(print, void(std::string str));
 };
 
 TEST(mockSoftwareSerial, read) {
     uint8_t rx = 5;
     uint8_t tx = 6;
-    MockSoftwareSerial serial(rx, tx);
-    EXPECT_CALL(serial, read())
-            .Times(AtLeast(1))
-            .WillOnce(Return(1));
-    ON_CALL(serial, read())
-            .WillByDefault(Return(1));
-    serial.read();
+    MockMySerial serial(rx, tx);
+    EXPECT_CALL(serial, print('a'))
+            .Times(AtLeast(1));
+    EXPECT_CALL(serial, print("hello"))
+            .Times(AtLeast(1));
+    serial.print('a');
+    serial.print("hello");
 }
 
 //TEST(vfd, new) {

@@ -1,9 +1,10 @@
 cmake_minimum_required(VERSION 3.6)
 
 
-include_directories("../Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src")
-include_directories("../Arduino/hardware/esp8266com/esp8266/cores/esp8266")
+#include_directories("../Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src")
+#include_directories("../Arduino/hardware/esp8266com/esp8266/cores/esp8266")
 include_directories("../pio/src")
+include_directories(".")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
 #set(CMAKE_CXX_FLAGS “${CMAKE_CXX_FLAGS} -std=gnu++11“)
