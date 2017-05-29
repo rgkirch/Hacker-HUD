@@ -26,8 +26,8 @@
 class MySerial : public SoftwareSerial {
 public:
     MySerial(int rx, int tx) : SoftwareSerial(rx, tx) {};
-    void print(std::string str) {
-        SoftwareSerial::print(str.c_str());
+    size_t print(std::string str) {
+        return SoftwareSerial::print(static_cast<const char*>(str.c_str()));
     };
     using SoftwareSerial::print;
 };
@@ -86,8 +86,8 @@ public:
     void setUpperLine(std::string str) {
         serial->print("\x1B\x51\x41");
         str.resize(20, ' ');
-        serial->print(str);
-        serial->print((const char*)"\x0D");
+        serial->print(str.c_str());
+        serial->print("\x0D");
     };
     void setLowerLine(std::string str) {
         serial->print("\x1B\x51\x42");
