@@ -6,6 +6,7 @@
 
 using ::testing::A;
 using ::testing::AtLeast;
+using ::testing::Invoke;
 using ::testing::Matcher;
 using ::testing::Return;
 using ::testing::StrEq;
@@ -61,8 +62,7 @@ public:
 TEST(vfd, setUpperLine) {
     MockMySerial serial(5, 6);
     VFD vfd(20, 2, &serial);
-//    EXPECT_CALL(serial, print(A<std::string>())).Times(3);
-//    ON_CALL(*vfd, write(A<char>())).WillByDefault(Return(1));
+    ON_CALL(serial, print(A<const char*>())).WillByDefault(Invoke([](const char* cs) { return strlen(cs); }));
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
     EXPECT_CALL(serial, print(StrEq("hello               "))).Times(1);
     EXPECT_CALL(serial, print(StrEq("\x0D"))).Times(1);
