@@ -29,7 +29,7 @@ public:
     void print(std::string str) {
         SoftwareSerial::print(str.c_str());
     };
-//    using SoftwareSerial::print;
+    using SoftwareSerial::print;
 };
 
 class CharacterDisplay {
@@ -87,7 +87,7 @@ public:
         serial->print("\x1B\x51\x41");
         str.resize(20, ' ');
         serial->print(str);
-        serial->print("\x0D");
+        serial->print((const char*)"\x0D");
     };
     void setLowerLine(std::string str) {
         serial->print("\x1B\x51\x42");

@@ -8,6 +8,7 @@ using ::testing::Return;
 using ::testing::Matcher;
 using ::testing::A;
 using ::testing::AtLeast;
+using ::testing::_;
 
 //class MockSerial : public MySerial {
 //public:
@@ -50,9 +51,22 @@ class MockMySerial : public MySerial {
 public:
     MockMySerial(int rx, int tx) : MySerial(rx, tx) {};
     MOCK_METHOD1(print, size_t(char c));
-//    MOCK_METHOD1(print, void(char *cs));
-    MOCK_METHOD1(print, void(std::string str));
+    MOCK_METHOD1(print, size_t(const char *));
+//    MOCK_METHOD1(print, size_t(const char[]));
+//    MOCK_METHOD1(print, void(std::string str));
+//    using Print::print;
 };
+
+TEST(vfd, setUpperLine) {
+    MockMySerial serial(5, 6);
+    VFD vfd(20, 2, &serial);
+//    EXPECT_CALL(serial, print(A<std::string>())).Times(3);
+//    ON_CALL(*vfd, write(A<char>())).WillByDefault(Return(1));
+    EXPECT_CALL(serial, print(Matcher<const char*>("\x1B\x51\x41"))).Times(1);
+    EXPECT_CALL(serial, print(Matcher<const char*>("hello               "))).Times(1);
+    EXPECT_CALL(serial, print(Matcher<const char*>("\x0D"))).Times(1);
+    vfd.setUpperLine("hello");
+}
 
 //TEST(SoftwareSerial, print) {
 //    uint8_t rx = 5;
@@ -67,27 +81,20 @@ public:
 //    serial.print("hello");
 //}
 
-TEST(mockSoftwareSerial, read) {
-    uint8_t rx = 5;
-    uint8_t tx = 6;
-    MockMySerial serial(rx, tx);
-    EXPECT_CALL(serial, print('a'))
-            .Times(1);
-    EXPECT_CALL(serial, print("hello"))
-            .Times(1);
-    serial.print('a');
-    serial.print("hello");
-}
+//TEST(MockMySerial, print) {
+//    uint8_t rx = 5;
+//    uint8_t tx = 6;
+//    std::string hello("hello");
+//    MockMySerial serial(rx, tx);
+//    EXPECT_CALL(serial, print(A<char>())).Times(0);
+//    EXPECT_CALL(serial, print(Matcher<char>('a')))
+//            .Times(1);
+//    EXPECT_CALL(serial, print(Matcher<std::string>("hello")))
+//            .Times(1);
+//    serial.print('a');
+//    serial.print(hello);
+//}
 
-TEST(vfd, setUpperLine) {
-    MockMySerial serial(5, 6);
-    VFD vfd(20, 2, &serial);
-//    ON_CALL(*vfd, write(A<char>())).WillByDefault(Return(1));
-    EXPECT_CALL(serial, print("\x1B\x51\x41")).Times(1);
-    EXPECT_CALL(serial, print("hello               ")).Times(1);
-    EXPECT_CALL(serial, print("\x0D")).Times(1);
-    vfd.setUpperLine("hello");
-}
 
 TEST(sanity, one) {
     int x = 1;
