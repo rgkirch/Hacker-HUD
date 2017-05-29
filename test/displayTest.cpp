@@ -37,45 +37,57 @@ using ::testing::AtLeast;
 //    operator bool() { return true; }
 //};
 
-//class MockSoftwareSerial : public SoftwareSerial {
-//public:
-//    MockSoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) : SoftwareSerial(receivePin, transmitPin, inverse_logic) {};
-////    ~MockSoftwareSerial() {};
-//    MOCK_METHOD1(write, size_t(uint8_t byte));
-//    MOCK_METHOD0(read, int());
-//    MOCK_METHOD0(available, int());
-//    MOCK_METHOD0(flush, void());
-//};
+class MockSoftwareSerial : public SoftwareSerial {
+public:
+    MockSoftwareSerial(uint8_t receivePin, uint8_t transmitPin, bool inverse_logic = false) : SoftwareSerial(receivePin, transmitPin, inverse_logic) {};
+    MOCK_METHOD1(write, size_t(uint8_t byte));
+    MOCK_METHOD0(read, int());
+    MOCK_METHOD0(available, int());
+    MOCK_METHOD0(flush, void());
+};
 
 class MockMySerial : public MySerial {
 public:
     MockMySerial(int rx, int tx) : MySerial(rx, tx) {};
-    MOCK_METHOD1(print, void(char c));
+    MOCK_METHOD1(print, size_t(char c));
 //    MOCK_METHOD1(print, void(char *cs));
     MOCK_METHOD1(print, void(std::string str));
 };
+
+//TEST(SoftwareSerial, print) {
+//    uint8_t rx = 5;
+//    uint8_t tx = 6;
+//    SoftwareSerial serial(rx, tx);
+//    ON_CALL(serial, print('a'))
+//    EXPECT_CALL(serial, print('a'))
+//            .Times(AtLeast(1));
+//    EXPECT_CALL(serial, print("hello"))
+//            .Times(AtLeast(1));
+//    serial.print('a');
+//    serial.print("hello");
+//}
 
 TEST(mockSoftwareSerial, read) {
     uint8_t rx = 5;
     uint8_t tx = 6;
     MockMySerial serial(rx, tx);
     EXPECT_CALL(serial, print('a'))
-            .Times(AtLeast(1));
+            .Times(1);
     EXPECT_CALL(serial, print("hello"))
-            .Times(AtLeast(1));
+            .Times(1);
     serial.print('a');
     serial.print("hello");
 }
 
-//TEST(vfd, new) {
-//    MockSerial *serial = new MockSerial(5, 6);
-//    VFD *vfd = new VFD(20, 2, serial);
+TEST(vfd, setUpperLine) {
+    MockMySerial serial(5, 6);
+    VFD vfd(20, 2, &serial);
 //    ON_CALL(*vfd, write(A<char>())).WillByDefault(Return(1));
-//    EXPECT_CALL(*serial, print("\x1B\x51\x41"));
-//    EXPECT_CALL(*serial, print("hello               "));
-//    EXPECT_CALL(*serial, print("\x0D"));
-//    vfd->setUpperLine("hello");
-//}
+    EXPECT_CALL(serial, print("\x1B\x51\x41")).Times(1);
+    EXPECT_CALL(serial, print("hello               ")).Times(1);
+    EXPECT_CALL(serial, print("\x0D")).Times(1);
+    vfd.setUpperLine("hello");
+}
 
 TEST(sanity, one) {
     int x = 1;

@@ -30,8 +30,8 @@ public:
     virtual int read() = 0;
     virtual int peek() = 0;
     Stream() {};
-    String readString() {};
-    String readStringUntil(char terminator);
+//    virtual String readString() {};
+//    virtual String readStringUntil(char terminator);
     virtual bool find(char *target) { return false; };
     virtual bool find(char *target, size_t length) { return false; };
     virtual bool find(char target) { return false; };

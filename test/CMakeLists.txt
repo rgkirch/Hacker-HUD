@@ -16,7 +16,7 @@ add_subdirectory(googletest)
 #include(CMakeListsPrivate.txt)
 
 #set(WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-add_executable(hhTest displayTest.cpp)
+add_executable(hhTest displayTest.cpp ../pio/src/display.cpp)
 #add_executable(${PROJECT_NAME} ${SRC_LIST})
 #include_directories(.)
 target_link_libraries(hhTest gtest gtest_main gmock)
