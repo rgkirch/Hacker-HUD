@@ -4,37 +4,9 @@
 #include <string>
 #include <SoftwareSerial.h>
 
-//class MySerial {
-//public:
-//    MySerial(int rx, int tx) {
-//        serial = new SoftwareSerial((unsigned char)rx, (unsigned char)tx);
-//    };
-//    virtual ~MySerial() {};
-//    virtual void print(char c) {
-//        serial->print(c);
-//    };
-////    virtual void print(char *cs) {
-////        serial->print(cs);
-////    };
-//    virtual void print(std::string str) {
-//        serial->print(str.c_str());
-//    };
-//private:
-//    SoftwareSerial *serial;
-//};
-
-class MySerial : public SoftwareSerial {
-public:
-    MySerial(int rx, int tx) : SoftwareSerial(rx, tx) {};
-    size_t print(std::string str) {
-        return SoftwareSerial::print(static_cast<const char*>(str.c_str()));
-    };
-    using SoftwareSerial::print;
-};
-
 class CharacterDisplay {
 public:
-    CharacterDisplay(int displayWidth, int displayHeight) : width(displayHeight), height(displayHeight) {};
+    CharacterDisplay(int width, int height) : width(width), height(height) {};
     virtual void setUpperLine(std::string str) =0;
     virtual void setLowerLine(std::string str) =0;
     void setUpperLine(std::string left, std::string right) {
@@ -43,31 +15,44 @@ public:
     void setLowerLine(std::string left, std::string right) {
         this->setLowerLine(blockFormat(left, right));
     };
-protected:
+    const int getWidth() const {
+        return width;
+    }
+    const int getHeight() const {
+        return height;
+    }
+private:
     const int width;
     const int height;
-private:
-    std::string blockFormat(std::string left, std::string right);
+    std::string blockFormat(std::string left, std::string right) {
+        const int leftLength = static_cast<int>(left.length());
+        const int rightLength = static_cast<int>(right.length());
+        const int padding = width - left.length() - right.length();
+        if (padding > 0) {
+            left.resize(static_cast<unsigned int>(leftLength + padding), ' ');
+        } else if (rightLength + padding < 0) {
+            left.resize(static_cast<unsigned int>(leftLength + rightLength + padding));
+            right.clear();
+        } else {
+            right.resize(static_cast<unsigned int>(rightLength + padding));
+        }
+        return left + right;
+    }
 };
 
 class HardwareDisplay : public CharacterDisplay {
 public:
-    HardwareDisplay(int width, int height, MySerial *s) : CharacterDisplay(width, height), serial(s) {};
-
-    void setUpperLine(std::string str);
-
-    void setLowerLine(std::string str);
-
+    HardwareDisplay(int width, int height, SoftwareSerial *s) : CharacterDisplay(width, height), serial(s) {};
     using CharacterDisplay::setUpperLine; // couldn't find setUpperLine(std::string, std::string) without this...
     using CharacterDisplay::setLowerLine;
 protected:
-    MySerial *serial;
+    SoftwareSerial *serial;
 };
 
 class VFD : public HardwareDisplay
 {
 public:
-    VFD(int Width, int Height, MySerial *serial) : HardwareDisplay(width, height, serial) {};
+    VFD(int width, int height, SoftwareSerial *serial) : HardwareDisplay(width, height, serial) {};
 //    void println(std::string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
     void overwriteMode()          { serial->print("\x1B\x11"); };
     void virticalScrollMode()     { serial->print("\x1B\x12"); };
@@ -85,16 +70,18 @@ public:
     void home()                   { serial->print("\x0B"); };
     void setUpperLine(std::string str) {
         serial->print("\x1B\x51\x41");
-        str.resize(20, ' ');
+        str.resize(getWidth(), ' ');
         serial->print(str.c_str());
         serial->print("\x0D");
     };
     void setLowerLine(std::string str) {
         serial->print("\x1B\x51\x42");
-        str.resize(20, ' ');
-        serial->print(str);
+        str.resize(getWidth(), ' ');
+        serial->print(str.c_str());
         serial->print("\x0D");
     };
+    using CharacterDisplay::setUpperLine; // couldn't find setUpperLine(std::string, std::string) without this...
+    using CharacterDisplay::setLowerLine;
 //    void printJustified(std::string str) {};
 };
 
