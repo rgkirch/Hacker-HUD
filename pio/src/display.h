@@ -2,22 +2,11 @@
 #define GTESTPROJ_VFD_H
 
 #include <string>
-#include <SoftwareSerial.h>
 
 class AbstractSerial {
 public:
 //    virtual size_t print(const char) =0;
     virtual size_t print(const char*) =0;
-};
-
-class Serial : public AbstractSerial {
-public:
-    Serial(int rx, int tx) { serial = new SoftwareSerial(rx, tx); }
-    ~Serial() { delete serial; }
-//    size_t print(const char c) override { serial->print(c); };
-    size_t print(const char* cs) override { serial->print(cs); };
-protected:
-    SoftwareSerial *serial;
 };
 
 class CharacterDisplay {
