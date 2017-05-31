@@ -198,19 +198,19 @@ void loop()
     unixTimeUpdated = millis();
 
     updateSite(coindesk);
-    myVFD.setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
     delay(4000);
 
     updateSite(coinMarketCap);
-    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
     delay(4000);
 
     updateSite(openWeatherMapTemp);
-    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
     delay(4000);
 
     updateSite(openWeatherMapHumidity);
-    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
     delay(4000);
 
 //    myVFD.clear();
