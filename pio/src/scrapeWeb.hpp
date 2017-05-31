@@ -33,7 +33,7 @@ std::string makeGetRequest(const char *host, const char *path)
     return request;
 
 }
-Option<std::string> scrapeJson(struct Site site) {
+Option<std::string> downloadSiteData(struct Site site) {
     Option<std::string> emptyOption;
     WiFiClient* client;
     if(site.port == httpsPort)
