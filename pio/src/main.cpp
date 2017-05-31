@@ -90,13 +90,13 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
 struct Site coindesk {
-        60000,
-        INT_MIN,
-        httpPort,
-        "api.coindesk.com",
-        "v1/bpi/currentprice.json",
+        .updateInterval = 60000,
+        .lastUpdated = INT_MIN,
+        .port = httpPort,
+        .host = "api.coindesk.com",
+        .path = "v1/bpi/currentprice.json",
         emptyStringOption,
-        {"bpi", "USD", "rate_float"}
+        .keys = {"bpi", "USD", "rate_float"}
 };
 struct Site coinMarketCap = {
         .updateInterval = 60000,
