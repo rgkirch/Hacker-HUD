@@ -2,12 +2,7 @@
 #define GTESTPROJ_VFD_H
 
 #include <string>
-
-class AbstractSerial {
-public:
-    virtual size_t print(const char) =0;
-    virtual size_t print(const char*) =0;
-};
+#include <abstractSerial.hpp>
 
 class CharacterDisplay {
 public:
@@ -53,7 +48,11 @@ protected:
 class VFD : public HardwareDisplay
 {
 public:
-    VFD(int width, int height, AbstractSerial *serial) : HardwareDisplay(width, height, serial) {};
+    VFD(int width, int height, AbstractSerial *serial) : HardwareDisplay(width, height, serial) {
+        serial->print("\x1B\x40\x0C"); // initialize ( bytes 0,1) and clear (byte 2) display
+    };
+    size_t print(const char c) { serial->print(c); };
+    size_t print(const char* cs) { serial->print(cs); };
 //    void println(std::string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
     void overwriteMode()          { serial->print("\x1B\x11"); };
     void virticalScrollMode()     { serial->print("\x1B\x12"); };

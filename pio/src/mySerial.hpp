@@ -2,12 +2,12 @@
 #define GTESTPROJ_SERIAL_H
 
 #include <SoftwareSerial.h>
-#include "display.h"
+#include "abstractSerial.hpp"
 
-class Serial : public AbstractSerial {
+class MySerial : public AbstractSerial {
 public:
-    Serial(int rx, int tx) { serial = new SoftwareSerial(rx, tx); }
-    ~Serial() { delete serial; }
+    MySerial(const uint8_t rx, const uint8_t tx) { serial = new SoftwareSerial(rx, tx); }
+    ~MySerial() { delete serial; }
     size_t print(const char c) override { serial->print(c); };
     size_t print(const char* cs) override { serial->print(cs); };
 protected:

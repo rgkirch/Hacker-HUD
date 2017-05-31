@@ -5,27 +5,19 @@
 #ifdef max
 #undef max
 #endif
-//#include <sstream>
-//#include <functional>
 #include <vector>
 #include <climits>
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
-#include <SoftwareSerial.h>
 #include <ArduinoJson.h>
-#include <Arduino.h>
 #include <Adafruit_MCP9808.h>
 #include <NtpClientLib.h>
-//#include <json.hpp>
 
-//#include <Adafruit_MCP9808.h>
-//#include <Wire.h>
 #include "site.hpp"
 #include "grid.hpp"
-#include "vfd.hpp"
 #include "wifi.hpp"
 #include "scrapeWeb.hpp"
-#include "option.hpp"
+#include "mySerial.hpp"
 
 extern "C" {
 #include "user_interface.h"
@@ -36,7 +28,8 @@ time_t unixTime;
 time_t unixTimeUpdated;
 
 os_timer_t myTimer;
-VFD *myVFD;
+MySerial serial(D5, D6);
+VFD myVFD(20, 2, &serial);
 Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
 Option<std::string> emptyStringOption;
 void *memchr(const void *s, int c, size_t n)
@@ -176,18 +169,18 @@ void timerCallback(void *pArg) {
     int len = strlen(buffer);
     memset(&buffer[len], ' ', max(0, 20 - len));
 //    snprintf(buffer, 20, "%d:%d:%d", hourFormat12(unixTime), minute(unixTime), second(unixTime));
-    myVFD->setUpperLine(buffer);
+    myVFD.setUpperLine(buffer);
 //    snprintf(unixBuffer, 20, "%d", unixTime);
-//    myVFD->setLowerLine(unixBuffer);
+//    myVFD.setLowerLine(unixBuffer);
 }
 void setup()
 {
     Serial.begin(115200);
-    myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
+//    myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
 //    ntpSetup();
 //    initializeTemp(tempsensor);
-    myVFD->clear();
-    myVFD->home();
+    myVFD.clear();
+    myVFD.home();
 
     os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
     os_timer_arm(&myTimer, 1000, true);
@@ -195,36 +188,36 @@ void setup()
 }
 //void p(const char *cs)
 //{
-//    myVFD->print(cs);
+//    myVFD.print(cs);
 //}
 void loop()
 {
-//    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
+//    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD.print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
     unixTime = NTP.getTime();
     unixTimeUpdated = millis();
 
     updateSite(coindesk);
-    myVFD->setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
     delay(4000);
 
     updateSite(coinMarketCap);
-    myVFD->setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
     delay(4000);
 
     updateSite(openWeatherMapTemp);
-    myVFD->setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
     delay(4000);
 
     updateSite(openWeatherMapHumidity);
-    myVFD->setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
+    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
     delay(4000);
 
-//    myVFD->clear();
-//    myVFD->home();
-//    myVFD->print("sensor temp "); //(char)223)
-//    myVFD->println(readTemp(tempsensor));
-//    myVFD->print("time "); //(char)223)
+//    myVFD.clear();
+//    myVFD.home();
+//    myVFD.print("sensor temp "); //(char)223)
+//    myVFD.println(readTemp(tempsensor));
+//    myVFD.print("time "); //(char)223)
 
     yield();
 }

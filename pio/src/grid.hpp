@@ -5,7 +5,7 @@
 #include <pins_arduino.h>
 #include <os_type.h>
 #include <Arduino.h>
-#include <vfd.hpp>
+#include "display.h"
 
 char toByte(int number) {
     return (number / 1000000 % 2 << 6) + (number / 100000 % 2 << 5) + (number / 10000 % 2 << 4) + (number / 1000 % 2 << 3) + (number / 100 % 2 << 2) + (number / 10 % 2 << 1) + (number % 2);
@@ -136,75 +136,75 @@ char first = '\x21';
 char last = first + 39;
 char counter = 0;
 
-void deleteAll(VFD *myVFD) {
+void deleteAll(VFD myVFD) {
     for (char a = '\x21'; a <= '\x21' + 39; a++) {
-        myVFD->print("\x1B\x3F");
-        myVFD->print(a);
+        myVFD.print("\x1B\x3F");
+        myVFD.print(a);
     }
     delay(1000);
 }
 
-void grid(VFD *myVFD) {
-//    myVFD->print("\x1B\x40");
-//    myVFD->print("\x1B\x52\x00");
+void grid(VFD myVFD) {
+//    myVFD.print("\x1B\x40");
+//    myVFD.print("\x1B\x52\x00");
     deleteAll(myVFD);
 }
 
-void messItUp(VFD *myVFD) {
+void messItUp(VFD myVFD) {
 //    memset(grid.data, '\x88', 2 * 5 * 20);
-//    grid.dump([](char x){myVFD->print(x);});
+//    grid.dump([](char x){myVFD.print(x);});
 //    os_timer_arm(&myTimer, 1000, true);
-    myVFD->print("\x1B\x25\x01");
-    myVFD->print("\x1B\x26\x01");
-    myVFD->print(first);
-    myVFD->print(last);
+    myVFD.print("\x1B\x25\x01");
+    myVFD.print("\x1B\x26\x01");
+    myVFD.print(first);
+    myVFD.print(last);
     for (char a = first; a <= last; a++) {
-        myVFD->print('\x05');
-//        myVFD->print("\x63\x33\x15\x06\x03");
+        myVFD.print('\x05');
+//        myVFD.print("\x63\x33\x15\x06\x03");
         for (int i = 0; i < 5; i++) {
-            myVFD->print(counter++);
+            myVFD.print(counter++);
         }
     }
 
-    myVFD->home();
+    myVFD.home();
     for (char c = '\x21'; c < '\x21' + 40; c++) {
-        myVFD->print(c);
+        myVFD.print(c);
     }
 //    Serial.println(grid.toString().c_str());
 //    for (char a = first; a < last; a++) {
-//        myVFD->print(a);
+//        myVFD.print(a);
 //        delay(200);
 //    }
     delay(1000);
 }
 //void loop()
 //{
-////    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD->print(str); }});
+////    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD.print(str); }});
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi();
 //    unixTime = NTP.getTime();
 //    unixTimeUpdated = millis();
 //
 //    updateSite(coindesk);
-//    myVFD->setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
+//    myVFD.setLowerLine("bitcoin", coindesk.lastResult.getOrElse("no data"));
 //    delay(4000);
 //
 //    updateSite(coinMarketCap);
-//    myVFD->setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
+//    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.getOrElse("no data"));
 //    delay(4000);
 //
 //    updateSite(openWeatherMapTemp);
-//    myVFD->setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
+//    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.getOrElse("no data"));
 //    delay(4000);
 //
 //    updateSite(openWeatherMapHumidity);
-//    myVFD->setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
+//    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.getOrElse("no data"));
 //    delay(4000);
 //
-////    myVFD->clear();
-////    myVFD->home();
-////    myVFD->print("sensor temp "); //(char)223)
-////    myVFD->println(readTemp(tempsensor));
-////    myVFD->print("time "); //(char)223)
+////    myVFD.clear();
+////    myVFD.home();
+////    myVFD.print("sensor temp "); //(char)223)
+////    myVFD.println(readTemp(tempsensor));
+////    myVFD.print("time "); //(char)223)
 //
 //    yield();
 //}
