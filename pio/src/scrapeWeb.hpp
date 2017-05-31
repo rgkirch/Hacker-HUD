@@ -66,18 +66,9 @@ Option<std::string> scrapeJson(struct Site site) {
     {
         data.append(client->readString().c_str());
     }
-    auto i = data.find('{');
-    // todo - this code is neutered
-    if (i != data.npos)
-    {
-//        data.erase(0, i);
-//        i += 2;
-    } else i = 0;
-//    Serial.print("i is ");
-//    Serial.println(i);
     client->stop();
     delete client;
-    return data.substr(i);
+    return data;
 }
 
 #endif
