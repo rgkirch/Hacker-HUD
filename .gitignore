@@ -12,4 +12,6 @@ data/
 lib/Time-master.zip
 
 /pio/.idea/
-!/test/CMakeListsPrivate.txt
+/test/CMakeListsPrivate.txt
+/.travis.yml
+/pio/lib/readme.txt

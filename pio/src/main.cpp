@@ -21,6 +21,7 @@
 //#include <Adafruit_MCP9808.h>
 //#include <Wire.h>
 #include "site.hpp"
+#include "grid.hpp"
 #include "vfd.hpp"
 #include "wifi.hpp"
 #include "scrapeWeb.hpp"
@@ -183,13 +184,14 @@ void setup()
 {
     Serial.begin(115200);
     myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
-    ntpSetup();
-    initializeTemp(tempsensor);
+//    ntpSetup();
+//    initializeTemp(tempsensor);
     myVFD->clear();
     myVFD->home();
 
     os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
     os_timer_arm(&myTimer, 1000, true);
+    grid(myVFD);
 }
 //void p(const char *cs)
 //{
