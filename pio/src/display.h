@@ -4,6 +4,22 @@
 #include <string>
 #include <SoftwareSerial.h>
 
+class AbstractSerial {
+public:
+//    virtual size_t print(const char) =0;
+    virtual size_t print(const char*) =0;
+};
+
+class Serial : public AbstractSerial {
+public:
+    Serial(int rx, int tx) { serial = new SoftwareSerial(rx, tx); }
+    ~Serial() { delete serial; }
+//    size_t print(const char c) override { serial->print(c); };
+    size_t print(const char* cs) override { serial->print(cs); };
+protected:
+    SoftwareSerial *serial;
+};
+
 class CharacterDisplay {
 public:
     CharacterDisplay(int width, int height) : width(width), height(height) {};
@@ -15,12 +31,8 @@ public:
     void setLowerLine(std::string left, std::string right) {
         this->setLowerLine(blockFormat(left, right));
     };
-    const int getWidth() const {
-        return width;
-    }
-    const int getHeight() const {
-        return height;
-    }
+    const int getWidth() const { return width; }
+    const int getHeight() const { return height; }
 private:
     const int width;
     const int height;
@@ -42,17 +54,17 @@ private:
 
 class HardwareDisplay : public CharacterDisplay {
 public:
-    HardwareDisplay(int width, int height, SoftwareSerial *s) : CharacterDisplay(width, height), serial(s) {};
-    using CharacterDisplay::setUpperLine; // couldn't find setUpperLine(std::string, std::string) without this...
+    HardwareDisplay(int width, int height, AbstractSerial *s) : CharacterDisplay(width, height), serial(s) {};
+    using CharacterDisplay::setUpperLine;
     using CharacterDisplay::setLowerLine;
 protected:
-    SoftwareSerial *serial;
+    AbstractSerial *serial;
 };
 
 class VFD : public HardwareDisplay
 {
 public:
-    VFD(int width, int height, SoftwareSerial *serial) : HardwareDisplay(width, height, serial) {};
+    VFD(int width, int height, AbstractSerial *serial) : HardwareDisplay(width, height, serial) {};
 //    void println(std::string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
     void overwriteMode()          { serial->print("\x1B\x11"); };
     void virticalScrollMode()     { serial->print("\x1B\x12"); };
@@ -80,7 +92,7 @@ public:
         serial->print(str.c_str());
         serial->print("\x0D");
     };
-    using CharacterDisplay::setUpperLine; // couldn't find setUpperLine(std::string, std::string) without this...
+    using CharacterDisplay::setUpperLine;
     using CharacterDisplay::setLowerLine;
 //    void printJustified(std::string str) {};
 };

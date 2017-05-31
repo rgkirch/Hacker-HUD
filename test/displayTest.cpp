@@ -12,14 +12,15 @@ using ::testing::Return;
 using ::testing::StrEq;
 using ::testing::_;
 
-class MockSoftwareSerial : public SoftwareSerial {
+class MockAbstractSerial : public AbstractSerial {
 public:
-    MockSoftwareSerial(int rx, int tx) : SoftwareSerial(rx, tx) {};
+    MockAbstractSerial(int rx, int tx) {};
+//    MOCK_METHOD1(print, size_t(const char));
     MOCK_METHOD1(print, size_t(const char *));
 };
 
 TEST(vfd, setUpperLine) {
-    MockSoftwareSerial serial(5, 6);
+    MockAbstractSerial serial(5, 6);
     VFD vfd(20, 2, &serial);
 //    ON_CALL(serial, print(A<const char*>())).WillByDefault(Invoke([](const char* cs) { return strlen(cs); }));
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
@@ -29,7 +30,7 @@ TEST(vfd, setUpperLine) {
 }
 
 TEST(vfd, setUpperLineCalledWithLongArgument) {
-    MockSoftwareSerial serial(4, 5);
+    MockAbstractSerial serial(4, 5);
     VFD vfd(18, 2, &serial);
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
     EXPECT_CALL(serial, print(StrEq("one two three four"))).Times(1);
@@ -38,7 +39,7 @@ TEST(vfd, setUpperLineCalledWithLongArgument) {
 }
 
 TEST(vfd, setUpperLineEmptyString) {
-    MockSoftwareSerial serial(3, 4);
+    MockAbstractSerial serial(3, 4);
     VFD vfd(7, 3, &serial);
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
     EXPECT_CALL(serial, print(StrEq("       "))).Times(1);
@@ -47,7 +48,7 @@ TEST(vfd, setUpperLineEmptyString) {
 }
 
 TEST(vfd, setLowerLine) {
-    MockSoftwareSerial serial(5, 6);
+    MockAbstractSerial serial(5, 6);
     VFD vfd(20, 2, &serial);
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x42"))).Times(1);
     EXPECT_CALL(serial, print(StrEq("hello               "))).Times(1);
@@ -56,7 +57,7 @@ TEST(vfd, setLowerLine) {
 }
 
 TEST(vfd, setLowerLineCalledWithLongArgument) {
-    MockSoftwareSerial serial(4, 5);
+    MockAbstractSerial serial(4, 5);
     VFD vfd(18, 2, &serial);
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x42"))).Times(1);
     EXPECT_CALL(serial, print(StrEq("one two three four"))).Times(1);
@@ -65,7 +66,7 @@ TEST(vfd, setLowerLineCalledWithLongArgument) {
 }
 
 TEST(vfd, setLowerLineEmptyString) {
-    MockSoftwareSerial serial(3, 4);
+    MockAbstractSerial serial(3, 4);
     VFD vfd(7, 3, &serial);
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x42"))).Times(1);
     EXPECT_CALL(serial, print(StrEq("       "))).Times(1);
@@ -74,7 +75,7 @@ TEST(vfd, setLowerLineEmptyString) {
 }
 
 TEST(vfd, setUpperLineTwoStrings) {
-    MockSoftwareSerial serial(5, 6);
+    MockAbstractSerial serial(5, 6);
     VFD vfd(20, 2, &serial);
     std::string temp = "temp", deg = "45C";
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
@@ -84,7 +85,7 @@ TEST(vfd, setUpperLineTwoStrings) {
 }
 
 TEST(vfd, setUpperLineTwoStringsTooSmallForRightMostAndSomeOfLeft) {
-    MockSoftwareSerial serial(5, 6);
+    MockAbstractSerial serial(5, 6);
     VFD vfd(8, 2, &serial);
     std::string temp = "temperature", deg = "45C";
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
@@ -94,7 +95,7 @@ TEST(vfd, setUpperLineTwoStringsTooSmallForRightMostAndSomeOfLeft) {
 }
 
 TEST(vfd, setUpperLineTwoStringsTooSmallForRightString) {
-    MockSoftwareSerial serial(5, 6);
+    MockAbstractSerial serial(5, 6);
     VFD vfd(11, 2, &serial);
     std::string temp = "temperature", deg = "45C";
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
@@ -104,7 +105,7 @@ TEST(vfd, setUpperLineTwoStringsTooSmallForRightString) {
 }
 
 TEST(vfd, setUpperLineTwoStringsRightStringGetsChopped) {
-    MockSoftwareSerial serial(5, 6);
+    MockAbstractSerial serial(5, 6);
     VFD vfd(12, 2, &serial);
     std::string temp = "temperature", deg = "45C";
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x41"))).Times(1);
@@ -114,7 +115,7 @@ TEST(vfd, setUpperLineTwoStringsRightStringGetsChopped) {
 }
 
 TEST(vfd, setLowerLineTwoStringsLeftChopOneChar) {
-    MockSoftwareSerial serial(5, 6);
+    MockAbstractSerial serial(5, 6);
     VFD vfd(10, 2, &serial);
     std::string temp = "temperature", deg = "45C";
     EXPECT_CALL(serial, print(StrEq("\x1B\x51\x42"))).Times(1);
