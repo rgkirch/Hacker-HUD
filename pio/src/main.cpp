@@ -177,7 +177,7 @@ void setup()
 {
     Serial.begin(115200);
 //    myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
-//    ntpSetup();
+    ntpSetup();
 //    initializeTemp(tempsensor);
     myVFD.clear();
     myVFD.home();
