@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
 #include <string>
-//#include <SoftwareSerial.h>
 #include "display.h"
 
 using ::testing::A;
@@ -19,70 +18,25 @@ public:
     MOCK_METHOD1(print, size_t(const char *));
 };
 
-TEST(vfd, setUpperLine) {
-    MockAbstractSerial serial(5, 6);
-    VFD vfd(20, 2, &serial);
-//    ON_CALL(serial, print(A<const char*>())).WillByDefault(Invoke([](const char* cs) { return strlen(cs); }));
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x41")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("hello               ")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1);
-    vfd.setUpperLine("hello");
+#define TESTUPPERLINEONE(test_case_name, test_case, display_width, input_string, match_string) \
+TEST(test_case_name, test_case) { \
+    MockAbstractSerial serial(1, 2); \
+    VFD vfd(display_width, 2, &serial); \
+    std::string str = input_string; \
+    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x41")))).Times(1); \
+    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq(match_string)))).Times(1); \
+    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1); \
+    vfd.setUpperLine(str); \
 }
 
-TEST(vfd, setUpperLineCalledWithLongArgument) {
-    MockAbstractSerial serial(4, 5);
-    VFD vfd(18, 2, &serial);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x41")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("one two three four")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1);
-    vfd.setUpperLine("one two three four five six");
-}
+TESTUPPERLINEONE(vfd, setUpperLine, 20, "hello", "hello               ")
+TESTUPPERLINEONE(vfd, setUpperLineCalledWithLongArgument, 18, "one two three four five six", "one two three four")
+TESTUPPERLINEONE(vfd, setUpperLineEmptyString, 7, "", "       ")
+TESTUPPERLINEONE(vfd, setLowerLine, 20, "hello", "hello               ")
+TESTUPPERLINEONE(vfd, setLowerLineCalledWithLongArgument, 18, "one two three four five six", "one two three four")
+TESTUPPERLINEONE(vfd, setLowerLineEmptyString, 7, "", "       ")
 
-TEST(vfd, setUpperLineEmptyString) {
-    MockAbstractSerial serial(3, 4);
-    VFD vfd(7, 3, &serial);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x41")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("       ")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1);
-    vfd.setUpperLine("");
-}
-
-TEST(vfd, setLowerLine) {
-    MockAbstractSerial serial(5, 6);
-    VFD vfd(20, 2, &serial);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x42")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("hello               ")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1);
-    vfd.setLowerLine("hello");
-}
-
-TEST(vfd, setLowerLineCalledWithLongArgument) {
-    MockAbstractSerial serial(4, 5);
-    VFD vfd(18, 2, &serial);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x42")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("one two three four")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1);
-    vfd.setLowerLine("one two three four five six");
-}
-
-TEST(vfd, setLowerLineEmptyString) {
-    MockAbstractSerial serial(3, 4);
-    VFD vfd(7, 3, &serial);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x42")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("       ")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1);
-    vfd.setLowerLine("");
-}
-
-TEST(vfd, setUpperLineTwoStrings) {
-    MockAbstractSerial serial(5, 6);
-    VFD vfd(20, 2, &serial);
-    std::string temp = "temp", deg = "45C";
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x41")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("temp             45C")))).Times(1);
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1);
-    vfd.setUpperLine(temp, deg);
-}
+//TESTUPPERLINETWO(vfd, setUpperLineTwoStrings, 20, "temp", "45C", "temp             45C")
 
 TEST(vfd, setUpperLineTwoStringsTooSmallForRightMostAndSomeOfLeft) {
     MockAbstractSerial serial(5, 6);
