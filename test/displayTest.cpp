@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 #include <gmock/gmock.h>
-//#include <string>
 #include "display.h"
 
 using ::testing::A;
@@ -18,24 +17,34 @@ public:
     MOCK_METHOD1(print, size_t(const char *));
 };
 
-#define TESTUPPERLINE(test_case_name, test_case, display_width, expected, ...) \
+#define TESTBOTH(test_case_name, test_case, display_width, expected, ...) \
+TESTUPPER(test_case_name, test_case ## Upper, display_width, expected, __VA_ARGS__) \
+TESTLOWER(test_case_name, test_case ## Lower, display_width, expected, __VA_ARGS__)
+
+#define TESTUPPER(test_case_name, test_case, display_width, expected, ...) TESTLINE(test_case_name, test_case, display_width, "\x1B\x51\x41", expected, "\x0D", setUpperLine, __VA_ARGS__)
+
+#define TESTLOWER(test_case_name, test_case, display_width, expected, ...) TESTLINE(test_case_name, test_case, display_width, "\x1B\x51\x42", expected, "\x0D", setLowerLine, __VA_ARGS__)
+
+#define TESTLINE(test_case_name, test_case, display_width, begin, expected, end, function, ...) \
 TEST(test_case_name, test_case) { \
     MockAbstractSerial serial(1, 2); \
     VFD vfd(display_width, 2, &serial); \
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x51\x41")))).Times(1); \
+    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq(begin)))).Times(1); \
     EXPECT_CALL(serial, print(Matcher<const char*>(StrEq(expected)))).Times(1); \
-    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x0D")))).Times(1); \
-    vfd.setUpperLine(__VA_ARGS__); \
+    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq(end)))).Times(1); \
+    vfd.function(__VA_ARGS__); \
 }
 
-TESTUPPERLINE(vfd, setUpperLine, 20, "hello               ", "hello")
-TESTUPPERLINE(vfd, setUpperLineCalledWithLongArgument, 18, "one two three four", "one two three four five six")
-TESTUPPERLINE(vfd, setUpperLineEmptyString, 7, "       ", "")
-TESTUPPERLINE(vfd, setLowerLine, 20, "hello               ", "hello")
-TESTUPPERLINE(vfd, setLowerLineCalledWithLongArgument, 18, "one two three four", "one two three four five six")
-TESTUPPERLINE(vfd, setLowerLineEmptyString, 7, "       ", "")
-TESTUPPERLINE(vfd, setUpperLineTwoStrings, 20, "temp             45C", "temp", "45C")
-TESTUPPERLINE(vfd, setUpperLineTwoStringsTooSmallForRightMostAndSomeOfLeft, 8, "temperat", "temperature", "45C")
-TESTUPPERLINE(vfd, setUpperLineTwoStringsTooSmallForRightString, 11, "temperature", "temperature", "45C")
-TESTUPPERLINE(vfd, setUpperLineTwoStringsRightStringGetsChopped, 12, "temperature4", "temperature", "45C")
-TESTUPPERLINE(vfd, setLowerLineTwoStringsLeftChopOneChar, 10, "temperatur", "temperature", "45C")
+TESTBOTH(vfd, setLineHello, 20, "hello               ", "hello")
+TESTBOTH(vfd, setLineCalledWithLongArgument, 18, "one two three four", "one two three four five six")
+TESTBOTH(vfd, setLineEmptyString, 7, "       ", "")
+TESTBOTH(vfd, setLineTwoStrings, 20, "temp             45C", "temp", "45C")
+TESTBOTH(vfd, setLineTwoStringsTooSmallForRightMostAndSomeOfLeft, 8, "temperat", "temperature", "45C")
+TESTBOTH(vfd, setLineTwoStringsTooSmallForRightString, 11, "temperature", "temperature", "45C")
+TESTBOTH(vfd, setLineTwoStringsRightStringGetsChopped, 12, "temperature4", "temperature", "45C")
+TESTBOTH(vfd, setLineTwoStringsLeftChopOneChar, 10, "temperatur", "temperature", "45C")
+
+#undef TESTBOTH
+#undef TESTUPPER
+#undef TESTLOWER
+#undef TESTLINE
