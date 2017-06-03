@@ -65,9 +65,13 @@ Option<std::string> downloadSiteData(struct Site site) {
     {
         data.append(client->readString().c_str());
     }
+    auto i = data.find('{');
+    if (i == data.npos) {
+        i = 0;
+    }
     client->stop();
     delete client;
-    return data;
+    return data.substr(i);
 }
 
 #endif

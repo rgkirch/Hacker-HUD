@@ -153,13 +153,11 @@ Option<std::string> getSiteData(struct Site site)
 }
 void updateSite(struct Site &site)
 {
-    if (millis() - site.lastUpdated > site.updateInterval) // todo - of if never updated
+    if (site.lastUpdated == 0 or millis() - site.lastUpdated > site.updateInterval)
     {
         Option<std::string> o = getSiteData(site);
-        if (not o.isEmpty()) {
-            site.lastResult = o;
-            site.lastUpdated = millis();
-        }
+        site.lastResult = o;
+        site.lastUpdated = millis();
     }
 }
 void timerCallback(void *pArg) {
