@@ -19,9 +19,9 @@ private:
 protected:
     void setWriteError(int err = 1) {};
 public:
-    Print() {};
-    virtual size_t write(uint8_t) = 0;
-    virtual int availableForWrite() { return 0; };
+//    Print() {};
+//    virtual ~Print() {};
+    virtual size_t write(uint8_t) { return 0; };
     virtual int getWriteError() { return 0; };
     virtual size_t print(char) { return 0; };
     virtual size_t print(const Printable&) { return 0; };

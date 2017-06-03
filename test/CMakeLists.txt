@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.6)
+project(gtestproj)
 
 
-#include_directories("../Arduino/hardware/arduino/avr/libraries/SoftwareSerial/src")
-#include_directories("../Arduino/hardware/esp8266com/esp8266/cores/esp8266")
 include_directories("../pio/src")
+include_directories("../pio/lib/ArduinoJson")
 include_directories(".")
 
 set(CMAKE_VERBOSE_MAKEFILE ON)
@@ -17,7 +17,7 @@ add_subdirectory(googletest)
 #include(CMakeListsPrivate.txt)
 
 #set(WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-add_executable(hhTest displayTest.cpp)
+add_executable(hhTest displayTest.cpp scrapeWebTest.cpp)
 #add_executable(${PROJECT_NAME} ${SRC_LIST})
-#include_directories(.)
 target_link_libraries(hhTest gtest gtest_main gmock)
+target_include_directories(hhTest PRIVATE arduinoStubs)
