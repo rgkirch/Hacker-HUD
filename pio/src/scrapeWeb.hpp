@@ -31,7 +31,6 @@ std::string makeGetRequest(const char *host, const char *path)
     if (host != nullptr) request.append(host);
     request.append(close);
     return request;
-
 }
 Option<std::string> downloadSiteData(struct Site site) {
     Option<std::string> emptyOption;
