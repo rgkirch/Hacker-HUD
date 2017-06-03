@@ -32,24 +32,24 @@ std::string makeGetRequest(const char *host, const char *path)
     request.append(close);
     return request;
 }
-Option<std::string> downloadSiteData(struct Site site) {
+Option<std::string> downloadSiteData(int port, const char *host, const char *path) {
     Option<std::string> emptyOption;
     WiFiClient* client;
-    if(site.port == httpsPort)
+    if(port == httpsPort)
     {
         client = new WiFiClientSecure;
-    } else if (site.port == httpPort){
+    } else if (port == httpPort){
         client = new WiFiClient;
-    } else return emptyOption; //"site port incorrect"
+    } else return emptyOption; //"port incorrect"
     if (client == NULL or client == nullptr) return emptyOption; //"couldn't make client"
 
-    if (not client->connect(site.host, site.port)) {
+    if (not client->connect(host, port)) {
         return emptyOption; //"client connect failed"
     }
     if (not client->connected()) {
         return emptyOption; //"client not connected?!?!"
     }
-    client->print(makeGetRequest(site.host, site.path).c_str());
+    client->print(makeGetRequest(host, path).c_str());
 
     unsigned long timeout = millis();
     while (!client->available()) {

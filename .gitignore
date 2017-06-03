@@ -16,3 +16,5 @@ lib/Time-master.zip
 /.travis.yml
 /pio/lib/readme.txt
 /Arduino/
+/pio/lib/ArduinoJson/
+/pio/lib/json/

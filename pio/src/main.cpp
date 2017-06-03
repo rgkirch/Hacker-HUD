@@ -141,7 +141,7 @@ Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string
 }
 Option<std::string> getSiteData(struct Site site)
 {
-    Option<std::string> o = downloadSiteData(site);
+    Option<std::string> o = downloadSiteData(site.port, site.host, site.path);
     DynamicJsonBuffer jsonBuffer(2000);
     std::function<Option<std::string>(std::string)> f([&o, &jsonBuffer, &site](std::string str)->Option<std::string> {
         JsonObject &o = jsonBuffer.parseObject(str.c_str());
