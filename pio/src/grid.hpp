@@ -81,7 +81,7 @@ public:
 };
 // grid 15 rows and 19*7+5 or 138
 void map(const char *cs, std::function<void(char)> f) {
-    for (int i = 0; i < strlen(cs); i++) {
+    for (unsigned int i = 0; i < strlen(cs); i++) {
         f(cs[i]);
     }
 }
@@ -100,7 +100,7 @@ public:
         std::string str;
         for (int y = 0; y < 14; y++) {
             for (int x = 0; x < 20 * 5; x++) {
-                if (data[x * 2 + y / 8] & 1 << (7 - (y % 8)) != 0) {
+                if ((data[x * 2 + y / 8] & (1 << (7 - (y % 8)))) != 0) {
                     str += '1';
                 } else {
                     str += '0';
@@ -108,6 +108,7 @@ public:
             }
             str += '\n';
         }
+        return str;
     };
     void setOn(int x, int y) {
         data[x / 8 + y / 2] |= (1 << (7 - ((y + 1) % 8)));

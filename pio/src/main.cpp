@@ -91,7 +91,7 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 }
 struct Site coindesk {
         .updateInterval = 60000,
-        .lastUpdated = INT_MIN,
+        .lastUpdated = 0,
         .port = httpPort,
         .host = "api.coindesk.com",
         .path = "v1/bpi/currentprice.json",
@@ -100,7 +100,7 @@ struct Site coindesk {
 };
 struct Site coinMarketCap = {
         .updateInterval = 60000,
-        .lastUpdated = INT_MIN,
+        .lastUpdated = 0,
         .port = httpsPort,
         .host = "coinmarketcap-nexuist.rhcloud.com",
         .path = "/api/eth",
@@ -109,7 +109,7 @@ struct Site coinMarketCap = {
 };
 struct Site openWeatherMapHumidity = {
         .updateInterval = 60000,
-        .lastUpdated = INT_MIN,
+        .lastUpdated = 0,
         .port = httpPort,
         .host = "api.openweathermap.org",
         .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
@@ -118,7 +118,7 @@ struct Site openWeatherMapHumidity = {
 };
 struct Site openWeatherMapTemp = {
         .updateInterval = 60000,
-        .lastUpdated = INT_MIN,
+        .lastUpdated = 0,
         .port = httpPort,
         .host = "api.openweathermap.org",
         .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
@@ -153,7 +153,7 @@ Option<std::string> getSiteData(struct Site site)
 }
 void updateSite(struct Site &site)
 {
-    if (millis() - site.lastUpdated > site.updateInterval)
+    if (millis() - site.lastUpdated > site.updateInterval) // todo - of if never updated
     {
         Option<std::string> o = getSiteData(site);
         if (not o.isEmpty()) {

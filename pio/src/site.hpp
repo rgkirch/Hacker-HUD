@@ -10,8 +10,8 @@ const int httpPort = 80;
 const int httpsPort = 443;
 
 struct Site {
-    int updateInterval;
-    int lastUpdated;
+    unsigned int updateInterval;
+    unsigned int lastUpdated;
     uint16_t port;
     const char* host;
     const char* path;
