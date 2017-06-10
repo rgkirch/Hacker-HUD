@@ -14,10 +14,18 @@
 #include <NtpClientLib.h>
 
 #include "site.hpp"
+//#include "myConnection.hpp"
 #include "grid.hpp"
 #include "wifi.hpp"
 #include "scrapeWeb.hpp"
 #include "mySerial.hpp"
+
+//#define DEBUGPRINT
+#ifdef DEBUGPRINT
+#define LOG(x) do{Serial.println(x);}while(0)
+#else
+#define LOG(x)
+#endif
 
 extern "C" {
 #include "user_interface.h"
@@ -45,16 +53,16 @@ void *memchr(const void *s, int c, size_t n)
 //setup ntp time -----
 void ntpSetup() {
     NTP.onNTPSyncEvent([&](NTPSyncEvent_t error) {
-        Serial.println("print from ntp sync callback lambda");
+        LOG("print from ntp sync callback lambda");
         if (error) {
-            Serial.print("Time Sync error: ");
+            LOG("Time Sync error: ");
             if (error == noResponse)
-                Serial.println("NTP server not reachable");
+                LOG("NTP server not reachable");
             else if (error == invalidAddress)
-                Serial.println("Invalid NTP server address");
+                LOG("Invalid NTP server address");
         } else {
-            Serial.print("Got NTP time: ");
-            Serial.println(NTP.getTimeDateString(NTP.getLastNTPSync()));
+            LOG("Got NTP time: ");
+            LOG(NTP.getTimeDateString(NTP.getLastNTPSync()));
         }
     });
 
@@ -127,6 +135,7 @@ struct Site openWeatherMapTemp = {
 };
 Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string>::iterator begin, const std::vector<std::string>::iterator end)
 {
+    LOG("apply keys");
     Option<std::string> emptyOption;
     auto it = begin;
     if (std::next(it) == end)
@@ -141,6 +150,7 @@ Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string
 }
 Option<std::string> getSiteData(struct Site site)
 {
+    LOG("get site data");
     Option<std::string> o = downloadSiteData(site.port, site.host, site.path);
     DynamicJsonBuffer jsonBuffer(2000);
     std::function<Option<std::string>(std::string)> f([&o, &jsonBuffer, &site](std::string str)->Option<std::string> {
@@ -148,11 +158,13 @@ Option<std::string> getSiteData(struct Site site)
         if (not o.success()) return Option<std::string>();
         return applyKeys(o, site.keys.begin(), site.keys.end());
     } );
+    LOG("json shit");
     o.map( f );
     return o;
 }
 void updateSite(struct Site &site)
 {
+    LOG("update site");
     if (site.lastUpdated == 0 or millis() - site.lastUpdated > site.updateInterval)
     {
         Option<std::string> o = getSiteData(site);
@@ -171,6 +183,7 @@ void timerCallback(void *pArg) {
 //    snprintf(unixBuffer, 20, "%d", unixTime);
 //    myVFD.setLowerLine(unixBuffer);
 }
+
 void setup()
 {
     Serial.begin(115200);
@@ -190,23 +203,27 @@ void setup()
 //}
 void loop()
 {
-//    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD.print(str); }});
     if(WiFi.status() != WL_CONNECTED) connectToWifi();
+    LOG("loop begin");
     unixTime = NTP.getTime();
     unixTimeUpdated = millis();
 
+    LOG("coindesk");
     updateSite(coindesk);
     myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
     delay(4000);
 
+    LOG("coinmargetcap");
     updateSite(coinMarketCap);
     myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
     delay(4000);
 
+    LOG("openweathermap");
     updateSite(openWeatherMapTemp);
     myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
     delay(4000);
 
+    LOG("openweathermaphumidity");
     updateSite(openWeatherMapHumidity);
     myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
     delay(4000);
