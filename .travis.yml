@@ -37,6 +37,7 @@
      - pip install -U platformio
 
  script:
+     - cd pio
      - platformio run
 
 
