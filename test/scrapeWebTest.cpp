@@ -21,9 +21,3 @@ TEST(downloadSiteData, basic) {
     const char *path = "v1/bpi/currentprice.json";
     downloadSiteData(port, host, path);
 }
-
-TEST(sanity, one) {
-    ASSERT_EQ(1, 1);
-}
-
-
