@@ -88,16 +88,14 @@ Option<std::string> downloadSiteData(int port, const char *host, const char *pat
         LOG("client returned from create wificlient is null");
         return emptyOption;
     }
-    int num = 0;
+    delay(500); // actually helps
     std::string data;
-    while(client->connected())
+    while(client->available())
     {
         LOG("read data from client");
         data.append(client->readString().c_str());
         LOG("after read data from client");
-        num++;
     }
-    if(num > 1) Serial.println("reading more data from string");
     LOG("find the left brace");
     auto i = data.find('{');
     if (i == data.npos) {

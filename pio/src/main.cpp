@@ -27,6 +27,9 @@
 #define LOG(x)
 #endif
 
+#define DELAY 4000
+#define UPDATE_INTERVAL 60000
+
 extern "C" {
 #include "user_interface.h"
 }
@@ -98,7 +101,7 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
 struct Site coindesk {
-        .updateInterval = 60000,
+        .updateInterval = UPDATE_INTERVAL,
         .lastUpdated = 0,
         .port = httpPort,
         .host = "api.coindesk.com",
@@ -107,7 +110,7 @@ struct Site coindesk {
         .keys = {"bpi", "USD", "rate_float"}
 };
 struct Site coinMarketCap = {
-        .updateInterval = 60000,
+        .updateInterval = UPDATE_INTERVAL,
         .lastUpdated = 0,
         .port = httpsPort,
         .host = "coinmarketcap-nexuist.rhcloud.com",
@@ -116,7 +119,7 @@ struct Site coinMarketCap = {
         .keys = {"price", "usd"}
 };
 struct Site openWeatherMapHumidity = {
-        .updateInterval = 60000,
+        .updateInterval = UPDATE_INTERVAL,
         .lastUpdated = 0,
         .port = httpPort,
         .host = "api.openweathermap.org",
@@ -125,7 +128,7 @@ struct Site openWeatherMapHumidity = {
         .keys = {"main", "humidity"}
 };
 struct Site openWeatherMapTemp = {
-        .updateInterval = 60000,
+        .updateInterval = UPDATE_INTERVAL,
         .lastUpdated = 0,
         .port = httpPort,
         .host = "api.openweathermap.org",
@@ -211,22 +214,22 @@ void loop()
     LOG("coindesk");
     updateSite(coindesk);
     myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
-    delay(4000);
+    delay(DELAY);
 
     LOG("coinmargetcap");
     updateSite(coinMarketCap);
     myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
-    delay(4000);
+    delay(DELAY);
 
     LOG("openweathermap");
     updateSite(openWeatherMapTemp);
     myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
-    delay(4000);
+    delay(DELAY);
 
     LOG("openweathermaphumidity");
     updateSite(openWeatherMapHumidity);
     myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
-    delay(4000);
+    delay(DELAY);
 
 //    myVFD.clear();
 //    myVFD.home();
