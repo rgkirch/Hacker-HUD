@@ -13,7 +13,6 @@ lib/Time-master.zip
 
 /pio/.idea/
 /test/CMakeListsPrivate.txt
-/.travis.yml
 /pio/lib/readme.txt
 /Arduino/
 /pio/lib/ArduinoJson/
