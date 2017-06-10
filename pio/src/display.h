@@ -2,7 +2,7 @@
 #define GTESTPROJ_VFD_H
 
 #include <string>
-#include <abstractSerial.hpp>
+#include "myAbstractSerial.hpp"
 
 class CharacterDisplay {
 public:
@@ -38,17 +38,17 @@ private:
 
 class HardwareDisplay : public CharacterDisplay {
 public:
-    HardwareDisplay(int width, int height, AbstractSerial *s) : CharacterDisplay(width, height), serial(s) {};
+    HardwareDisplay(int width, int height, MyPrint *s) : CharacterDisplay(width, height), serial(s) {};
     using CharacterDisplay::setUpperLine;
     using CharacterDisplay::setLowerLine;
 protected:
-    AbstractSerial *serial;
+    MyPrint *serial;
 };
 
 class VFD : public HardwareDisplay
 {
 public:
-    VFD(int width, int height, AbstractSerial *serial) : HardwareDisplay(width, height, serial) {
+    VFD(int width, int height, MyPrint *serial) : HardwareDisplay(width, height, serial) {
         serial->print("\x1B\x40\x0C"); // initialize ( bytes 0,1) and clear (byte 2) display
     };
     size_t print(const char c) { return serial->print(c); };

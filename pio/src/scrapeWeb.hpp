@@ -21,18 +21,10 @@
 //#define min(a,b) ((a)<(b)?(a):(b))
 //#define max(a,b) ((a)>(b)?(a):(b))
 
-//#define DEBUGPRINT
-#ifdef DEBUGPRINT
-#define LOG(x) do{Serial.println(x);}while(0)
-#else
-#define LOG(x)
-#endif
-
 Option<std::string> emptyOption;
 
 std::string makeGetRequest(std::string host, std::string path)
 {
-    LOG("make get request string overload");
     std::string request;
     std::string get = {"GET /"};
     std::string http = {" HTTP/1.1\r\nHost: "};
@@ -47,7 +39,6 @@ std::string makeGetRequest(std::string host, std::string path)
 
 std::string makeGetRequest(const char *host, const char *path)
 {
-    LOG("make get request pointer overload");
     std::string request;
     std::string get = {"GET /"};
     std::string http = {" HTTP/1.1\r\nHost: "};
@@ -60,9 +51,8 @@ std::string makeGetRequest(const char *host, const char *path)
     return request;
 }
 
-WiFiClient* createWificlient(int port, const char *host, const char *path) {
-    LOG("create wifi client");
-    WiFiClient* client;
+Client* createWificlient(int port, const char *host, const char *path) {
+    Client* client;
     if(port == httpsPort) {
         client = new WiFiClientSecure();
     } else if (port == httpPort){
@@ -76,37 +66,26 @@ WiFiClient* createWificlient(int port, const char *host, const char *path) {
         return nullptr; //"client not connected?!?!"
     }
     client->print(makeGetRequest(host, path).c_str());
-    LOG("exit create wifi client");
     return client;
 }
 
 
 Option<std::string> downloadSiteData(int port, const char *host, const char *path) {
-    LOG("download site data");
-    WiFiClient *client = createWificlient(port, host, path);
+    Client *client = createWificlient(port, host, path);
     if(client == nullptr) {
-        LOG("client returned from create wificlient is null");
         return emptyOption;
     }
-    delay(500); // actually helps
+    delay(1000); // actually helps
     std::string data;
-    while(client->available())
-    {
-        LOG("read data from client");
-        data.append(client->readString().c_str());
-        LOG("after read data from client");
-    }
-    LOG("find the left brace");
+    for(int read = 0; (read = client->read()) > -1; data.push_back(static_cast<char>(read)));
+//    for(char c; client->readBytes(&c, 1) > -1; data.push_back(c));
+//    for(uint8_t c; client->read(&c, 1) > -1; data.push_back(c));
     auto i = data.find('{');
     if (i == data.npos) {
-        LOG("didn't find the left brace");
         i = 0;
     }
-    LOG("stop client");
     client->stop();
-    LOG("delete client");
     delete client;
-    LOG("exit download site data");
     return data.substr(i);
 }
 

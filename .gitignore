@@ -7,12 +7,10 @@ cmake-build-debug
 /lib/Arduino/
 /lib/Adafruit_MCP9808_Library-master/
 /lib/ArduinoJson/
-CMakeListsPrivate.txt
 data/
 lib/Time-master.zip
 
 /pio/.idea/
-/test/CMakeListsPrivate.txt
 /pio/lib/readme.txt
 /Arduino/
 /pio/lib/ArduinoJson/

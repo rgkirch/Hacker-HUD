@@ -18,9 +18,9 @@
 #include "grid.hpp"
 #include "wifi.hpp"
 #include "scrapeWeb.hpp"
-#include "mySerial.hpp"
+#include "myConcreteSerial.hpp"
 
-//#define DEBUGPRINT
+#define DEBUGPRINT
 #ifdef DEBUGPRINT
 #define LOG(x) do{Serial.println(x);}while(0)
 #else
@@ -39,7 +39,7 @@ time_t unixTime;
 time_t unixTimeUpdated;
 
 os_timer_t myTimer;
-MySerial serial(D5, D6);
+MyConcretePrint serial(D5, D6);
 VFD myVFD(20, 2, &serial);
 Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
 Option<std::string> emptyStringOption;

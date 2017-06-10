@@ -10,7 +10,7 @@ using ::testing::Return;
 using ::testing::StrEq;
 using ::testing::_;
 
-class MockAbstractSerial : public AbstractSerial {
+class MockAbstractSerial : public MyPrint {
 public:
     MockAbstractSerial(int rx, int tx) {};
     MOCK_METHOD1(print, size_t(const char));
