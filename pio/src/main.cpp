@@ -30,6 +30,13 @@
 #define DELAY 4000
 #define UPDATE_INTERVAL 60000
 
+//#define DEBUGPRINT
+#ifdef DEBUGPRINT
+#define LOG(x) do{Serial.println(x);}while(0)
+#else
+#define LOG(x)
+#endif
+
 extern "C" {
 #include "user_interface.h"
 }
