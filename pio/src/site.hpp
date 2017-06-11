@@ -6,9 +6,6 @@
 #include "site.hpp"
 #include "option.hpp"
 
-const int httpPort = 80;
-const int httpsPort = 443;
-
 struct Site {
     unsigned int updateInterval;
     unsigned int lastUpdated;

@@ -3,7 +3,11 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <WiFiClientSecure.h>
+#include <WiFiClient.h>
 #include "myClient.hpp"
+#include "Client.h"
+#include "globals.hpp"
 
 class MyConcreteClient : public MyClient {
 public:

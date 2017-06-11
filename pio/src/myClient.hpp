@@ -11,9 +11,6 @@ public:
     virtual uint8_t connected() =0;
     virtual int read() =0;
     virtual void stop() =0;
-//    available
-//    readbytes
-//    readString
 };
 
 #endif //PROJECT_WIFICLIENTADAPTER_HPP
