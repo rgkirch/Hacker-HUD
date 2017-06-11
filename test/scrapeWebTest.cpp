@@ -1,3 +1,4 @@
+#include <makeGetRequest.hpp>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
 #include "scrapeWeb.hpp"
@@ -15,9 +16,9 @@ TEST(makeGetRequest, basic) {
     EXPECT_STREQ(str.c_str(), "GET /v1/bpi/currentprice.json HTTP/1.1\r\nHost: api.coindesk.com\r\nConnection: close\r\n\r\n");
 }
 
-TEST(downloadSiteData, basic) {
+TEST(downloadDataa, basic) {
     int port = 80;
     const char *host = "api.coindesk.com";
     const char *path = "v1/bpi/currentprice.json";
-    downloadSiteData(port, host, path);
+//    downloadData(port, host, path);
 }

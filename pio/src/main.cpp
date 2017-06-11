@@ -14,11 +14,10 @@
 #include <NtpClientLib.h>
 
 #include "site.hpp"
-//#include "myConnection.hpp"
-#include "grid.hpp"
 #include "wifi.hpp"
-#include "scrapeWeb.hpp"
+#include "display.h"
 #include "myConcreteSerial.hpp"
+#include "myConcreteConnection.hpp"
 
 #define DEBUGPRINT
 #ifdef DEBUGPRINT
@@ -30,7 +29,7 @@
 #define DELAY 4000
 #define UPDATE_INTERVAL 60000
 
-//#define DEBUGPRINT
+#define DEBUGPRINT
 #ifdef DEBUGPRINT
 #define LOG(x) do{Serial.println(x);}while(0)
 #else
@@ -161,7 +160,9 @@ Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string
 Option<std::string> getSiteData(struct Site site)
 {
     LOG("get site data");
-    Option<std::string> o = downloadSiteData(site.port, site.host, site.path);
+    std::string data = MyConcreteConnection(site.port, site.host, site.path).read();
+    LOG(data.c_str());
+    Option<std::string> o(data);
     DynamicJsonBuffer jsonBuffer(2000);
     std::function<Option<std::string>(std::string)> f([&o, &jsonBuffer, &site](std::string str)->Option<std::string> {
         JsonObject &o = jsonBuffer.parseObject(str.c_str());
@@ -205,7 +206,7 @@ void setup()
 
     os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
     os_timer_arm(&myTimer, 1000, true);
-    grid(myVFD);
+//    grid(myVFD);
 }
 //void p(const char *cs)
 //{

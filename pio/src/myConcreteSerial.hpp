@@ -1,8 +1,7 @@
-#ifndef GTESTPROJ_SERIAL_H
-#define GTESTPROJ_SERIAL_H
+#ifndef MYCONCRETEPRINT_HPP
+#define MYCONCRETEPRINT_HPP
 
 #include <SoftwareSerial.h>
-#include "myAbstractSerial.hpp"
 
 class MyConcretePrint : public MyPrint {
 public:
@@ -14,4 +13,4 @@ protected:
     SoftwareSerial serial;
 };
 
-#endif //GTESTPROJ_SERIAL_H
+#endif //MYCONCRETEPRINT_HPP

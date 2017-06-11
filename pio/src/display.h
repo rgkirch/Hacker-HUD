@@ -1,8 +1,8 @@
-#ifndef GTESTPROJ_VFD_H
-#define GTESTPROJ_VFD_H
+#ifndef DISPLAY_H
+#define DISPLAY_H
 
 #include <string>
-#include "myAbstractSerial.hpp"
+#include "mySerial.hpp"
 
 class CharacterDisplay {
 public:
@@ -85,4 +85,4 @@ public:
 //    void printJustified(std::string str) {};
 };
 
-#endif //GTESTPROJ_VFD_H
+#endif //DISPLAY_H
