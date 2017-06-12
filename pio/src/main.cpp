@@ -160,7 +160,9 @@ Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string
 Option<std::string> getSiteData(struct Site site)
 {
     LOG("get site data");
-    std::string data = MyConcreteConnection(site.port, site.host, site.path).read();
+    MyConcreteClient client(site.port);
+    MyConcreteConnection connection(&client, site.host, site.path);
+    std::string data = connection.read();
     LOG(data.c_str());
     Option<std::string> o(data);
     DynamicJsonBuffer jsonBuffer(2000);

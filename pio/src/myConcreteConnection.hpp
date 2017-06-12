@@ -3,7 +3,6 @@
 
 #include <string>
 #include "myConnection.hpp"
-#include "myConcreteClient.hpp"
 
 std::string makeGetRequest(std::string host, std::string path)
 {
@@ -18,6 +17,11 @@ std::string makeGetRequest(std::string host, std::string path)
     request.append(close);
     return request;
 }
+
+//MyConnection* makeConnection(uint16_t port, const char *host, const char *path) {
+//    MyClient *client = new MyConcreteClient(port);
+//    return static_cast<MyConnection *>(new MyConcreteConnection(client, host, path));
+//}
 
 class MyConcreteConnection : MyConnection {
 public:
@@ -38,17 +42,16 @@ public:
 //        path = std::move(c.path);
 //        return *this;
 //    };
-    MyConcreteConnection(uint16_t port, const char *host, const char *path) :
-        client(new MyConcreteClient(port)),
-        port(port),
-        host(host),
-        path(path) {
-        client->connect(this->host.c_str(), this->port);
-        client->print(makeGetRequest(this->host, this->path).c_str());
+    MyConcreteConnection(MyClient* c, const char *h, const char *p) :
+        client(c),
+        host(h),
+        path(p) {
+//        client->connect(host.c_str(), port);
+        client->print(makeGetRequest(host, path).c_str());
     };
     ~MyConcreteConnection() {
         client->stop();
-        delete client;
+//        delete client;
     };
 //    int write(const char *cs) {
 //        if (not client->connected()) {
