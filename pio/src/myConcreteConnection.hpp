@@ -3,6 +3,7 @@
 
 #include <string>
 #include "myConnection.hpp"
+#include "myClient.hpp"
 
 std::string makeGetRequest(std::string host, std::string path)
 {

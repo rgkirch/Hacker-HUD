@@ -18,6 +18,7 @@
 #include "display.h"
 #include "myConcreteSerial.hpp"
 #include "myConcreteConnection.hpp"
+#include "myConcreteClient.hpp"
 
 #define DEBUGPRINT
 #ifdef DEBUGPRINT
