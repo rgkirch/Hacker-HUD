@@ -24,3 +24,6 @@ pio device monitor -b 115200
 
 ^\s*(virtual)?(( \w+)*\((\w+ \w+(, \w+ \w+)*)?\)).*$
 virtual$2;
+
+text	   data	    bss	    dec	    hex	filename
+286934	  10296	  30352	 327582	  4ff9e	.pioenvs\nodemcuv2\firmware.elf

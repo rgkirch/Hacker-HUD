@@ -5,6 +5,7 @@
 #include "myConnection.hpp"
 #include "myClient.hpp"
 #include "makeGetRequest.hpp"
+#include "globals.hpp"
 
 //std::string makeGetRequest(std::string host, std::string path)
 //{
@@ -45,7 +46,7 @@ public:
 //        return *this;
 //    };
     MyConcreteConnection(MyClient* c, const char *h, const char *p) : client(c), host(h), path(p) {
-        client->connect(port, h);
+//        client->connect(port, h);
 //        unsigned long timeout = 2000;
 //        unsigned long t = millis();
 //        while (not client->connected() and millis() - t > timeout) yield();
@@ -71,7 +72,7 @@ public:
         for(int read = 0; (read = client->read()) > -1; data.push_back(static_cast<char>(read)));
 //    for(char c; client->readBytes(&c, 1) > -1; data.push_back(c));
 //    for(uint8_t c; client->read(&c, 1) > -1; data.push_back(c));
-        LOG(data.c_str());
+//        LOG(data.c_str());
         auto i = data.find('{');
         if (i == data.npos) {
             i = 0;
