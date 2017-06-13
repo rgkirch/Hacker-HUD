@@ -6,7 +6,7 @@
 
 class MyClient {
 public:
-    virtual int connect(const char *host, uint16_t port) =0;
+    virtual int connect(uint16_t port, const char *host) =0;
     virtual size_t print(const char[]) =0;
     virtual uint8_t connected() =0;
     virtual int read() =0;

@@ -4,20 +4,21 @@
 #include <string>
 #include "myConnection.hpp"
 #include "myClient.hpp"
+#include "makeGetRequest.hpp"
 
-std::string makeGetRequest(std::string host, std::string path)
-{
-    std::string request;
-    std::string get = {"GET /"};
-    std::string http = {" HTTP/1.1\r\nHost: "};
-    std::string close = {"\r\nConnection: close\r\n\r\n"};
-    request.append(get);
-    request.append(path);
-    request.append(http);
-    request.append(host);
-    request.append(close);
-    return request;
-}
+//std::string makeGetRequest(std::string host, std::string path)
+//{
+//    std::string request;
+//    std::string get = {"GET /"};
+//    std::string http = {" HTTP/1.1\r\nHost: "};
+//    std::string close = {"\r\nConnection: close\r\n\r\n"};
+//    request.append(get);
+//    request.append(path);
+//    request.append(http);
+//    request.append(host);
+//    request.append(close);
+//    return request;
+//}
 
 //MyConnection* makeConnection(uint16_t port, const char *host, const char *path) {
 //    MyClient *client = new MyConcreteClient(port);
@@ -43,12 +44,12 @@ public:
 //        path = std::move(c.path);
 //        return *this;
 //    };
-    MyConcreteConnection(MyClient* c, const char *h, const char *p) :
-        client(c),
-        host(h),
-        path(p) {
-//        client->connect(host.c_str(), port);
-        client->print(makeGetRequest(host, path).c_str());
+    MyConcreteConnection(MyClient* c, const char *h, const char *p) : client(c), host(h), path(p) {
+        client->connect(port, h);
+//        unsigned long timeout = 2000;
+//        unsigned long t = millis();
+//        while (not client->connected() and millis() - t > timeout) yield();
+        client->print(makeGetRequest(host.c_str(), path.c_str()).c_str());
     };
     ~MyConcreteConnection() {
         client->stop();
@@ -68,6 +69,9 @@ public:
     std::string read() override {
         std::string data;
         for(int read = 0; (read = client->read()) > -1; data.push_back(static_cast<char>(read)));
+//    for(char c; client->readBytes(&c, 1) > -1; data.push_back(c));
+//    for(uint8_t c; client->read(&c, 1) > -1; data.push_back(c));
+        LOG(data.c_str());
         auto i = data.find('{');
         if (i == data.npos) {
             i = 0;

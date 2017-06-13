@@ -1,6 +1,13 @@
 #ifndef GLOBALS_HPP
 #define GLOBALS_HPP
 
+#define DEBUGPRINT
+#ifdef DEBUGPRINT
+#define LOG(x) do{Serial.println(x);}while(0)
+#else
+#define LOG(x)
+#endif
+
 const char ssid[] = "HellSpot Slow";
 const char password[] = "ILikeWiFi";
 const int httpPort = 80;

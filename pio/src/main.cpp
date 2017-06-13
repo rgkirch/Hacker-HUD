@@ -20,13 +20,6 @@
 #include "myConcreteConnection.hpp"
 #include "myConcreteClient.hpp"
 
-#define DEBUGPRINT
-#ifdef DEBUGPRINT
-#define LOG(x) do{Serial.println(x);}while(0)
-#else
-#define LOG(x)
-#endif
-
 #define DELAY 4000
 #define UPDATE_INTERVAL 60000
 
@@ -163,6 +156,7 @@ Option<std::string> getSiteData(struct Site site)
     LOG("get site data");
     MyConcreteClient client(site.port);
     MyConcreteConnection connection(&client, site.host, site.path);
+    delay(1000);
     std::string data = connection.read();
     LOG(data.c_str());
     Option<std::string> o(data);
