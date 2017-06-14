@@ -1,7 +1,6 @@
 cmake_minimum_required(VERSION 3.6)
 project(gtestproj)
 
-
 include_directories("../pio/src")
 include_directories("../pio/lib/ArduinoJson")
 include_directories(".")
@@ -11,7 +10,6 @@ set(CMAKE_VERBOSE_MAKEFILE ON)
 #set(CMAKE_CXX_FLAGS “-std=gnu++11“)
 set(CMAKE_FLAGS “--gmock_verbose=info“)
 set(CMAKE_CXX_STANDARD 11)
-
 
 add_subdirectory(googletest)
 #include(CMakeListsPrivate.txt)
