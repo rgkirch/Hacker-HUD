@@ -46,10 +46,7 @@ public:
 //        return *this;
 //    };
     MyConcreteConnection(MyClient* c, const char *h, const char *p) : client(c), host(h), path(p) {
-//        client->connect(port, h);
-//        unsigned long timeout = 2000;
-//        unsigned long t = millis();
-//        while (not client->connected() and millis() - t > timeout) yield();
+        client->connect(h);
         client->print(makeGetRequest(host.c_str(), path.c_str()).c_str());
     };
     ~MyConcreteConnection() {
