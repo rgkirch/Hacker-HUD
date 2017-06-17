@@ -155,7 +155,7 @@ Option<std::string> getSiteData(struct Site site)
 {
     LOG("get site data");
     MyConcreteClient client(site.port);
-    client.connect(site.port, site.host);
+    client.connect(site.host);
     MyConcreteConnection connection(&client, site.host, site.path);
     delay(1000);
     std::string data = connection.read();
