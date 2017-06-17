@@ -3,6 +3,7 @@
 #include "display.h"
 
 using ::testing::A;
+using ::testing::StrictMock;
 using ::testing::AtLeast;
 using ::testing::Invoke;
 using ::testing::Matcher;
@@ -27,11 +28,12 @@ TESTLOWER(test_case_name, test_case ## Lower, display_width, expected, __VA_ARGS
 
 #define TESTLINE(test_case_name, test_case, display_width, begin, expected, end, function, ...) \
 TEST(test_case_name, test_case) { \
-    MockAbstractSerial serial(1, 2); \
-    VFD vfd(display_width, 2, &serial); \
+    StrictMock<MockAbstractSerial> serial(1, 2); \
+    EXPECT_CALL(serial, print(Matcher<const char*>(StrEq("\x1B\x40\x0C")))).Times(1); \
     EXPECT_CALL(serial, print(Matcher<const char*>(StrEq(begin)))).Times(1); \
     EXPECT_CALL(serial, print(Matcher<const char*>(StrEq(expected)))).Times(1); \
     EXPECT_CALL(serial, print(Matcher<const char*>(StrEq(end)))).Times(1); \
+    VFD vfd(display_width, 2, &serial); \
     vfd.function(__VA_ARGS__); \
 }
 
