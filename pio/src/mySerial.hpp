@@ -1,5 +1,5 @@
-#ifndef MYSERIAL_HPP
-#define MYSERIAL_HPP
+#ifndef MYPRINT_HPP
+#define MYPRINT_HPP
 
 class MyPrint {
 public:
