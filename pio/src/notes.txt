@@ -26,4 +26,19 @@ pio device monitor -b 115200
 virtual$2;
 
 text	   data	    bss	    dec	    hex	filename
-286934	  10296	  30352	 327582	  4ff9e	.pioenvs\nodemcuv2\firmware.elf
+286934	  10296	  30352	 327582	  4ff9e	.pioenvs\nodemcuv2\firmware.elf a1235fcbd0ff627d4ec04a9e89ba91f18c565300
+
+38592                 ESP.getFreeHeap()
+12630021              ESP.getChipId()
+1.5.3(aec24ac9)       ESP.getSdkVersion()
+2_3_0                 ESP.getCoreVersion()
+31                    ESP.getBootVersion()
+1                     ESP.getBootMode()
+80                    ESP.getCpuFreqMHz()
+1458400               ESP.getFlashChipId()
+4194304               ESP.getFlashChipRealSize()
+4194304               ESP.getFlashChipSize()
+40000000              ESP.getFlashChipSpeed()
+2                     ESP.getFlashChipMode()
+4194304               ESP.getFlashChipSizeByChipId()
+

@@ -6,7 +6,6 @@
 #undef max
 #endif
 #include <vector>
-#include <climits>
 #define min(a,b) ((a)<(b)?(a):(b))
 #define max(a,b) ((a)>(b)?(a):(b))
 #include <ArduinoJson.h>
@@ -19,6 +18,7 @@
 #include "myConcreteSerial.hpp"
 #include "myConcreteConnection.hpp"
 #include "myConcreteClient.hpp"
+#include "espInfo.hpp"
 
 #define DELAY 4000
 #define UPDATE_INTERVAL 60000
@@ -156,9 +156,15 @@ Option<std::string> getSiteData(struct Site site)
     LOG("get site data");
     MyConcreteClient client(site.port);
     MyConcreteConnection connection(&client, site.host, site.path);
-    delay(1000);
     LOG("read site data");
     std::string data = connection.read();
+    LOG("search for the left brace");
+    int i = data.find('{');
+    if (i == data.npos) {
+        i = 0;
+    }
+    LOG("take the substring of the string");
+    data = data.substr(i);
     LOG(data.c_str());
     Option<std::string> o(data);
     DynamicJsonBuffer jsonBuffer(2000);

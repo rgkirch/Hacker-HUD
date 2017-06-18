@@ -1,6 +1,9 @@
 #ifndef ESPINFO_HPP
 #define ESPINFO_HPP
 
+#include <HardwareSerial.h>
+#include <Esp.h>
+
 void printEspInfo()
 {
     Serial.println(ESP.getVcc());

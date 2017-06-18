@@ -75,14 +75,7 @@ public:
         for(int read = 0; (read = client->read()) > -1; data.push_back(static_cast<char>(read)));
 //    for(char c; client->readBytes(&c, 1) > -1; data.push_back(c));
 //    for(uint8_t c; client->read(&c, 1) > -1; data.push_back(c));
-//        LOG(data.c_str());
-        LOG("search for the left brace");
-        auto i = data.find('{');
-        if (i == data.npos) {
-            i = 0;
-        }
-        LOG("take the substring of the string");
-        return data.substr(i);
+        return data;
     };
 private:
 //    std::unique_ptr<WiFiClient> client;
