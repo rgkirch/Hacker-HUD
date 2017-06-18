@@ -157,6 +157,7 @@ Option<std::string> getSiteData(struct Site site)
     MyConcreteClient client(site.port);
     MyConcreteConnection connection(&client, site.host, site.path);
     delay(1000);
+    LOG("read site data");
     std::string data = connection.read();
     LOG(data.c_str());
     Option<std::string> o(data);
@@ -172,9 +173,9 @@ Option<std::string> getSiteData(struct Site site)
 }
 void updateSite(struct Site &site)
 {
-    LOG("update site");
     if (site.lastUpdated == 0 or millis() - site.lastUpdated > site.updateInterval)
     {
+        LOG("update site");
         Option<std::string> o = getSiteData(site);
         site.lastResult = o;
         site.lastUpdated = millis();
@@ -221,10 +222,10 @@ void loop()
     myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
     delay(DELAY);
 
-    LOG("coinmargetcap");
-    updateSite(coinMarketCap);
-    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
-    delay(DELAY);
+//    LOG("coinmargetcap");
+//    updateSite(coinMarketCap);
+//    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
+//    delay(DELAY);
 
     LOG("openweathermap");
     updateSite(openWeatherMapTemp);

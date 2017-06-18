@@ -44,7 +44,3 @@ TEST(downloadData, basic) {
     std::string data = connection.read();
     ASSERT_EQ(data, expected);
 }
-
-TEST(sanity, one) {
-    ASSERT_EQ(1,1);
-}

@@ -1,6 +1,8 @@
 #ifndef GLOBALS_HPP
 #define GLOBALS_HPP
 
+#define LOGN(x) do{Serial.print(x);}while(0)
+
 #define DEBUGPRINT
 #ifdef DEBUGPRINT
 #define LOG(x) do{Serial.println(x);}while(0)

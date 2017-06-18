@@ -18,12 +18,41 @@ public:
             client(
                     static_cast<Client*>(port == httpsPort ? new WiFiClientSecure() : new WiFiClient())
             ) {};
-    ~MyConcreteClient() { delete client; };
-    int connect(const char *host) { return client->connect(host, port); };
-    uint8_t connected() { return client->connected(); };
-    size_t print(const char *cs) { return client->print(cs); };
-    int read() { return client->read(); };
-    void stop() { client->stop(); };
+    ~MyConcreteClient() {
+        if(client != nullptr) {
+            LOG("mycc deleting client");
+            delete client;
+        }
+    };
+    int connect(const char *host) {
+        if(client != nullptr) {
+            LOG("mycc connect");
+            return client->connect(host, port);
+        }
+    };
+    uint8_t connected() {
+        if(client != nullptr) {
+            LOG("mycc check that client is connected");
+            return client->connected();
+        }
+    };
+    size_t print(const char *cs) {
+        if(client != nullptr) {
+            LOG("mycc print to client");
+            return client->print(cs);
+        }
+    };
+    int read() {
+        if(client != nullptr) {
+            return client->read();
+        }
+    };
+    void stop() {
+        if(client != nullptr) {
+            LOG("mycc stop client");
+            client->stop();
+        }
+    };
 private:
     uint16_t port;
     Client *client;
