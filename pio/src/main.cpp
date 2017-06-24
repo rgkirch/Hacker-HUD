@@ -33,7 +33,7 @@ using std::next;
 using std::vector;
 using std::function;
 
-//std::string ntpTime;
+//string ntpTime;
 time_t unixTime;
 time_t unixTimeUpdated;
 
@@ -41,7 +41,7 @@ os_timer_t myTimer;
 MyConcretePrint serial(D5, D6);
 VFD myVFD(20, 2, &serial);
 Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
-Option<std::string> emptyStringOption;
+Option<string> emptyStringOption;
 void *memchr(const void *s, int c, size_t n)
 {
     unsigned char *p = (unsigned char*)s;
@@ -135,22 +135,22 @@ struct Site openWeatherMapTemp = {
         emptyStringOption,
         .keys = {"main", "temp"}
 };
-Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string>::iterator begin, const std::vector<std::string>::iterator end)
+Option<string> applyKeys(const JsonObject& o, const vector<string>::iterator begin, const vector<string>::iterator end)
 {
     LOG("apply keys");
-    Option<std::string> emptyOption;
+    Option<string> emptyOption;
     auto it = begin;
-    if (std::next(it) == end)
+    if (next(it) == end)
     {
         const char *r = o[(*it).c_str()].as<const char*>();
         if (r == nullptr) {
             return emptyOption;
-        } else return std::string(r);
+        } else return string(r);
     } else {
-        return applyKeys(o[(*it).c_str()], std::next(begin), end);
+        return applyKeys(o[(*it).c_str()], next(begin), end);
     }
 }
-Option<std::string> getSiteData(struct Site site)
+Option<string> getSiteData(struct Site site)
 {
     HTTPClient http;
     string server;
@@ -172,11 +172,11 @@ Option<std::string> getSiteData(struct Site site)
     LOG("take the substring of the string");
     data = data.substr(i);
     LOG(data.c_str());
-    Option<std::string> o(data);
+    Option<string> o(data);
     DynamicJsonBuffer jsonBuffer(2000);
-    std::function<Option<std::string>(std::string)> f([&o, &jsonBuffer, &site](std::string str)->Option<std::string> {
+    function<Option<string>(std::string)> f([&o, &jsonBuffer, &site](string str)->Option<string> {
         JsonObject &o = jsonBuffer.parseObject(str.c_str());
-        if (not o.success()) return Option<std::string>();
+        if (not o.success()) return Option<string>();
         return applyKeys(o, site.keys.begin(), site.keys.end());
     } );
     LOG("json shit");
@@ -188,7 +188,7 @@ void updateSite(struct Site &site)
     if (site.lastUpdated == 0 or millis() - site.lastUpdated > site.updateInterval)
     {
         LOG("update site");
-        Option<std::string> o = getSiteData(site);
+        Option<string> o = getSiteData(site);
         site.lastResult = o;
         site.lastUpdated = millis();
     }

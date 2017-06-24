@@ -5,14 +5,16 @@
 #include "site.hpp"
 #include "option.hpp"
 
+using std::string;
+
 struct Site {
     unsigned int updateInterval;
     unsigned int lastUpdated;
     uint16_t port;
     const char* host;
     const char* path;
-    Option<std::string> lastResult;
-    std::vector<std::string> keys;
+    Option<string> lastResult;
+    std::vector<string> keys;
 };
 
 #endif

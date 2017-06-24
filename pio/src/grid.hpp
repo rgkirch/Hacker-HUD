@@ -7,6 +7,8 @@
 #include <Arduino.h>
 #include "display.h"
 
+using string;
+
 char toByte(int number) {
     return (number / 1000000 % 2 << 6) + (number / 100000 % 2 << 5) + (number / 10000 % 2 << 4) + (number / 1000 % 2 << 3) + (number / 100 % 2 << 2) + (number / 10 % 2 << 1) + (number % 2);
 }
@@ -28,8 +30,8 @@ public:
         }
         return *this;
     };
-    operator std::string() {
-        return std::string(x);
+    operator string() {
+        return string(x);
     };
     Char& operator&=(const Char &c) {
         for (int i = 0; i < 5; ++i) {
@@ -96,8 +98,8 @@ public:
 //    void setOff(int x, int y) {
 //        data[(y * width + x) / 8] &= ~(1 << (8 - ((y * width + x) % 8)));
 //    };
-    std::string toString() {
-        std::string str;
+    string toString() {
+        string str;
         for (int y = 0; y < 14; y++) {
             for (int x = 0; x < 20 * 5; x++) {
                 if ((data[x * 2 + y / 8] & (1 << (7 - (y % 8)))) != 0) {
@@ -180,7 +182,7 @@ void messItUp(VFD myVFD) {
 }
 //void loop()
 //{
-////    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(std::string)> {[](std::string str)->void { myVFD.print(str); }});
+////    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(string)> {[](string str)->void { myVFD.print(str); }});
 //    if(WiFi.status() != WL_CONNECTED) connectToWifi();
 //    unixTime = NTP.getTime();
 //    unixTimeUpdated = millis();

@@ -7,12 +7,14 @@
 #include "makeGetRequest.hpp"
 #include "globals.hpp"
 
-//std::string makeGetRequest(std::string host, std::string path)
+using std::string;
+
+//string makeGetRequest(string host, string path)
 //{
-//    std::string request;
-//    std::string get = {"GET /"};
-//    std::string http = {" HTTP/1.1\r\nHost: "};
-//    std::string close = {"\r\nConnection: close\r\n\r\n"};
+//    string request;
+//    string get = {"GET /"};
+//    string http = {" HTTP/1.1\r\nHost: "};
+//    string close = {"\r\nConnection: close\r\n\r\n"};
 //    request.append(get);
 //    request.append(path);
 //    request.append(http);
@@ -69,9 +71,9 @@ public:
 //    };
 //    uint8_t connected() { return client->connected(); };
     size_t print(const char *cs) override { return client->print(cs); };
-    std::string read() override {
+    string read() override {
         LOG("read from the client a bunch of times");
-        std::string data;
+        string data;
         for(int read = 0; (read = client->read()) > -1; data.push_back(static_cast<char>(read)));
 //    for(char c; client->readBytes(&c, 1) > -1; data.push_back(c));
 //    for(uint8_t c; client->read(&c, 1) > -1; data.push_back(c));
@@ -81,8 +83,8 @@ private:
 //    std::unique_ptr<WiFiClient> client;
     MyClient *client;
     uint16_t port;
-    std::string host;
-    std::string path;
+    string host;
+    string path;
 };
 
 ////static auto makePartialClient(uint16_t port, const char *host) {

@@ -13,6 +13,8 @@ using ::testing::Return;
 using ::testing::StrEq;
 using ::testing::_;
 
+using std::string;
+
 class MockMyClient: public MyClient {
 public:
     MockMyClient(uint16_t port) {};
@@ -28,9 +30,9 @@ TEST(downloadData, basic) {
     const char *host {"api.coindesk.com"};
     const char *path {"v1/bpi/currentprice.json"};
     StrictMock<MockMyClient> client(port); // connection happens through client
-    std::string request = makeGetRequest(host, path); // the text that connection will print to client
-    std::string json {"one two three {four five six}"};
-    std::string expected {"{four five six}"};
+    string request = makeGetRequest(host, path); // the text that connection will print to client
+    string json {"one two three {four five six}"};
+    string expected {"{four five six}"};
     ON_CALL(client, read()).WillByDefault(InvokeWithoutArgs([&json]()->int { // when the connection calls the clients read, it should
         static auto it = json.begin();
         if(it == json.end()) return -1;
@@ -41,6 +43,6 @@ TEST(downloadData, basic) {
     EXPECT_CALL(client, read()).Times(static_cast<int>(json.size()+1));
     EXPECT_CALL(client, stop()).Times(1);
     MyConcreteConnection connection(&client, host, path); // connection prints text to client and reads from client
-    std::string data = connection.read();
+    string data = connection.read();
     ASSERT_EQ(data, expected);
 }

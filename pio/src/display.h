@@ -4,15 +4,17 @@
 #include <string>
 #include "mySerial.hpp"
 
+using std::string;
+
 class CharacterDisplay {
 public:
     CharacterDisplay(int width, int height) : width(width), height(height) {};
-    virtual void setUpperLine(std::string str) =0;
-    virtual void setLowerLine(std::string str) =0;
-    void setUpperLine(std::string left, std::string right) {
+    virtual void setUpperLine(string str) =0;
+    virtual void setLowerLine(string str) =0;
+    void setUpperLine(string left, string right) {
         this->setUpperLine(blockFormat(left, right));
     };
-    void setLowerLine(std::string left, std::string right) {
+    void setLowerLine(string left, string right) {
         this->setLowerLine(blockFormat(left, right));
     };
     const int getWidth() const { return width; }
@@ -20,7 +22,7 @@ public:
 private:
     const int width;
     const int height;
-    std::string blockFormat(std::string left, std::string right) {
+    string blockFormat(string left, string right) {
         const int leftLength = static_cast<int>(left.length());
         const int rightLength = static_cast<int>(right.length());
         const int padding = width - left.length() - right.length();
@@ -53,7 +55,7 @@ public:
     };
     size_t print(const char c) { return serial->print(c); };
     size_t print(const char* cs) { return serial->print(cs); };
-//    void println(std::string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
+//    void println(string str) { this->print(str); this->write("\x1B\x6C\x01\x02"); };
     void overwriteMode()          { serial->print("\x1B\x11"); };
     void virticalScrollMode()     { serial->print("\x1B\x12"); };
     void horizontalScrollMode()   { serial->print("\x1B\x13"); };
@@ -68,13 +70,13 @@ public:
     void lineFeed()               { serial->print("\x0A"); };
     void carriageReturn()         { serial->print("\x0D"); };
     void home()                   { serial->print("\x0B"); };
-    void setUpperLine(std::string str) {
+    void setUpperLine(string str) {
         serial->print("\x1B\x51\x41");
         str.resize(getWidth(), ' ');
         serial->print(str.c_str());
         serial->print("\x0D");
     };
-    void setLowerLine(std::string str) {
+    void setLowerLine(string str) {
         serial->print("\x1B\x51\x42");
         str.resize(getWidth(), ' ');
         serial->print(str.c_str());
@@ -82,7 +84,7 @@ public:
     };
     using CharacterDisplay::setUpperLine;
     using CharacterDisplay::setLowerLine;
-//    void printJustified(std::string str) {};
+//    void printJustified(string str) {};
 };
 
 #endif //DISPLAY_H

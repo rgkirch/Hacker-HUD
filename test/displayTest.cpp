@@ -11,6 +11,8 @@ using ::testing::Return;
 using ::testing::StrEq;
 using ::testing::_;
 
+using std::string;
+
 class MockAbstractSerial : public MyPrint {
 public:
     MockAbstractSerial(int rx, int tx) {};
