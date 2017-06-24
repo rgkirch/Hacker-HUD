@@ -99,41 +99,41 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 //    float temp = analogRead(A0);
 //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
-struct Site coindesk {
-        .updateInterval = UPDATE_INTERVAL,
-        .lastUpdated = 0,
-        .port = httpPort,
-        .host = "api.coindesk.com",
-        .path = "/v1/bpi/currentprice.json",
+struct Site coindesk (
+        UPDATE_INTERVAL,
+        0,
+        httpPort,
+        "api.coindesk.com",
+        "/v1/bpi/currentprice.json",
         emptyStringOption,
-        .keys = {"bpi", "USD", "rate_float"}
-};
+        {"bpi", "USD", "rate_float"}
+);
 struct Site coinMarketCap = {
-        .updateInterval = UPDATE_INTERVAL,
-        .lastUpdated = 0,
-        .port = httpsPort,
-        .host = "coinmarketcap-nexuist.rhcloud.com",
-        .path = "/api/eth",
+        UPDATE_INTERVAL,
+        0,
+        httpsPort,
+        "coinmarketcap-nexuist.rhcloud.com",
+        "/api/eth",
         emptyStringOption,
-        .keys = {"price", "usd"}
+        {"price", "usd"}
 };
 struct Site openWeatherMapHumidity = {
-        .updateInterval = UPDATE_INTERVAL,
-        .lastUpdated = 0,
-        .port = httpPort,
-        .host = "api.openweathermap.org",
-        .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
+        UPDATE_INTERVAL,
+        0,
+        httpPort,
+        "api.openweathermap.org",
+        "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
         emptyStringOption,
-        .keys = {"main", "humidity"}
+        {"main", "humidity"}
 };
 struct Site openWeatherMapTemp = {
-        .updateInterval = UPDATE_INTERVAL,
-        .lastUpdated = 0,
-        .port = httpPort,
-        .host = "api.openweathermap.org",
-        .path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
+        UPDATE_INTERVAL,
+        0,
+        httpPort,
+        "api.openweathermap.org",
+        "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
         emptyStringOption,
-        .keys = {"main", "temp"}
+        {"main", "temp"}
 };
 Option<string> applyKeys(const JsonObject& o, const vector<string>::iterator begin, const vector<string>::iterator end)
 {
