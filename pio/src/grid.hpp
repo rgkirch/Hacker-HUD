@@ -181,7 +181,6 @@ private:
 
 char first = '\x21';
 char last = first + 39;
-char counter = 0;
 
 void deleteAll(VFD myVFD) {
     for (char a = '\x21'; a <= '\x21' + 39; a++) {
@@ -197,32 +196,20 @@ void deleteAll(VFD myVFD) {
 //    deleteAll(myVFD);
 //}
 
-void messItUp(VFD myVFD) {
-//    memset(grid.data, '\x88', 2 * 5 * 20);
-//    grid.dump([](char x){myVFD.print(x);});
-//    os_timer_arm(&myTimer, 1000, true);
-    myVFD.print("\x1B\x25\x01");
-    myVFD.print("\x1B\x26\x01");
-    myVFD.print(first);
-    myVFD.print(last);
+void messItUp(function<void(char)> f) {
+    char buffer[5] {1, 3, 7, 15, 31};
+    char counter = 0;
+    for ( auto c : "\x1B\x25\x01" "\x1B\x26\x01") f(c);
+    f(first);
+    f(last);
     for (char a = first; a <= last; a++) {
-        myVFD.print('\x05');
-//        myVFD.print("\x63\x33\x15\x06\x03");
+        f('\x05');
+//        f("\x63\x33\x15\x06\x03");
         for (int i = 0; i < 5; i++) {
-            myVFD.print(counter++);
+            f(buffer[counter % 5]);
         }
+        counter++;
     }
-
-    myVFD.home();
-    for (char c = '\x21'; c < '\x21' + 40; c++) {
-        myVFD.print(c);
-    }
-//    Serial.println(grid.toString().c_str());
-//    for (char a = first; a < last; a++) {
-//        myVFD.print(a);
-//        delay(200);
-//    }
-    delay(1000);
 }
 //void loop()
 //{

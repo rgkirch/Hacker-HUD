@@ -196,9 +196,10 @@ BarGraph grid(20, 2);
 void setup()
 {
     Serial.begin(115200);
+    deleteAll(myVFD);
     myVFD.clear();
     myVFD.home();
-    messItUp(myVFD);
+    messItUp([](char c) { myVFD.print(c); });
 }
 //void p(const char *cs)
 //{
@@ -207,7 +208,9 @@ void setup()
 void loop()
 {
     myVFD.home();
-    grid.print([](char c){ myVFD.print(c); });
+    for (char c = '\x21'; c < '\x21' + 40; c++) {
+        myVFD.print(c);
+    }
     delay(500);
 
     yield();
