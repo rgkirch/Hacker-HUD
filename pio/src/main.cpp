@@ -19,7 +19,6 @@
 #include "myConcreteSerial.hpp"
 
 #define DELAY 4000
-#define UPDATE_INTERVAL 60000
 
 #define DEBUGPRINT
 #ifdef DEBUGPRINT
@@ -41,7 +40,6 @@ os_timer_t myTimer;
 MyConcretePrint serial(D5, D6);
 VFD myVFD(20, 2, &serial);
 Adafruit_MCP9808 tempsensor;// = Adafruit_MCP9808(); //for MCP9808
-Option<string> emptyStringOption;
 void *memchr(const void *s, int c, size_t n)
 {
     unsigned char *p = (unsigned char*)s;
@@ -100,39 +98,27 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
 struct Site coindesk (
-        UPDATE_INTERVAL,
-        0,
         httpPort,
         "api.coindesk.com",
         "/v1/bpi/currentprice.json",
-        emptyStringOption,
         {"bpi", "USD", "rate_float"}
 );
 struct Site coinMarketCap = {
-        UPDATE_INTERVAL,
-        0,
         httpsPort,
         "coinmarketcap-nexuist.rhcloud.com",
         "/api/eth",
-        emptyStringOption,
         {"price", "usd"}
 };
 struct Site openWeatherMapHumidity = {
-        UPDATE_INTERVAL,
-        0,
         httpPort,
         "api.openweathermap.org",
         "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-        emptyStringOption,
         {"main", "humidity"}
 };
 struct Site openWeatherMapTemp = {
-        UPDATE_INTERVAL,
-        0,
         httpPort,
         "api.openweathermap.org",
         "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-        emptyStringOption,
         {"main", "temp"}
 };
 Option<string> applyKeys(const JsonObject& o, const vector<string>::iterator begin, const vector<string>::iterator end)

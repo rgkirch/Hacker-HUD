@@ -5,7 +5,11 @@
 #include "site.hpp"
 #include "option.hpp"
 
+#define UPDATE_INTERVAL 60000
+
 using std::string;
+
+Option<string> emptyStringOption;
 
 struct Site {
 public:
@@ -17,6 +21,16 @@ public:
             path(path),
             lastResult(lastResult),
             keys(keys) {}
+
+    Site(uint16_t port, const char *host, const char *path, const vector<string> &keys) :
+            updateInterval(UPDATE_INTERVAL),
+            lastUpdated(0),
+            port(port),
+            host(host),
+            path(path),
+            lastResult(emptyStringOption),
+            keys(keys) {}
+
     unsigned int updateInterval;
     unsigned int lastUpdated;
     uint16_t port;

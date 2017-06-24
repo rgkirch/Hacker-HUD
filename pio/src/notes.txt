@@ -25,9 +25,9 @@ pio device monitor -b 115200
 ^\s*(virtual)?(( \w+)*\((\w+ \w+(, \w+ \w+)*)?\)).*$
 virtual$2;
 
-text	   data	    bss	    dec	    hex	filename
-286934	  10296	  30352	 327582	  4ff9e	.pioenvs\nodemcuv2\firmware.elf a1235fcbd0ff627d4ec04a9e89ba91f18c565300
-248160	   4784	  30448	 283392	  45300	.pioenvs\nodemcuv2\firmware.elf using site constructor
+text	   data	    bss	    dec	    hex
+248160	   4784	  30448	 283392	  45300    using site constructor
+248080	   4784	  30448	 283312	  452b0    put some defaults in site constructor
 
 38592                 ESP.getFreeHeap()
 12630021              ESP.getChipId()
