@@ -17,6 +17,7 @@
 #include "wifi.hpp"
 #include "display.h"
 #include "myConcreteSerial.hpp"
+#include "grid.hpp"
 
 #define DELAY 4000
 
@@ -191,18 +192,26 @@ void timerCallback(void *pArg) {
 //    myVFD.setLowerLine(unixBuffer);
 }
 
+BarGraph grid(20, 2);
 void setup()
 {
     Serial.begin(115200);
-//    myVFD = VFD::Builder().setRx(D5).setTx(D6).setDisplayWidth(20).setDisplayHeight(2).build();
-    ntpSetup();
-//    initializeTemp(tempsensor);
     myVFD.clear();
     myVFD.home();
+    vector<int> vec {
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31,
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31,
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31,
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31,
 
-    os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
-    os_timer_arm(&myTimer, 1000, true);
-//    grid(myVFD);
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31,
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31,
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31,
+            1,1,1,1,1, 3,3,3,3,3, 7,7,7,7,7, 15,15,15,15,15, 31,31,31,31,31
+    };
+    auto chars = grid.toChars(vec);
+    auto msg = grid.set(chars, [](char c){ myVFD.print(c); });
+    Serial.println(msg.c_str());
 }
 //void p(const char *cs)
 //{
@@ -210,36 +219,9 @@ void setup()
 //}
 void loop()
 {
-    if(WiFi.status() != WL_CONNECTED) connectToWifi();
-    LOG("loop begin");
-    unixTime = NTP.getTime();
-    unixTimeUpdated = millis();
-
-    LOG("coindesk");
-    updateSite(coindesk);
-    myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
-    delay(DELAY);
-
-    LOG("coinmarketcap");
-    updateSite(coinMarketCap);
-    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
-    delay(DELAY);
-
-    LOG("openweathermap");
-    updateSite(openWeatherMapTemp);
-    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
-    delay(DELAY);
-
-    LOG("openweathermaphumidity");
-    updateSite(openWeatherMapHumidity);
-    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
-    delay(DELAY);
-
-//    myVFD.clear();
-//    myVFD.home();
-//    myVFD.print("sensor temp "); //(char)223)
-//    myVFD.println(readTemp(tempsensor));
-//    myVFD.print("time "); //(char)223)
+    myVFD.home();
+    grid.print([](char c){ myVFD.print(c); });
+    delay(500);
 
     yield();
 }

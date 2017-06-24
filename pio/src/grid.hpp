@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 #include <functional>
 #include <string.h>
 #include <HardwareSerial.h>
@@ -7,7 +8,11 @@
 #include <Arduino.h>
 #include "display.h"
 
-using string;
+using std::string;
+using std::vector;
+using std::function;
+using std::begin;
+using std::end;
 
 char toByte(int number) {
     return (number / 1000000 % 2 << 6) + (number / 100000 % 2 << 5) + (number / 10000 % 2 << 4) + (number / 1000 % 2 << 3) + (number / 100 % 2 << 2) + (number / 10 % 2 << 1) + (number % 2);
@@ -135,6 +140,45 @@ public:
     char data[2 * 5 * 20] {0};
 };
 
+class BarGraph {
+public:
+    BarGraph(int width, int height) : width(20 * 5), height(7*2 + 1) {}
+    // takes a bunch of ints all in the range of [0,7) and builds the character set
+    void print(function<void(char)> f) {
+        for (char c = '\x21'; c < '\x21' + 40; c++) {
+            f(c);
+        }
+    }
+    string set(vector<char> cols, function<void(char)> f) {
+        if(cols.size() != 40 * 5) return "length of cols is wrong";
+        if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
+        if(cols.size() - 1 + '\x21' > '\xFF') return "length of cols is wrong";
+        for(char c : "\x1B\x25\x01" "\x1B\x26\x01") {
+            f(c);
+        }
+        f('\x21');
+        f('\x21' + (cols.size() - 1));
+        for (auto x = begin(cols); x < end(cols); x += 5) {
+            f('\x05');
+            for (auto y = x; y < x + 5; y++) {
+                f(*x);
+            }
+        }
+        return "success";
+    }
+    vector<char> toChars(const vector<int> vec) {
+        vector<char> bitPatterns;
+        for (int col : vec) {
+            bitPatterns.emplace_back(col);
+        }
+        return bitPatterns;
+    };
+private:
+    int width;
+    int height;
+
+};
+
 char first = '\x21';
 char last = first + 39;
 char counter = 0;
@@ -147,11 +191,11 @@ void deleteAll(VFD myVFD) {
     delay(1000);
 }
 
-void grid(VFD myVFD) {
-//    myVFD.print("\x1B\x40");
-//    myVFD.print("\x1B\x52\x00");
-    deleteAll(myVFD);
-}
+//void grid(VFD myVFD) {
+////    myVFD.print("\x1B\x40");
+////    myVFD.print("\x1B\x52\x00");
+//    deleteAll(myVFD);
+//}
 
 void messItUp(VFD myVFD) {
 //    memset(grid.data, '\x88', 2 * 5 * 20);
