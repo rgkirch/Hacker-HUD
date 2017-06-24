@@ -97,25 +97,25 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 //    float temp = analogRead(A0);
 //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
-struct Site coindesk (
+struct Site coindesk {
         httpPort,
         "api.coindesk.com",
         "/v1/bpi/currentprice.json",
         {"bpi", "USD", "rate_float"}
-);
-struct Site coinMarketCap = {
+};
+struct Site coinMarketCap {
         httpsPort,
         "coinmarketcap-nexuist.rhcloud.com",
         "/api/eth",
         {"price", "usd"}
 };
-struct Site openWeatherMapHumidity = {
+struct Site openWeatherMapHumidity {
         httpPort,
         "api.openweathermap.org",
         "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
         {"main", "humidity"}
 };
-struct Site openWeatherMapTemp = {
+struct Site openWeatherMapTemp {
         httpPort,
         "api.openweathermap.org",
         "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
