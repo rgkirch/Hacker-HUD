@@ -5,7 +5,6 @@
 #include "myConnection.hpp"
 #include "myClient.hpp"
 #include "makeGetRequest.hpp"
-#include "globals.hpp"
 
 using std::string;
 
@@ -48,15 +47,15 @@ public:
 //        return *this;
 //    };
     MyConcreteConnection(MyClient* c, const char *h, const char *p) : client(c), host(h), path(p) {
-        LOG("connection constructor");
+//        LOG("connection constructor");
         int i = client->connect(h);
-        LOGN("client -> connect returned ");
-        LOG(i);
-        LOG("print the get request");
+//        LOGN("client -> connect returned ");
+//        LOG(i);
+//        LOG("print the get request");
         client->print(makeGetRequest(host.c_str(), path.c_str()).c_str());
     };
     ~MyConcreteConnection() {
-        LOG("stop the client in the destructor");
+//        LOG("stop the client in the destructor");
         client->stop();
 //        delete client;
     };
@@ -72,7 +71,7 @@ public:
 //    uint8_t connected() { return client->connected(); };
     size_t print(const char *cs) override { return client->print(cs); };
     string read() override {
-        LOG("read from the client a bunch of times");
+//        LOG("read from the client a bunch of times");
         string data;
         for(int read = 0; (read = client->read()) > -1; data.push_back(static_cast<char>(read)));
 //    for(char c; client->readBytes(&c, 1) > -1; data.push_back(c));

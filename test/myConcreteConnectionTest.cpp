@@ -44,5 +44,6 @@ TEST(downloadData, basic) {
     EXPECT_CALL(client, stop()).Times(1);
     MyConcreteConnection connection(&client, host, path); // connection prints text to client and reads from client
     string data = connection.read();
-    ASSERT_EQ(data, expected);
+//    ASSERT_EQ(data, expected); // not parseing right now. using httpclient
+    ASSERT_EQ(data, json);
 }
