@@ -11,14 +11,12 @@
 #include <ArduinoJson.h>
 #include <Adafruit_MCP9808.h>
 #include <NtpClientLib.h>
+#include <ESP8266HTTPClient.h>
 
 #include "site.hpp"
 #include "wifi.hpp"
 #include "display.h"
 #include "myConcreteSerial.hpp"
-#include "myConcreteConnection.hpp"
-#include "myConcreteClient.hpp"
-#include "espInfo.hpp"
 
 #define DELAY 4000
 #define UPDATE_INTERVAL 60000
@@ -30,9 +28,10 @@
 #define LOG(x)
 #endif
 
-extern "C" {
-#include "user_interface.h"
-}
+using std::string;
+using std::next;
+using std::vector;
+using std::function;
 
 //std::string ntpTime;
 time_t unixTime;
@@ -105,7 +104,7 @@ struct Site coindesk {
         .lastUpdated = 0,
         .port = httpPort,
         .host = "api.coindesk.com",
-        .path = "v1/bpi/currentprice.json",
+        .path = "/v1/bpi/currentprice.json",
         emptyStringOption,
         .keys = {"bpi", "USD", "rate_float"}
 };
@@ -153,11 +152,18 @@ Option<std::string> applyKeys(const JsonObject& o, const std::vector<std::string
 }
 Option<std::string> getSiteData(struct Site site)
 {
-    LOG("get site data");
-    MyConcreteClient client(site.port);
-    MyConcreteConnection connection(&client, site.host, site.path);
-    LOG("read site data");
-    std::string data = connection.read();
+    HTTPClient http;
+    string server;
+    site.port == httpsPort ? server.append("https://") : server.append("http://");
+    server.append(site.host).append(site.path);
+    http.begin(server.c_str());
+    int httpCode = http.GET();
+    LOGN(httpCode);
+    LOG(HTTP_CODE_OK);
+    string data = http.getString().c_str();
+    http.end();
+    LOGN("data ");
+    LOG(data.c_str());
     LOG("search for the left brace");
     int i = data.find('{');
     if (i == data.npos) {
@@ -228,10 +234,10 @@ void loop()
     myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
     delay(DELAY);
 
-//    LOG("coinmargetcap");
-//    updateSite(coinMarketCap);
-//    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
-//    delay(DELAY);
+    LOG("coinmarketcap");
+    updateSite(coinMarketCap);
+    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
+    delay(DELAY);
 
     LOG("openweathermap");
     updateSite(openWeatherMapTemp);
