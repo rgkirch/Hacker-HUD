@@ -199,7 +199,7 @@ void setup()
     deleteAll(myVFD);
     myVFD.clear();
     myVFD.home();
-    messItUp([](char c) { myVFD.print(c); });
+    messItUp(myVFD);
 }
 //void p(const char *cs)
 //{

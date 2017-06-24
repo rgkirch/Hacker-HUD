@@ -181,6 +181,7 @@ private:
 
 char first = '\x21';
 char last = first + 39;
+char counter = 0;
 
 void deleteAll(VFD myVFD) {
     for (char a = '\x21'; a <= '\x21' + 39; a++) {
@@ -196,20 +197,18 @@ void deleteAll(VFD myVFD) {
 //    deleteAll(myVFD);
 //}
 
-void messItUp(function<void(char)> f) {
-    char buffer[5] {1, 3, 7, 15, 31};
-    char counter = 0;
-    for ( auto c : "\x1B\x25\x01" "\x1B\x26\x01") f(c);
-    f(first);
-    f(last);
+void messItUp(VFD myVFD) {
+    myVFD.print("\x1B\x25\x01");
+    myVFD.print("\x1B\x26\x01");
+    myVFD.print(first);
+    myVFD.print(last);
     for (char a = first; a <= last; a++) {
-        f('\x05');
-//        f("\x63\x33\x15\x06\x03");
+        myVFD.print('\x05');
         for (int i = 0; i < 5; i++) {
-            f(buffer[counter % 5]);
+            myVFD.print(counter++);
         }
-        counter++;
     }
+
 }
 //void loop()
 //{
