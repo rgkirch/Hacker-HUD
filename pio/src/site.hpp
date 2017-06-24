@@ -11,7 +11,7 @@ using std::string;
 
 Option<string> emptyStringOption;
 
-struct Site {
+class Site {
 public:
     Site(unsigned int updateInterval, unsigned int lastUpdated, uint16_t port, const char *host, const char *path, const Option<string> &lastResult, const vector<string> &keys) :
             updateInterval(updateInterval),
