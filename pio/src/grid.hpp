@@ -2,10 +2,6 @@
 #include <vector>
 #include <functional>
 #include <string.h>
-#include <HardwareSerial.h>
-#include <pins_arduino.h>
-#include <os_type.h>
-#include <Arduino.h>
 #include "display.h"
 
 using std::string;
@@ -153,9 +149,8 @@ public:
         if(cols.size() != 40 * 5) return "length of cols is wrong";
         if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
         if(cols.size() - 1 + '\x21' > '\xFF') return "length of cols is wrong";
-        for(char c : "\x1B\x25\x01" "\x1B\x26\x01") {
-            f(c);
-        }
+        vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
+        for ( auto c : cs ) f(c);
         f('\x21');
         f('\x21' + (cols.size() - 1));
         for (auto x = begin(cols); x < end(cols); x += 5) {
@@ -181,14 +176,13 @@ private:
 
 char first = '\x21';
 char last = first + 39;
-char counter = 0;
 
 void deleteAll(VFD myVFD) {
     for (char a = '\x21'; a <= '\x21' + 39; a++) {
         myVFD.print("\x1B\x3F");
         myVFD.print(a);
     }
-    delay(1000);
+//    delay(1000);
 }
 
 //void grid(VFD myVFD) {
@@ -197,19 +191,20 @@ void deleteAll(VFD myVFD) {
 //    deleteAll(myVFD);
 //}
 
-void messItUp(VFD myVFD) {
-    myVFD.print("\x1B\x25\x01");
-    myVFD.print("\x1B\x26\x01");
-    myVFD.print(first);
-    myVFD.print(last);
+void messItUp(function<void(char)> f) {
+    char counter = 0;
+    vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
+    for ( auto c : cs ) f(c);
+    f(first);
+    f(last);
     for (char a = first; a <= last; a++) {
-        myVFD.print('\x05');
+        f('\x05');
         for (int i = 0; i < 5; i++) {
-            myVFD.print(counter++);
+            f(counter++);
         }
     }
-
 }
+
 //void loop()
 //{
 ////    if(WiFi.status() != WL_CONNECTED) connectToWifi(std::function<void(string)> {[](string str)->void { myVFD.print(str); }});
