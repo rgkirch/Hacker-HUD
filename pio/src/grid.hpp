@@ -145,6 +145,7 @@ public:
             f(c);
         }
     }
+
     string set(vector<char> cols, function<void(char)> f) {
         if(cols.size() != 40 * 5) return "length of cols is wrong";
         if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
@@ -152,15 +153,16 @@ public:
         vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
         for ( auto c : cs ) f(c);
         f('\x21');
-        f('\x21' + (cols.size() - 1));
+        f('\x21' + (40 - 1));
         for (auto x = begin(cols); x < end(cols); x += 5) {
             f('\x05');
             for (auto y = x; y < x + 5; y++) {
-                f(*x);
+                f(*y);
             }
         }
         return "success";
     }
+
     vector<char> toChars(const vector<int> vec) {
         vector<char> bitPatterns;
         for (int col : vec) {
