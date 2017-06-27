@@ -181,21 +181,30 @@ public:
         vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
         for ( auto c : cs ) f(c);
         f('\x21');
-        f('\x21' + (40 - 1));
+        f('\x21' + (40 - 1)); // todo - don't hard code 40, take number of rows into account
+        vector<char> later{};
         for (auto x = begin(cols); x < end(cols); x += 5) {
             f('\x05');
             for (auto y = x; y < x + 5; y++) {
-                auto yMinusEight = *y - 8;
-                auto umm = yMinusEight > 0 ? yMinusEight : 0;
-                f(static_cast<char>(pow(2, umm) - 1));
+                switch(*y / 7) {
+                    case 2:
+                        f(static_cast<char>(pow(2, 7) - 1));
+                        break;
+                    case 1:
+                        f(static_cast<char>(pow(2, *y % 7) - 1));
+                        break;
+                    case 0:
+                        later.push_back(static_cast<char>(pow(2, *y % 7) - 1));
+                        break;
+                    default:
+                        break;
+                }
             }
         }
-        for (auto x = begin(cols); x < end(cols); x += 5) {
+        for (auto x = begin(later); x < end(later); x += 5) {
             f('\x05');
             for (auto y = x; y < x + 5; y++) {
-                auto umm = *y > 0 ? *y : 0;
-                umm = umm <= 7 ? umm : 7;
-                f(static_cast<char>(pow(2, umm) - 1));
+                f(*y);
             }
         }
         return "success";
