@@ -182,11 +182,11 @@ public:
         for ( auto c : cs ) f(c);
         f('\x21');
         f('\x21' + (40 - 1)); // todo - don't hard code 40, take number of rows into account
-        vector<char> later{};
         for (auto x = begin(cols); x < end(cols); x += 5) {
             f('\x05');
             for (auto y = x; y < x + 5; y++) {
-                switch(*y / 7) {
+                int n = *y / 7;
+                switch(n) {
                     case 2:
                         f(static_cast<char>(pow(2, 7) - 1));
                         break;
@@ -194,17 +194,30 @@ public:
                         f(static_cast<char>(pow(2, *y % 7) - 1));
                         break;
                     case 0:
-                        later.push_back(static_cast<char>(pow(2, *y % 7) - 1));
+                        f(static_cast<char>(0));
                         break;
                     default:
                         break;
                 }
             }
         }
-        for (auto x = begin(later); x < end(later); x += 5) {
+        for (auto x = begin(cols); x < end(cols); x += 5) {
             f('\x05');
             for (auto y = x; y < x + 5; y++) {
-                f(*y);
+                int n = *y / 7;
+                switch(n) {
+                    case 2:
+                        f(static_cast<char>(pow(2, 7) - 1));
+                        break;
+                    case 1:
+                        f(static_cast<char>(pow(2, 7) - 1));
+                        break;
+                    case 0:
+                        f(static_cast<char>(pow(2, *y) - 1));
+                        break;
+                    default:
+                        break;
+                }
             }
         }
         return "success";
