@@ -4,6 +4,7 @@
 #include <string.h>
 #include "display.h"
 #include "transform.hpp"
+#include "myAlgorithm.hpp"
 
 using std::string;
 using std::vector;
@@ -27,7 +28,7 @@ vector<string> parseThatJson(string json) {
     return v;
 }
 
-function<vector<double>(string)> work = [](string s)->vector<double>{ return transform(parseThatJson(s), [](string s)->double{ return atof(s.c_str()); }); };
+function<vector<double>(string)> parseThatJsonToDoubles = [](string s)->vector<double>{ return transform(parseThatJson(s), [](string s)->double{ return atof(s.c_str()); }); };
 
 
 char toByte(int number) {
@@ -158,7 +159,7 @@ public:
 
 class BarGraph {
 public:
-    BarGraph(int width, int height) : width(20 * 5), height(7*2 + 1) {}
+    BarGraph(int width, int height) : width(width), height(height) {}
     // takes a bunch of ints all in the range of [0,7) and builds the character set
     void print(function<void(char)> f) {
         for (char c = '\x21'; c < '\x21' + 40; c++) {
@@ -166,8 +167,15 @@ public:
         }
     }
 
+    vector<int> normalize(vector<double> data) {
+        auto max = maximum(begin(data), end(data));
+        return transform(data, [=](double x){ // is this capturing height or this?
+            return (int)floor((x / max) * height);
+        });
+    }
+
     string set(vector<int> cols, function<void(char)> f) {
-        if(cols.size() != 20 * 5) return "length of cols is wrong";
+        if(cols.size() != width) return "length of cols is wrong";
         if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
         if(cols.size() - 1 + '\x21' > '\xFF') return "length of cols is wrong";
         vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
