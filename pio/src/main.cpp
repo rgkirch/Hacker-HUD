@@ -12,6 +12,7 @@
 #include <Adafruit_MCP9808.h>
 #include <NtpClientLib.h>
 #include <ESP8266HTTPClient.h>
+#include <cmath>
 
 #include "site.hpp"
 #include "wifi.hpp"
@@ -195,30 +196,6 @@ void timerCallback(void *pArg) {
 
 BarGraph grid(20, 2);
 
-vector<string> parseThatJson(string json) {
-    vector<string> v{};
-    auto i = json.find(':') + 1;
-    while(true) {
-        auto begin = json.find(':', i+1) + 1;
-        auto end = json.find(',', begin);
-        if(json[end-1] == '}') {
-            v.push_back(json.substr(begin, end-1 - begin));
-            break;
-        }
-        v.push_back(json.substr(begin, end - begin));
-        i = end + 1;
-    }
-    return v;
-}
-
-template<class InputIt, class OutputIt, class UnaryOperation>
-OutputIt transform(InputIt first1, InputIt last1, OutputIt d_first, UnaryOperation unary_op) {
-    while (first1 != last1) {
-        *d_first++ = unary_op(*first1++);
-    }
-    return d_first;
-}
-
 template<typename InputIt>
 auto maximum(InputIt first, InputIt last)-> decltype(*first) {
     decltype(*first) maximum = *first;
@@ -258,27 +235,16 @@ void setup()
     Serial.println();
 
     auto max = maximum(begin(converted), end(converted));
-    for (auto& x : converted) {
-        x = (x / max) * 7.0;
-    }
-
-    for (auto d : converted) {
-        Serial.print(d);
-        Serial.print(" ");
-    }
-    Serial.println();
-
-    Serial.print("length of converted ");
-    Serial.println(converted.size());
     vector<int> vec{};
-    for (auto x : converted) {
-        vec.push_back(floor(x));
+    vec.reserve(converted.size());
+    for (auto& x : converted) {
+        vec.push_back((int)floor((x / max) * 15.0));
     }
 
     Serial.print("length of vec ");
     Serial.println(vec.size());
-    for (auto d : vec) {
-        Serial.print(d);
+    for (auto i : vec) {
+        Serial.print(i);
         Serial.print(" ");
     }
     Serial.println();
@@ -296,11 +262,7 @@ void setup()
     myVFD.home();
     function<void(char)> g = bind([](VFD& vfd, char c)->void { myVFD.print(c); }, myVFD, std::placeholders::_1);
 
-    auto chars = grid.toChars(vec);
-    vector<char> tempForPadding{};
-    tempForPadding.resize(100);
-    tempForPadding.insert(begin(tempForPadding), begin(chars), end(chars));
-    auto msg = grid.set(tempForPadding, g);
+    auto msg = grid.set(vec, g);
     Serial.println(msg.c_str());
 }
 //void p(const char *cs)

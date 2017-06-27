@@ -3,12 +3,32 @@
 #include <functional>
 #include <string.h>
 #include "display.h"
+#include "transform.hpp"
 
 using std::string;
 using std::vector;
 using std::function;
 using std::begin;
 using std::end;
+
+vector<string> parseThatJson(string json) {
+    vector<string> v{};
+    auto i = json.find(':') + 1;
+    while(true) {
+        auto begin = json.find(':', i+1) + 1;
+        auto end = json.find(',', begin);
+        if(json[end-1] == '}') {
+            v.push_back(json.substr(begin, end-1 - begin));
+            break;
+        }
+        v.push_back(json.substr(begin, end - begin));
+        i = end + 1;
+    }
+    return v;
+}
+
+function<vector<double>(string)> work = [](string s)->vector<double>{ return transform(parseThatJson(s), [](string s)->double{ return atof(s.c_str()); }); };
+
 
 char toByte(int number) {
     return (number / 1000000 % 2 << 6) + (number / 100000 % 2 << 5) + (number / 10000 % 2 << 4) + (number / 1000 % 2 << 3) + (number / 100 % 2 << 2) + (number / 10 % 2 << 1) + (number % 2);
@@ -146,8 +166,8 @@ public:
         }
     }
 
-    string set(vector<char> cols, function<void(char)> f) {
-        if(cols.size() != 40 * 5) return "length of cols is wrong";
+    string set(vector<int> cols, function<void(char)> f) {
+        if(cols.size() != 20 * 5) return "length of cols is wrong";
         if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
         if(cols.size() - 1 + '\x21' > '\xFF') return "length of cols is wrong";
         vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
@@ -157,7 +177,17 @@ public:
         for (auto x = begin(cols); x < end(cols); x += 5) {
             f('\x05');
             for (auto y = x; y < x + 5; y++) {
-                f(*y);
+                auto yMinusEight = *y - 8;
+                auto umm = yMinusEight > 0 ? yMinusEight : 0;
+                f(static_cast<char>(pow(2, umm) - 1));
+            }
+        }
+        for (auto x = begin(cols); x < end(cols); x += 5) {
+            f('\x05');
+            for (auto y = x; y < x + 5; y++) {
+                auto umm = *y > 0 ? *y : 0;
+                umm = umm <= 7 ? umm : 7;
+                f(static_cast<char>(pow(2, umm) - 1));
             }
         }
         return "success";
