@@ -28,7 +28,9 @@ vector<string> parseThatJson(string json) {
     return v;
 }
 
-function<vector<double>(string)> parseThatJsonToDoubles = [](string s)->vector<double>{ return transform(parseThatJson(s), [](string s)->double{ return atof(s.c_str()); }); };
+function<vector<double>(string)> parseThatJsonToDoubles = [](string s)->vector<double>{
+    return transform(parseThatJson(s), [](string s)->double{ return atof(s.c_str()); });
+};
 
 
 char toByte(int number) {
@@ -168,9 +170,11 @@ public:
     }
 
     vector<int> normalize(vector<double> data) {
-        auto max = maximum(begin(data), end(data));
-        return transform(data, [=](double x){ // is this capturing height or this?
-            return (int)floor((x / max) * height);
+        double max = maximum(data);
+        return transform(data, [=](double z){ // is this capturing height or this?
+            auto x = z;
+            auto y = (int)floor((x / max) * (height + 1));
+            return y - (y / (height + 1));
         });
     }
 
