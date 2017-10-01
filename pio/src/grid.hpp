@@ -170,14 +170,6 @@ public:
         }
     }
 
-    vector<int> normalize(vector<double> data) {
-//        double max = maximum(data);
-        double max = *std::max_element(begin(data), end(data));
-        return transform(data, [=](double x)->int { // is this capturing height or this?
-            return (int)(x / max * height);
-        });
-    }
-
     string set(vector<int> cols, function<void(char)> f) {
         if(cols.size() != width) return "length of cols is wrong";
         if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
@@ -227,6 +219,15 @@ public:
         }
         return bitPatterns;
     };
+
+    int getWidth() const {
+        return width;
+    }
+
+    int getHeight() const {
+        return height;
+    }
+
 private:
     int width;
     int height;

@@ -238,7 +238,7 @@ void setup()
     myVFD.home();
     function<void(char)> g = bind([](VFD& vfd, char c)->void { myVFD.print(c); }, myVFD, std::placeholders::_1);
 
-    auto vec = grid.normalize(parseThatJsonToDoubles(data));
+    auto vec = normalize(parseThatJsonToDoubles(data), grid.getHeight());
     auto msg = grid.set(vec, g);
     Serial.println(msg.c_str());
 }
