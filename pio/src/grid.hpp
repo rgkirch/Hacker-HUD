@@ -173,10 +173,8 @@ public:
     vector<int> normalize(vector<double> data) {
 //        double max = maximum(data);
         double max = *std::max_element(begin(data), end(data));
-        return transform(data, [=](double z){ // is this capturing height or this?
-            auto x = z;
-            auto y = (int)floor((x / max) * (height + 1));
-            return y - (y / (height + 1));
+        return transform(data, [=](double x)->int { // is this capturing height or this?
+            return (int)(x / max * height);
         });
     }
 
