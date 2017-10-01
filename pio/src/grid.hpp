@@ -113,6 +113,60 @@ void map(const char *cs, std::function<void(char)> f) {
     }
 }
 
+class Frame {
+public:
+    Frame(vector<int> cols) {
+        int width = 100;
+//        if(cols.size() != width) return "length of cols is wrong";
+//        if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
+//        if(cols.size() - 1 + '\x21' > '\xFF') return "length of cols is wrong";
+        vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
+        for ( auto c : cs ) frameData.push_back(c);
+        frameData.push_back('\x21');
+        frameData.push_back('\x21' + (40 - 1)); // todo - don't hard code 40, take number of rows into account
+        vector<char> first {};
+        vector<char> later {};
+        for (auto x = begin(cols); x < end(cols); x += 5) {
+            first.push_back('\x05');
+            later.push_back('\x05');
+            for (auto y = x; y < x + 5; y++) {
+                int n = *y / 7;
+                switch(n) {
+                    case 2:
+                        first.push_back(static_cast<char>(pow(2, 7) - 1));
+                        later.push_back(static_cast<char>(pow(2, 7) - 1));
+                        break;
+                    case 1:
+                        first.push_back(static_cast<char>(pow(2, *y % 7) - 1));
+                        later.push_back(static_cast<char>(pow(2, 7) - 1));
+                        break;
+                    case 0:
+                        first.push_back(static_cast<char>(0));
+                        later.push_back(static_cast<char>(pow(2, *y) - 1));
+                        break;
+                    default:
+                        break;
+                }
+            }
+        }
+        for(auto x : first) {
+            frameData.push_back(x);
+        }
+        for(auto x : later) {
+            frameData.push_back(x);
+        }
+    }
+    void bind(function<void(char)> f) {
+        for (auto c : frameData) {
+            f(c);
+        }
+    }
+
+private:
+    vector<char> frameData;
+//    function<void(char)> f;
+};
+
 class Grid {
 public:
     const int width = 138;
@@ -170,47 +224,6 @@ public:
         }
     }
 
-    string set(vector<int> cols, function<void(char)> f) {
-        if(cols.size() != width) return "length of cols is wrong";
-        if(cols.size() % 5 != 0) return "length of cols is wrong"; // linter should highlight this
-        if(cols.size() - 1 + '\x21' > '\xFF') return "length of cols is wrong";
-        vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
-        for ( auto c : cs ) f(c);
-        f('\x21');
-        f('\x21' + (40 - 1)); // todo - don't hard code 40, take number of rows into account
-        vector<char> first {};
-        vector<char> later {};
-        for (auto x = begin(cols); x < end(cols); x += 5) {
-            first.push_back('\x05');
-            later.push_back('\x05');
-            for (auto y = x; y < x + 5; y++) {
-                int n = *y / 7;
-                switch(n) {
-                    case 2:
-                        first.push_back(static_cast<char>(pow(2, 7) - 1));
-                        later.push_back(static_cast<char>(pow(2, 7) - 1));
-                        break;
-                    case 1:
-                        first.push_back(static_cast<char>(pow(2, *y % 7) - 1));
-                        later.push_back(static_cast<char>(pow(2, 7) - 1));
-                        break;
-                    case 0:
-                        first.push_back(static_cast<char>(0));
-                        later.push_back(static_cast<char>(pow(2, *y) - 1));
-                        break;
-                    default:
-                        break;
-                }
-            }
-        }
-        for(auto x : first) {
-            f(x);
-        }
-        for(auto x : later) {
-            f(x);
-        }
-        return "success";
-    }
 
     vector<char> toChars(const vector<int> vec) {
         vector<char> bitPatterns;
