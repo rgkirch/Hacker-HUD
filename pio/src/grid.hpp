@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include <functional>
+#include <algorithm>
 #include <string.h>
 #include "display.h"
 #include "transform.hpp"
@@ -170,7 +171,8 @@ public:
     }
 
     vector<int> normalize(vector<double> data) {
-        double max = maximum(data);
+//        double max = maximum(data);
+        double max = *std::max_element(begin(data), end(data));
         return transform(data, [=](double z){ // is this capturing height or this?
             auto x = z;
             auto y = (int)floor((x / max) * (height + 1));

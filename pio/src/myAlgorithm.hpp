@@ -1,6 +1,7 @@
 #ifndef PROJECT_MYALGORITHM_HPP
 #define PROJECT_MYALGORITHM_HPP
 
+// only call with non-empty vector
 double maximum(std::vector<double> v) {
     if(v.empty()) abort();
     double m = v[0];
