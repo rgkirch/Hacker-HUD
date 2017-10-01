@@ -160,6 +160,11 @@ public:
         for (auto c : frameData) {
             f(c);
         }
+        for (char a = '\x21'; a <= '\x21' + 39; a++) {
+            f('\x1B');
+            f('\x3F');
+            f(a);
+        }
     }
 
 private:
