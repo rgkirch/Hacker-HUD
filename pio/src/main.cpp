@@ -37,7 +37,7 @@ using std::bind;
 //string ntpTime;
 time_t unixTime;
 time_t unixTimeUpdated;
-bool callbackEnabled = true;
+bool callbackEnabled = false;
 
 os_timer_t myTimer;
 MyConcretePrint serial(D5, D6);
@@ -206,8 +206,8 @@ void setup()
     myVFD.clear();
     myVFD.home();
 
-    os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
-    os_timer_arm(&myTimer, 1000, true);
+//    os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
+//    os_timer_arm(&myTimer, 1000, true);
 
 //    const int stringLength = 20;
 //    char endString[stringLength];
@@ -251,39 +251,49 @@ void loop()
     function<void(char)> g = bind([](VFD& vfd, char c)->void { myVFD.print(c); }, myVFD, std::placeholders::_1);
 
     int frameTime = 4000;
-    if(WiFi.status() != WL_CONNECTED) connectToWifi();
-    LOG("loop begin");
-    unixTime = NTP.getTime();
-    unixTimeUpdated = millis();
+//    if(WiFi.status() != WL_CONNECTED) connectToWifi();
+//    LOG("loop begin");
+//    unixTime = NTP.getTime();
+//    unixTimeUpdated = millis();
+//
+//    LOG("coindesk");
+//    updateSite(coindesk);
+//    myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
+//    delay(frameTime);
+//
+//    LOG("coinmarketcap");
+//    updateSite(coinMarketCap);
+//    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
+//    delay(frameTime);
+//
+//    LOG("openweathermap");
+//    updateSite(openWeatherMapTemp);
+//    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
+//    delay(frameTime);
+//
+//    LOG("openweathermaphumidity");
+//    updateSite(openWeatherMapHumidity);
+//    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
+//    delay(frameTime);
 
-    LOG("coindesk");
-    updateSite(coindesk);
-    myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
-    delay(frameTime);
-
-    LOG("coinmarketcap");
-    updateSite(coinMarketCap);
-    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
-    delay(frameTime);
-
-    LOG("openweathermap");
-    updateSite(openWeatherMapTemp);
-    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
-    delay(frameTime);
-
-    LOG("openweathermaphumidity");
-    updateSite(openWeatherMapHumidity);
-    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
-    delay(frameTime);
-
+    function<string(void)> clearFrame = []()->std::string{
+        string str;
+        for (char a = '\x21'; a <= '\x21' + 39; a++) {
+            str.push_back('\x1B');
+            str.push_back('\x3F');
+            str.push_back(a);
+        }
+        return str;
+    };
     callbackEnabled = false;
     frame->bind(g);
+    myVFD.home();
+    for (char c = '\x21'; c < '\x21' + 40; c++) {
+        myVFD.print(c);
+    }
+    myVFD.print(clearFrame().c_str());
     delay(frameTime);
     callbackEnabled = true;
-//    myVFD.home();
-//    for (char c = '\x21'; c < '\x21' + 40; c++) {
-//        myVFD.print(c);
-//    }
 //    delay(10000);
 
     yield();

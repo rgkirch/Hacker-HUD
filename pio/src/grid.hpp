@@ -122,8 +122,8 @@ public:
 //        if(cols.size() - 1 + '\x21' > '\xFF') return "length of cols is wrong";
         vector<char> cs {'\x1B','\x25','\x01','\x1B','\x26','\x01'};
         for ( auto c : cs ) frameData.push_back(c);
-        frameData.push_back('\x21');
-        frameData.push_back('\x21' + (40 - 1)); // todo - don't hard code 40, take number of rows into account
+        f('\x21');
+        f('\x21' + (40 - 1)); // todo - don't hard code 40, take number of rows into account
         vector<char> first {};
         vector<char> later {};
         for (auto x = begin(cols); x < end(cols); x += 5) {
@@ -150,26 +150,21 @@ public:
             }
         }
         for(auto x : first) {
-            frameData.push_back(x);
+            f(x);
         }
         for(auto x : later) {
-            frameData.push_back(x);
+            f(x);
         }
     }
     void bind(function<void(char)> f) {
         for (auto c : frameData) {
             f(c);
         }
-        for (char a = '\x21'; a <= '\x21' + 39; a++) {
-            f('\x1B');
-            f('\x3F');
-            f(a);
-        }
     }
 
 private:
     vector<char> frameData;
-//    function<void(char)> f;
+    function<void(char)> f = [&](char c)->void{ frameData.push_back(c); };
 };
 
 class Grid {
