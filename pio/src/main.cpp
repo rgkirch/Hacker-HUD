@@ -100,30 +100,6 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
 //    float temp = analogRead(A0);
 //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
-Site coindesk {
-        httpPort,
-        "api.coindesk.com",
-        "/v1/bpi/currentprice.json",
-        {"bpi", "USD", "rate_float"}
-};
-Site coinMarketCap {
-        httpsPort,
-        "coinmarketcap-nexuist.rhcloud.com",
-        "/api/eth",
-        {"price", "usd"}
-};
-Site openWeatherMapHumidity {
-        httpPort,
-        "api.openweathermap.org",
-        "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-        {"main", "humidity"}
-};
-Site openWeatherMapTemp {
-        httpPort,
-        "api.openweathermap.org",
-        "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
-        {"main", "temp"}
-};
 Option<string> applyKeys(const JsonObject& o, const vector<string>::iterator begin, const vector<string>::iterator end)
 {
     LOG("apply keys");
@@ -196,9 +172,80 @@ void timerCallback(void *pArg) {
     }
 }
 
+Site coinMarketCap {
+        httpsPort,
+        "coinmarketcap-nexuist.rhcloud.com",
+        "/api/eth",
+        {"price", "usd"}
+};
+Site openWeatherMapHumidity {
+        httpPort,
+        "api.openweathermap.org",
+        "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
+        {"main", "humidity"}
+};
+Site openWeatherMapTemp {
+        httpPort,
+        "api.openweathermap.org",
+        "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29",
+        {"main", "temp"}
+};
 BarGraph grid(100, 14);
 Frame* frame;
 
+template <typename T>
+struct Cache {
+    virtual T get() =0;
+};
+template <typename T>
+struct SimpleCache : public Cache<T> {
+    SimpleCache(T t) : data(t) {}
+    T get() override {
+        return data;
+    }
+    T data;
+};
+template <typename T>
+struct CountCache : public Cache<T> {
+    CountCache(function<T(void)> f, int period) : f(f), period(period), count(0) {}
+    T get() override {
+        if(count == 0) {
+            data = f();
+            count = period - 1;
+        } else {
+            count--;
+        }
+        return data;
+    }
+    T data;
+    function<T(void)> f;
+    const int period;
+    int count;
+};
+template <typename T>
+struct TimeCache : public Cache<T> {
+    TimeCache(function<T(void)> f, int cacheTime) : f(f), cacheTime(cacheTime) {}
+    T get() override {
+        if(millis() > lastUpdated + cacheTime) {
+            lastUpdated = millis();
+            data = f();
+        }
+        return data;
+    }
+    T data;
+    function<T(void)> f;
+    int cacheTime;
+    unsigned long lastUpdated;
+};
+TimeCache<Option<string>> coindesk(function<Option<string>(void)>([]()->Option<string>{
+    Site coindesk {
+            httpPort,
+            "api.coindesk.com",
+            "/v1/bpi/currentprice.json",
+            {"bpi", "USD", "rate_float"}
+    };
+    return getSiteData(coindesk);
+}), 60000);
 void setup()
 {
     Serial.begin(115200);
@@ -246,12 +293,6 @@ void setup()
 //{
 //    myVFD.print(cs);
 //}
-class DisplayFrameSequence {
-    void push_back(function<string(void)> f) {
-        sequence.push_back(f);
-    }
-    vector<function<string(void)>> sequence;
-};
 void loop()
 {
     function<void(char)> g = [&](char c)->void { myVFD.print(c); };
@@ -263,8 +304,7 @@ void loop()
     unixTimeUpdated = millis();
 
     LOG("coindesk");
-    updateSite(coindesk);
-    myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
+    myVFD.setLowerLine("bitcoin", coindesk.get().orElse("no data"));
     delay(frameTime);
 
     LOG("coinmarketcap");
