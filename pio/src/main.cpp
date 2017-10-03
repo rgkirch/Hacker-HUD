@@ -115,6 +115,40 @@ Option<string> applyKeys(const JsonObject& o, const vector<string>::iterator beg
         return applyKeys(o[(*it).c_str()], next(begin), end);
     }
 }
+Option<string> getSiteData(uint16_t port, string host, string path, vector<string> keys)
+{
+    HTTPClient http;
+    string server;
+    port == httpsPort ? server.append("https://") : server.append("http://");
+    server.append(host).append(path);
+    http.begin(server.c_str());
+    int httpCode = http.GET();
+    LOGN(httpCode);
+    LOG(HTTP_CODE_OK);
+    string data = http.getString().c_str();
+    http.end();
+    LOGN("data ");
+    LOG(data.c_str());
+    LOG("search for the left brace");
+    int i = data.find('{');
+    if (i == data.npos) {
+        i = 0;
+    }
+    LOG("take the substring of the string");
+    data = data.substr(i);
+    LOG(data.c_str());
+    Option<string> o(data);
+    DynamicJsonBuffer jsonBuffer(2000);
+    function<Option<string>(std::string)> f([&](string str)->Option<string> {
+        JsonObject &o = jsonBuffer.parseObject(str.c_str());
+        if (not o.success()) return Option<string>();
+        return applyKeys(o, keys.begin(), keys.end());
+    } );
+    LOG("json shit");
+    o.map( f );
+    return o;
+}
+
 Option<string> getSiteData(Site site)
 {
     HTTPClient http;
@@ -237,15 +271,13 @@ struct TimeCache : public Cache<T> {
     int cacheTime;
     unsigned long lastUpdated;
 };
-TimeCache<Option<string>> coindesk(function<Option<string>(void)>([]()->Option<string>{
-    Site coindesk {
-            httpPort,
-            "api.coindesk.com",
-            "/v1/bpi/currentprice.json",
-            {"bpi", "USD", "rate_float"}
-    };
-    return getSiteData(coindesk);
-}), 60000);
+TimeCache<Option<string>> coindesk([]() {
+    auto port = httpPort;
+    auto host = "api.coindesk.com";
+    auto path = "/v1/bpi/currentprice.json";
+    vector<string> keys = {"bpi", "USD", "rate_float"};
+    return getSiteData(port, host, path, keys);
+}, 60000);
 void setup()
 {
     Serial.begin(115200);
