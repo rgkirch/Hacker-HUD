@@ -37,7 +37,7 @@ using std::bind;
 //string ntpTime;
 time_t unixTime;
 time_t unixTimeUpdated;
-bool callbackEnabled = false;
+bool callbackEnabled = true;
 
 os_timer_t myTimer;
 MyConcretePrint serial(D5, D6);
@@ -206,8 +206,8 @@ void setup()
     myVFD.clear();
     myVFD.home();
 
-//    os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
-//    os_timer_arm(&myTimer, 1000, true);
+    os_timer_setfn(&myTimer, (os_timer_func_t *)timerCallback, NULL);
+    os_timer_arm(&myTimer, 1000, true);
 
 //    const int stringLength = 20;
 //    char endString[stringLength];
@@ -246,35 +246,41 @@ void setup()
 //{
 //    myVFD.print(cs);
 //}
+class DisplayFrameSequence {
+    void push_back(function<string(void)> f) {
+        sequence.push_back(f);
+    }
+    vector<function<string(void)>> sequence;
+};
 void loop()
 {
-    function<void(char)> g = bind([](VFD& vfd, char c)->void { myVFD.print(c); }, myVFD, std::placeholders::_1);
+    function<void(char)> g = [&](char c)->void { myVFD.print(c); };
 
-    int frameTime = 4000;
-//    if(WiFi.status() != WL_CONNECTED) connectToWifi();
-//    LOG("loop begin");
-//    unixTime = NTP.getTime();
-//    unixTimeUpdated = millis();
-//
-//    LOG("coindesk");
-//    updateSite(coindesk);
-//    myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
-//    delay(frameTime);
-//
-//    LOG("coinmarketcap");
-//    updateSite(coinMarketCap);
-//    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
-//    delay(frameTime);
-//
-//    LOG("openweathermap");
-//    updateSite(openWeatherMapTemp);
-//    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
-//    delay(frameTime);
-//
-//    LOG("openweathermaphumidity");
-//    updateSite(openWeatherMapHumidity);
-//    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
-//    delay(frameTime);
+    int frameTime = 1000;
+    if(WiFi.status() != WL_CONNECTED) connectToWifi();
+    LOG("loop begin");
+    unixTime = NTP.getTime();
+    unixTimeUpdated = millis();
+
+    LOG("coindesk");
+    updateSite(coindesk);
+    myVFD.setLowerLine("bitcoin", coindesk.lastResult.orElse("no data"));
+    delay(frameTime);
+
+    LOG("coinmarketcap");
+    updateSite(coinMarketCap);
+    myVFD.setLowerLine("etherium", coinMarketCap.lastResult.orElse("no data"));
+    delay(frameTime);
+
+    LOG("openweathermap");
+    updateSite(openWeatherMapTemp);
+    myVFD.setLowerLine("tampa temp", openWeatherMapTemp.lastResult.orElse("no data"));
+    delay(frameTime);
+
+    LOG("openweathermaphumidity");
+    updateSite(openWeatherMapHumidity);
+    myVFD.setLowerLine("tampa humidity", openWeatherMapHumidity.lastResult.orElse("no data"));
+    delay(frameTime);
 
     function<string(void)> clearFrame = []()->std::string{
         string str;
@@ -293,6 +299,7 @@ void loop()
     }
     myVFD.print(clearFrame().c_str());
     delay(frameTime);
+    myVFD.clear();
     callbackEnabled = true;
 //    delay(10000);
 
