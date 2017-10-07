@@ -271,14 +271,14 @@ struct TimeCache : public Cache<T> {
     unsigned long lastUpdated;
 };
 
-TimeCache<Option<string>> coindesk([]() {
+TimeCache<Option<string>> bitcoin([]() {
     auto port = httpPort;
     auto host = "api.coindesk.com";
     auto path = "/v1/bpi/currentprice.json";
     vector<string> keys = {"bpi", "USD", "rate_float"};
     return getSiteData(port, host, path, keys);
 }, 60000);
-TimeCache<Option<string>> coinMarketCap([]() {
+TimeCache<Option<string>> etherium([]() {
     auto port = httpsPort;
     auto host = "coinmarketcap-nexuist.rhcloud.com";
     auto path = "/api/eth";
@@ -357,12 +357,12 @@ void loop() {
     unixTime = NTP.getTime();
     unixTimeUpdated = millis();
 
-    LOG("coindesk");
-    myVFD.setLowerLine("bitcoin", coindesk.get().orElse("no data"));
+    LOG("bitcoin");
+    myVFD.setLowerLine("bitcoin", bitcoin.get().orElse("no data"));
     delay(frameTime);
 
-    LOG("coinmarketcap");
-    myVFD.setLowerLine("etherium", coinMarketCap.get().orElse("no data"));
+    LOG("etherium");
+    myVFD.setLowerLine("etherium", etherium.get().orElse("no data"));
     delay(frameTime);
 
     LOG("openweathermap");
