@@ -1,0 +1,10 @@
+{
+    "terminal.integrated.env.windows": {
+        "PATH": "C:\\Users\\richie\\.platformio\\penv\\Scripts;C:\\Python27\\;C:\\Python27\\Scripts;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\LLVM\\bin;C:\\Program Files (x86)\\sbt\\bin;C:\\Program Files\\Crucial\\Crucial Storage Executive;C:\\ProgramData\\chocolatey\\bin;C:\\Users\\richie\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\richie\\.babun;C:\\Program Files\\Microsoft VS Code\\bin;C:\\Python27\\;C:\\Python27\\Scripts;C:\\Program Files (x86)\\NVIDIA Corporation\\PhysX\\Common;C:\\WINDOWS\\system32;C:\\WINDOWS;C:\\WINDOWS\\System32\\Wbem;C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\;C:\\Program Files\\Git\\cmd;C:\\Program Files\\Git\\mingw64\\bin;C:\\Program Files\\Git\\usr\\bin;C:\\Program Files\\LLVM\\bin;C:\\Program Files (x86)\\sbt\\bin;C:\\Program Files\\Crucial\\Crucial Storage Executive;C:\\ProgramData\\chocolatey\\bin;C:\\Users\\richie\\AppData\\Local\\Microsoft\\WindowsApps;;C:\\Users\\richie\\.babun;C:\\Program Files\\Microsoft VS Code\\bin"
+    },
+    "C_Cpp.intelliSenseEngineFallback": "Disabled",
+    "files.associations": {
+        "array": "cpp",
+        "functional": "cpp"
+    }
+}
