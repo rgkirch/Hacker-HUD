@@ -27,3 +27,6 @@ build/CMakeFiles/cmake.check_cache
 build/CMakeCache.txt
 build/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c
 build/CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp
+error-cmake.txt
+error-multi.txt
+error-single.txt
