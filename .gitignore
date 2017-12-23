@@ -15,3 +15,15 @@ lib/Time-master.zip
 /Arduino/
 /pio/lib/ArduinoJson/
 /pio/lib/json/
+build/CMakeFiles/3.5.1/CompilerIdC/a.out
+build/CMakeFiles/3.5.1/CMakeSystem.cmake
+build/CMakeFiles/3.5.1/CMakeDetermineCompilerABI_C.bin
+build/CMakeFiles/3.5.1/CMakeCCompiler.cmake
+build/CMakeFiles/feature_tests.c
+build/CMakeFiles/feature_tests.bin
+build/CMakeFiles/CMakeOutput.log
+build/CMakeFiles/CMakeError.log
+build/CMakeFiles/cmake.check_cache
+build/CMakeCache.txt
+build/CMakeFiles/3.5.1/CompilerIdC/CMakeCCompilerId.c
+build/CMakeFiles/3.5.1/CompilerIdCXX/CMakeCXXCompilerId.cpp
