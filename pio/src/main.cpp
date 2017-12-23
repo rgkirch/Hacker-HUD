@@ -27,6 +27,7 @@
 #include "display.h"
 #include "myConcreteSerial.hpp"
 #include "grid.hpp"
+#include "apiKeys.hpp"
 
 #define DEBUGPRINT
 #ifdef DEBUGPRINT
@@ -218,44 +219,9 @@ BarGraph grid(100, 14);
 Frame *frame;
 
 template<typename T>
-struct Cache {
-    virtual T get() =0;
-};
-
-template<typename T>
-struct SimpleCache : public Cache<T> {
-    SimpleCache(T t) : data(t) {}
-
-    T get() override {
-        return data;
-    }
-
-    T data;
-};
-
-template<typename T>
-struct CountCache : public Cache<T> {
-    CountCache(function<T(void)> f, int period) : f(f), period(period), count(0) {}
-
-    T get() override {
-        if (count == 0) {
-            data = f();
-            count = period - 1;
-        } else {
-            count--;
-        }
-        return data;
-    }
-
-    T data;
-    function<T(void)> f;
-    const int period;
-    int count;
-};
-
-template<typename T>
-struct TimeCache : public Cache<T> {
+struct TimeCache {
     TimeCache(function<T(void)> f, int cacheTime) : f(f), cacheTime(cacheTime) {}
+    virtual ~TimeCache =default;
 
     T get() override {
         if (millis() > lastUpdated + cacheTime) {
@@ -277,28 +243,28 @@ TimeCache<Option<string>> bitcoin([]() {
     auto path = "/v1/bpi/currentprice.json";
     vector<string> keys = {"bpi", "USD", "rate_float"};
     return getSiteData(port, host, path, keys);
-}, 60000);
+}, 60*60*1000);
 TimeCache<Option<string>> etherium([]() {
     auto port = httpsPort;
     auto host = "coinmarketcap-nexuist.rhcloud.com";
     auto path = "/api/eth";
     vector<string> keys = {"price", "usd"};
     return getSiteData(port, host, path, keys);
-}, 60000);
+}, 60*60*1000);
 TimeCache<Option<string>> openWeatherMapHumidity([]() {
     auto port = httpPort;
     auto host = "api.openweathermap.org";
-    auto path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29";
+    auto path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=" + openWeatherMapApiKey;
     vector<string> keys = {"main", "humidity"};
     return getSiteData(port, host, path, keys);
-}, 60000);
+}, 60*60*1000);
 TimeCache<Option<string>> openWeatherMapTemp([]() {
     auto port = httpPort;
     auto host = "api.openweathermap.org";
-    auto path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=f8ffd4de380fb081bfc12d4ee8c82d29";
+    auto path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=" + openWeatherMapApiKey;
     vector<string> keys = {"main", "temp"};
     return getSiteData(port, host, path, keys);
-}, 60000);
+}, 60*60*1000);
 
 void setup() {
     Serial.begin(115200);
