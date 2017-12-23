@@ -1,0 +1,3 @@
+save and read wifi config from spiff memory
+connect and config through web interface
+display five day forcast high and low
