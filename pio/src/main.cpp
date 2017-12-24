@@ -272,19 +272,19 @@ void setup() {
     myVFD.clear();
     myVFD.home();
 
-    os_timer_setfn(&myTimer, (os_timer_func_t *) timerCallback, NULL);
-    os_timer_arm(&myTimer, 1000, true);
+    // os_timer_setfn(&myTimer, (os_timer_func_t *) timerCallback, NULL);
+    // os_timer_arm(&myTimer, 1000, true);
 
 //    const int stringLength = 20;
 //    char endString[stringLength];
 //    char startString[stringLength];
 //    time_t endTime = 1499516750;
 //    time_t startTime = endTime - 100 * 24 * 60 * 60;
-////    strftime(startString, stringLength, "%Y-%m-%d", localtime(&t));
+// //    strftime(startString, stringLength, "%Y-%m-%d", localtime(&t));
 //    snprintf(endString, stringLength, "%02d-%02d-%02d", year(endTime), month(endTime), day(endTime));
 //    snprintf(startString, stringLength, "%02d-%02d-%02d", year(startTime), month(startTime), day(startTime));
 //    const char *urlTemplate = "http://api.coindesk.com/v1/bpi/historical/close.json?start=%s&end=%s";
-////    https://etherscan.io/chart/etherprice?output=csv
+// //    https://etherscan.io/chart/etherprice?output=csv
 //    char url[100];
 //    snprintf(url, 100, urlTemplate, startString, endString);
 
@@ -310,10 +310,10 @@ void setup() {
     frame = new Frame(normalize(parseThatJsonToDoubles(data), grid.getHeight()));
 }
 
-//void p(const char *cs)
-//{
-//    myVFD.print(cs);
-//}
+string frameFun(long time) {
+    
+}
+
 void loop() {
     function<void(char)> g = [&](char c) -> void { myVFD.print(c); };
 
