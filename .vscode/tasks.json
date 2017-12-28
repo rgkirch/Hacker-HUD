@@ -4,37 +4,7 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "run tests",
-            "type": "shell",
-            "command": "cd test/build ./hhTest",
-            "group": {
-                "kind": "test",
-                "isDefault": true
-            },
-            "presentation": {
-                "echo": true,
-                "reveal": "silent",
-                "focus": true,
-                "panel": "shared"
-            },
-            "problemMatcher": [
-                {
-                    "owner": "googletest",
-                    "fileLocation": [
-                        "relative",
-                        "${workspaceFolder}"
-                    ],
-                    "pattern": {
-                        "regexp": "^(.*):(\\d+): (Failure)$",
-                        "file": 1,
-                        "location": 2,
-                        "message": 3
-                    }
-                }
-            ]
-        },
-        {
-            "label": "make tests",
+            "label": "tests",
             "type": "shell",
             "command": "cd test/build && make hhTest && ./hhTest",
             "group": {
