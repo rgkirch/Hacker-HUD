@@ -366,6 +366,8 @@ void setup()
     // frame = new Frame(normalize(parseThatJsonToDoubles(data), grid.getHeight()));
 }
 
+auto whichFrame = [](long currentTime) { return getWhichFrame(4, 4000, currentTime); };
+
 void loop()
 {
     function<void(char)> g = [&](char c) -> void { myVFD.print(c); };
