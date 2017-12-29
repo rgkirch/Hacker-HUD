@@ -21,3 +21,7 @@ pio/.vscode/settings.json
 .vscode/settings.json
 test/CMakeFiles/*
 .vscode/c_cpp_properties.json
+test/gtest_main.pc
+test/gtest.pc
+test/gmock_main.pc
+test/gmock.pc
