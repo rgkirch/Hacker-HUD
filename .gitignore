@@ -20,3 +20,4 @@ test/build
 pio/.vscode/settings.json
 .vscode/settings.json
 test/CMakeFiles/*
+.vscode/c_cpp_properties.json
