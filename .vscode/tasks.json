@@ -15,7 +15,7 @@
                 "echo": true,
                 "reveal": "silent",
                 "focus": true,
-                "panel": "shared"
+                "panel": "new"
             },
             "problemMatcher": [
                 {
