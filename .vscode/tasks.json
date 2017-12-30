@@ -35,6 +35,16 @@
                             "message": 1
                         }
                     ]
+                },
+                {
+                    "owner": "cpp",
+                    "pattern":{
+                        "regexp": "^(.*/)+(.*\\....):(\\d*):(\\d*).*(error: .*)$",
+                        "file": 2,
+                        "line": 3,
+                        "column": 4,
+                        "message": 5
+                    }
                 }
             ]
         }
