@@ -2,6 +2,7 @@
 #include <functional>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#include "../../pio/src/main.hpp"
 #include "grid.hpp"
 #include "main.hpp"
 
@@ -44,4 +45,15 @@ TEST(frameSelection, negative) {
     ASSERT_EQ(1, whichFrame(-12000));
     ASSERT_EQ(0, whichFrame(-15999));
     ASSERT_EQ(0, whichFrame(-16000));
+}
+
+TEST(frameSelection, selectFromVector) {
+    auto currentTime = 1000;
+    vector<function<string()>> frames;
+    int currentFrame = getWhichFrame(frames.size(), 4000, currentTime);
+    frames.push_back([&]() {
+        return "hello there";
+    });
+    string str = frames[currentFrame]();
+    ASSERT_STREQ("hello there", str.c_str());
 }

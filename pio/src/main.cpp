@@ -308,6 +308,9 @@ TimeCache<Option<string>> openWeatherMapTemp([]() {
 },
                                              60 * 60 * 1000);
 
+auto lowerLineStatus
+vector<function<string()>> frames;
+
 void setup()
 {
     Serial.begin(115200);
@@ -319,16 +322,16 @@ void setup()
     // os_timer_arm(&myTimer, 1000, true);
 
     frames.push_back([&]() {
-        return bitcoin.get().orElse("no data");
+        return bitcoin.get().orElse("no data for bitcoin price");
     });
     frames.push_back([&]() {
-        return etherium.get().orElse("no data");
+        return etherium.get().orElse("no data for etherium price");
     });
     frames.push_back([&]() {
-        return openWeatherMapTemp.get().orElse("no data");
+        return openWeatherMapTemp.get().orElse("no data for weather temp");
     });
     frames.push_back([&]() {
-        return openWeatherMapHumidity.get().orElse("no data");
+        return openWeatherMapHumidity.get().orElse("no data for weather humidity");
     });
 
     //    const int stringLength = 20;
@@ -373,12 +376,13 @@ void loop()
     function<void(char)> g = [&](char c) -> void { myVFD.print(c); };
 
     int frameTime = 1000;
-    if (WiFi.status() != WL_CONNECTED)
-        connectToWifi();
+    // if (WiFi.status() != WL_CONNECTED) connectToWifi();
     unixTime = NTP.getTime();
     unixTimeUpdated = millis();
 
-    string str = frames[whichFrame(millis())]();
+    auto currentTime = millis();
+    int currentFrame = getWhichFrame(frames.size(), 4000, currentTime);
+    string str = frames[currentFrame]();
     Serial.println(str.c_str());
     myVFD.setLowerLine(str);
 
