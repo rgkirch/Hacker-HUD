@@ -308,7 +308,6 @@ TimeCache<Option<string>> openWeatherMapTemp([]() {
 },
                                              60 * 60 * 1000);
 
-auto lowerLineStatus
 vector<function<string()>> frames;
 
 void setup()
@@ -376,15 +375,17 @@ void loop()
     function<void(char)> g = [&](char c) -> void { myVFD.print(c); };
 
     int frameTime = 1000;
-    // if (WiFi.status() != WL_CONNECTED) connectToWifi();
+    if (WiFi.status() != WL_CONNECTED) connectToWifi([&](string s){
+        myVFD.print(s.c_str());
+    });
     unixTime = NTP.getTime();
     unixTimeUpdated = millis();
 
-    auto currentTime = millis();
-    int currentFrame = getWhichFrame(frames.size(), 4000, currentTime);
-    string str = frames[currentFrame]();
-    Serial.println(str.c_str());
-    myVFD.setLowerLine(str);
+    // auto currentTime = millis();
+    // int currentFrame = getWhichFrame(frames.size(), 4000, currentTime);
+    // string str = frames[currentFrame]();
+    // Serial.println(str.c_str());
+    // myVFD.setLowerLine(str);
 
     delay(500);
 
