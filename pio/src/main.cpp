@@ -31,6 +31,7 @@
 #include "main.hpp"
 #include "myConcreteSerial.hpp"
 #include "site.hpp"
+#include "timeCache.hpp"
 #include "wifi.hpp"
 
 #define DEBUGPRINT
@@ -122,58 +123,6 @@ float readTemp(Adafruit_MCP9808 &tempsensor) {
   //    temp = (((temp/1023)*3.3*100)*1.8) + 32;
 }
 
-Option<string> applyKeys(const JsonObject &o,
-                         const vector<string>::iterator begin,
-                         const vector<string>::iterator end) {
-  LOG("apply keys");
-  Option<string> emptyOption;
-  auto it = begin;
-  if (next(it) == end) {
-    const char *r = o[(*it).c_str()].as<const char *>();
-    if (r == nullptr) {
-      return emptyOption;
-    } else
-      return string(r);
-  } else {
-    return applyKeys(o[(*it).c_str()], next(begin), end);
-  }
-}
-
-Option<string> getSiteData(uint16_t port, string host, string path,
-                           vector<string> keys) {
-  HTTPClient http;
-  string server;
-  port == httpsPort ? server.append("https://") : server.append("http://");
-  server.append(host).append(path);
-  http.begin(server.c_str());
-  int httpCode = http.GET();
-  LOGN(httpCode);
-  LOG(HTTP_CODE_OK);
-  string data = http.getString().c_str();
-  http.end();
-  LOGN("data ");
-  LOG(data.c_str());
-  LOG("search for the left brace");
-  int i = data.find('{');
-  if (i == data.npos) {
-    i = 0;
-  }
-  LOG("take the substring of the string");
-  data = data.substr(i);
-  LOG(data.c_str());
-  Option<string> o(data);
-  DynamicJsonBuffer jsonBuffer(2000);
-  function<Option<string>(std::string)> f([&](string str) -> Option<string> {
-    JsonObject &o = jsonBuffer.parseObject(str.c_str());
-    if (not o.success())
-      return Option<string>();
-    return applyKeys(o, keys.begin(), keys.end());
-  });
-  LOG("json shit");
-  o.map(f);
-  return o;
-}
-
 string someFunctionWithHttp(string host, string path, uint16_t port) {
   HTTPClient http;
   string server;
@@ -243,63 +192,6 @@ void timerCallback(void *pArg) {
 
 BarGraph grid(100, 14);
 Frame *frame;
-
-template <typename T> struct TimeCache {
-  TimeCache(function<T(void)> f, int cacheTime) : f(f), cacheTime(cacheTime) {}
-  virtual ~TimeCache() = default;
-
-  T get() {
-    if (millis() > lastUpdated + cacheTime) {
-      lastUpdated = millis();
-      data = f();
-    }
-    return data;
-  }
-
-  T data;
-  function<T(void)> f;
-  int cacheTime;
-  unsigned long lastUpdated;
-};
-
-TimeCache<Option<string>> bitcoin(
-    []() {
-      auto port = httpPort;
-      auto host = "api.coindesk.com";
-      auto path = "/v1/bpi/currentprice.json";
-      vector<string> keys = {"bpi", "USD", "rate_float"};
-      return getSiteData(port, host, path, keys);
-    },
-    60 * 60 * 1000);
-TimeCache<Option<string>> etherium(
-    []() {
-      auto port = httpsPort;
-      auto host = "coinmarketcap-nexuist.rhcloud.com";
-      auto path = "/api/eth";
-      vector<string> keys = {"price", "usd"};
-      return getSiteData(port, host, path, keys);
-    },
-    60 * 60 * 1000);
-TimeCache<Option<string>> openWeatherMapHumidity(
-    []() {
-      auto port = httpPort;
-      auto host = "api.openweathermap.org";
-      auto path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=" +
-                  openWeatherMapApiKey;
-      vector<string> keys = {"main", "humidity"};
-      return getSiteData(port, host, path, keys);
-    },
-    60 * 60 * 1000);
-TimeCache<Option<string>> openWeatherMapTemp(
-    []() {
-      auto port = httpPort;
-      auto host = "api.openweathermap.org";
-      auto path = "/data/2.5/weather?q=Tampa,us&units=imperial&APPID=" +
-                  openWeatherMapApiKey;
-      vector<string> keys = {"main", "temp"};
-      return getSiteData(port, host, path, keys);
-    },
-    60 * 60 * 1000);
 
 vector<function<string()>> frames;
 
