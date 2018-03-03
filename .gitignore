@@ -1,3 +1,4 @@
+*.swp
 .idea/
 .pioenvs
 .piolibdeps
@@ -47,3 +48,8 @@ fs/hacker-hud/obj/fsac.cache
 fs/hacker-hud/paket.references
 fs/hacker-hud/hacker-hud.fsproj
 fs/hacker-hud/App.config
+.gitignore_BACKUP_500
+.gitignore_BASE_500
+.gitignore_LOCAL_500
+.gitignore_REMOTE_500
+.gitignore.orig
