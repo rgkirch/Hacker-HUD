@@ -158,7 +158,7 @@ Option<string> getSiteData(Site site) {
         return applyKeys(o, site.keys.begin(), site.keys.end());
       });
   LOG("json shit");
-  o.map(f);
+  o.flatMap(f);
   return o;
 }
 

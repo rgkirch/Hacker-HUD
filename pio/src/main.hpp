@@ -57,7 +57,7 @@ Option<string> getSiteData(uint16_t port, string host, string path,
     return applyKeys(o, keys.begin(), keys.end());
   });
   LOG("json shit");
-  o.map(f);
+  o.flatMap(f);
   return o;
 }
 
@@ -103,9 +103,11 @@ TimeCache<Option<string>> openWeatherMapTemp(
 string whatToDisplay(long time) {
   long frameTime = time % 10;
   if (frameTime < 2) {
-    return "hello";
+    string bitcoinPrice("bitcoin price = ");
+    bitcoinPrice.append(bitcoin.get().getOrElse("no data"));
+    return bitcoinPrice;
   } else if (frameTime < 4) {
-    return "world";
+    return "hello world";
   } else {
     return NTP.getTimeStr(time).c_str();
   }
